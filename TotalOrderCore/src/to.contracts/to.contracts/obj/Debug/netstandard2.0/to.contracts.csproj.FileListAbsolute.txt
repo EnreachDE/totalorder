@@ -1,9 +1,0 @@
-C:\_cc\swyx_1\TotalOrderCore\contracts\netstandard2.0\to.contracts.deps.json
-C:\_cc\swyx_1\TotalOrderCore\contracts\netstandard2.0\to.contracts.dll
-C:\_cc\swyx_1\TotalOrderCore\contracts\netstandard2.0\to.contracts.pdb
-C:\_cc\swyx_1\TotalOrderCore\src\to.contracts\to.contracts\obj\Debug\netstandard2.0\to.contracts.csproj.CoreCompileInputs.cache
-C:\_cc\swyx_1\TotalOrderCore\src\to.contracts\to.contracts\obj\Debug\netstandard2.0\to.contracts.AssemblyInfoInputs.cache
-C:\_cc\swyx_1\TotalOrderCore\src\to.contracts\to.contracts\obj\Debug\netstandard2.0\to.contracts.AssemblyInfo.cs
-C:\_cc\swyx_1\TotalOrderCore\src\to.contracts\to.contracts\obj\Debug\netstandard2.0\to.contracts.dll
-C:\_cc\swyx_1\TotalOrderCore\src\to.contracts\to.contracts\obj\Debug\netstandard2.0\to.contracts.pdb
-C:\_cc\swyx_1\TotalOrderCore\src\to.contracts\to.contracts\obj\Debug\netstandard2.0\to.contracts.csprojAssemblyReference.cache
