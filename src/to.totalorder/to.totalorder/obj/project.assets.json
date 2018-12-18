@@ -40,12 +40,10 @@
   },
   "libraries": {
     "Microsoft.NETCore.Platforms/1.1.0": {
-      "sha512": "bLpT1f/SFlO1CzqXG12KnJzpZs6lv24uX2Rzi4Fmm0noJpNlnWRVryuO3yK18Ca04t/YHcO1e1Z0WDfjseqNzw==",
+      "sha512": "kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
       "type": "package",
       "path": "microsoft.netcore.platforms/1.1.0",
       "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/netstandard1.0/_._",
@@ -194,37 +192,35 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\georg.brzyk\\.nuget\\packages\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "/Users/martin/.nuget/packages/": {},
+    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\_cc\\swyx_1\\TotalOrderCore\\src\\to.totalorder\\to.totalorder\\to.totalorder.csproj",
+      "projectUniqueName": "/Users/martin/Dev/cleancode/totalorder/src/to.totalorder/to.totalorder/to.totalorder.csproj",
       "projectName": "to.totalorder",
-      "projectPath": "C:\\_cc\\swyx_1\\TotalOrderCore\\src\\to.totalorder\\to.totalorder\\to.totalorder.csproj",
-      "packagesPath": "C:\\Users\\georg.brzyk\\.nuget\\packages\\",
-      "outputPath": "C:\\_cc\\swyx_1\\TotalOrderCore\\src\\to.totalorder\\to.totalorder\\obj\\",
+      "projectPath": "/Users/martin/Dev/cleancode/totalorder/src/to.totalorder/to.totalorder/to.totalorder.csproj",
+      "packagesPath": "/Users/martin/.nuget/packages/",
+      "outputPath": "/Users/martin/Dev/cleancode/totalorder/src/to.totalorder/to.totalorder/obj/",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\georg.brzyk\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/martin/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netstandard2.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netstandard2.0": {
           "projectReferences": {
-            "C:\\_cc\\swyx_1\\TotalOrderCore\\src\\to.contracts\\to.contracts\\to.contracts.csproj": {
-              "projectPath": "C:\\_cc\\swyx_1\\TotalOrderCore\\src\\to.contracts\\to.contracts\\to.contracts.csproj"
+            "/Users/martin/Dev/cleancode/totalorder/src/to.contracts/to.contracts/to.contracts.csproj": {
+              "projectPath": "/Users/martin/Dev/cleancode/totalorder/src/to.contracts/to.contracts/to.contracts.csproj"
             }
           }
         }

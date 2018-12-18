@@ -49,12 +49,10 @@
   },
   "libraries": {
     "Microsoft.NETCore.Platforms/1.1.0": {
-      "sha512": "bLpT1f/SFlO1CzqXG12KnJzpZs6lv24uX2Rzi4Fmm0noJpNlnWRVryuO3yK18Ca04t/YHcO1e1Z0WDfjseqNzw==",
+      "sha512": "kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
       "type": "package",
       "path": "microsoft.netcore.platforms/1.1.0",
       "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
         "ThirdPartyNotices.txt",
         "dotnet_library_license.txt",
         "lib/netstandard1.0/_._",
@@ -68,7 +66,6 @@
       "type": "package",
       "path": "netstandard.library/2.0.3",
       "files": [
-        ".nupkg.metadata",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
         "build/netstandard2.0/NETStandard.Library.targets",
@@ -196,7 +193,6 @@
       "type": "package",
       "path": "newtonsoft.json/12.0.1",
       "files": [
-        ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.md",
         "lib/net20/Newtonsoft.Json.dll",
@@ -244,37 +240,35 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\georg.brzyk\\.nuget\\packages\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "/Users/martin/.nuget/packages/": {},
+    "/usr/local/share/dotnet/sdk/NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\_cc\\swyx_1\\TotalOrderCore\\src\\to.permissionrepo\\to.permissionrepo\\to.permissionrepo.csproj",
+      "projectUniqueName": "/Users/martin/Dev/cleancode/totalorder/src/to.permissionrepo/to.permissionrepo/to.permissionrepo.csproj",
       "projectName": "to.permissionrepo",
-      "projectPath": "C:\\_cc\\swyx_1\\TotalOrderCore\\src\\to.permissionrepo\\to.permissionrepo\\to.permissionrepo.csproj",
-      "packagesPath": "C:\\Users\\georg.brzyk\\.nuget\\packages\\",
-      "outputPath": "C:\\_cc\\swyx_1\\TotalOrderCore\\src\\to.permissionrepo\\to.permissionrepo\\obj\\",
+      "projectPath": "/Users/martin/Dev/cleancode/totalorder/src/to.permissionrepo/to.permissionrepo/to.permissionrepo.csproj",
+      "packagesPath": "/Users/martin/.nuget/packages/",
+      "outputPath": "/Users/martin/Dev/cleancode/totalorder/src/to.permissionrepo/to.permissionrepo/obj/",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\georg.brzyk\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/martin/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netstandard2.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netstandard2.0": {
           "projectReferences": {
-            "C:\\_cc\\swyx_1\\TotalOrderCore\\src\\to.contracts\\to.contracts\\to.contracts.csproj": {
-              "projectPath": "C:\\_cc\\swyx_1\\TotalOrderCore\\src\\to.contracts\\to.contracts\\to.contracts.csproj"
+            "/Users/martin/Dev/cleancode/totalorder/src/to.contracts/to.contracts/to.contracts.csproj": {
+              "projectPath": "/Users/martin/Dev/cleancode/totalorder/src/to.contracts/to.contracts/to.contracts.csproj"
             }
           }
         }
