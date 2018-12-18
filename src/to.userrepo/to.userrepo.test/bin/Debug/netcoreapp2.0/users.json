@@ -1,0 +1,14 @@
+[
+  {
+    "id": 0,
+    "passwordhash": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+    "username": "peter",
+    "userRole": 0
+  },
+  {
+    "id": 1,
+    "passwordhash": "3f8a6d01e9cc99d6106a3eae08b2cd00d3ce1152edd1589b213156c7f6c41923",
+    "username": "klaus",
+    "userRole": 0
+  }
+]

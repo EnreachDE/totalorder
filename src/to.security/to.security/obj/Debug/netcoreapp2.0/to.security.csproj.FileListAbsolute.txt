@@ -1,0 +1,12 @@
+/Users/martin/Dev/cleancode/totalorder/src/to.security/to.security/bin/Debug/netcoreapp2.0/to.security.deps.json
+/Users/martin/Dev/cleancode/totalorder/src/to.security/to.security/bin/Debug/netcoreapp2.0/to.security.dll
+/Users/martin/Dev/cleancode/totalorder/src/to.security/to.security/bin/Debug/netcoreapp2.0/to.security.pdb
+/Users/martin/Dev/cleancode/totalorder/src/to.security/to.security/bin/Debug/netcoreapp2.0/to.contracts.dll
+/Users/martin/Dev/cleancode/totalorder/src/to.security/to.security/bin/Debug/netcoreapp2.0/to.contracts.pdb
+/Users/martin/Dev/cleancode/totalorder/src/to.security/to.security/obj/Debug/netcoreapp2.0/to.security.csprojAssemblyReference.cache
+/Users/martin/Dev/cleancode/totalorder/src/to.security/to.security/obj/Debug/netcoreapp2.0/to.security.csproj.CoreCompileInputs.cache
+/Users/martin/Dev/cleancode/totalorder/src/to.security/to.security/obj/Debug/netcoreapp2.0/to.security.AssemblyInfoInputs.cache
+/Users/martin/Dev/cleancode/totalorder/src/to.security/to.security/obj/Debug/netcoreapp2.0/to.security.AssemblyInfo.cs
+/Users/martin/Dev/cleancode/totalorder/src/to.security/to.security/obj/Debug/netcoreapp2.0/to.security.csproj.CopyComplete
+/Users/martin/Dev/cleancode/totalorder/src/to.security/to.security/obj/Debug/netcoreapp2.0/to.security.dll
+/Users/martin/Dev/cleancode/totalorder/src/to.security/to.security/obj/Debug/netcoreapp2.0/to.security.pdb

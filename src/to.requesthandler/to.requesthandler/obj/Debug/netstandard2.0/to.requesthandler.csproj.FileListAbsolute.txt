@@ -1,0 +1,12 @@
+/Users/martin/Dev/cleancode/totalorder/src/to.requesthandler/to.requesthandler/bin/Debug/netstandard2.0/to.requesthandler.deps.json
+/Users/martin/Dev/cleancode/totalorder/src/to.requesthandler/to.requesthandler/bin/Debug/netstandard2.0/to.requesthandler.dll
+/Users/martin/Dev/cleancode/totalorder/src/to.requesthandler/to.requesthandler/bin/Debug/netstandard2.0/to.requesthandler.pdb
+/Users/martin/Dev/cleancode/totalorder/src/to.requesthandler/to.requesthandler/bin/Debug/netstandard2.0/to.contracts.dll
+/Users/martin/Dev/cleancode/totalorder/src/to.requesthandler/to.requesthandler/bin/Debug/netstandard2.0/to.contracts.pdb
+/Users/martin/Dev/cleancode/totalorder/src/to.requesthandler/to.requesthandler/obj/Debug/netstandard2.0/to.requesthandler.csprojAssemblyReference.cache
+/Users/martin/Dev/cleancode/totalorder/src/to.requesthandler/to.requesthandler/obj/Debug/netstandard2.0/to.requesthandler.csproj.CoreCompileInputs.cache
+/Users/martin/Dev/cleancode/totalorder/src/to.requesthandler/to.requesthandler/obj/Debug/netstandard2.0/to.requesthandler.AssemblyInfoInputs.cache
+/Users/martin/Dev/cleancode/totalorder/src/to.requesthandler/to.requesthandler/obj/Debug/netstandard2.0/to.requesthandler.AssemblyInfo.cs
+/Users/martin/Dev/cleancode/totalorder/src/to.requesthandler/to.requesthandler/obj/Debug/netstandard2.0/to.requesthandler.csproj.CopyComplete
+/Users/martin/Dev/cleancode/totalorder/src/to.requesthandler/to.requesthandler/obj/Debug/netstandard2.0/to.requesthandler.dll
+/Users/martin/Dev/cleancode/totalorder/src/to.requesthandler/to.requesthandler/obj/Debug/netstandard2.0/to.requesthandler.pdb
