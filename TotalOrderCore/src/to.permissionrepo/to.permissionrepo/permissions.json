@@ -1,0 +1,27 @@
+{
+  "Guest": [
+    "ListBacklog" 
+  ],
+  "ProductOwner": [
+    "CreateBacklog",
+    "DeleteBacklog",
+    "EvaluateBacklog",
+    "ListBacklog"
+  ],
+  "Developer": [
+    "EvaluateBacklog",
+    "OrderBacklog",
+    "ListBacklog"
+  ],
+  "Administrator": [
+    "CreateBacklog",
+    "DeleteBacklog",
+    "EvaluateBacklog",
+    "OrderBacklog",
+    "ListBacklog",
+    "CreateUser",
+    "DeleteUser",
+    "EditUser",
+    "ListUser"
+  ] 
+}

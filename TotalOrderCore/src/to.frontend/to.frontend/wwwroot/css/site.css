@@ -1,0 +1,64 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.nobullets li {
+    list-style-type: none;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.alert.alert-danger ul {
+    padding-left: 5px;
+}
+
+.logoutLink {
+    float: right;
+    position: absolute;
+    right: 20px;
+    top: 8px;
+}
+
+ul.userStories {
+    padding-left: 0;
+}
+
+ul.userStories li {
+    font-size: bigger;
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid black;
+    background-color: white;
+}
+
+.noButtonWrap {
+    white-space: nowrap;
+    width: 10px;
+}
+
+.hidden {
+    display: none;
+}

@@ -1,0 +1,64 @@
+﻿@model to.frontend.Models.Backlog.BacklogEvalViewModel
+@{
+    ViewBag.Title = "Order";
+}
+
+<script src="@Url.Content("~/js/jquery-ui.js")"></script>
+<script src="@Url.Content("~/js/jquery.ui.touch-punch.min.js")"></script>
+<div class="row" style="margin-top: 30px;">
+    <div class="col-md-6">
+        <h3>@Model.Title</h3>
+    </div>
+</div><br />
+<div class="row">
+    <div class="col-md-6">
+        Drag and Drop items to reorder Backlog
+    </div><br /><br />
+    <div class="col-md-6 userStories">
+        <ul class="nobullets pointer userStories">
+            @{
+                var counter = 0;
+                foreach (var userStory in Model.UserStories)
+                {
+                    <li data-value="@counter">@(counter + 1). @userStory</li>
+                    counter++;
+                }
+            }
+        </ul>
+    </div>
+</div><br />
+
+<form action="/Backlogs/Order" method="post">
+    <div style="display: none">
+        <input type="text" id="Id" name="Id" value="@Model.Id" />
+        <input type="text" id="UserStoryIndexes" name="UserStoryIndexes" />
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <button type="submit">Save</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".userStories").sortable({
+            placeholder: "ui-state-highlight",
+            update: function (event, ui) {
+                saveValuesToField();
+            }
+        });
+        saveValuesToField();
+    });
+
+    function saveValuesToField() {
+        // save new order
+        var userStories = $(".userStories li");
+        var indexList = "";
+        for (var i = 0; i < userStories.length; i++) {
+            var index = $(userStories[i]).attr("data-value");
+            indexList += index + ",";
+        }
+        $("#UserStoryIndexes").val(indexList.substr(0, indexList.length - 1));
+    }
+</script>

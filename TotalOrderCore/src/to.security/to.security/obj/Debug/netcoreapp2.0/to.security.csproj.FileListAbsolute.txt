@@ -1,0 +1,12 @@
+C:\_cc\swyx_1\TotalOrderCore\src\to.security\to.security\bin\Debug\netcoreapp2.0\to.security.deps.json
+C:\_cc\swyx_1\TotalOrderCore\src\to.security\to.security\bin\Debug\netcoreapp2.0\to.security.dll
+C:\_cc\swyx_1\TotalOrderCore\src\to.security\to.security\bin\Debug\netcoreapp2.0\to.security.pdb
+C:\_cc\swyx_1\TotalOrderCore\src\to.security\to.security\bin\Debug\netcoreapp2.0\to.contracts.dll
+C:\_cc\swyx_1\TotalOrderCore\src\to.security\to.security\bin\Debug\netcoreapp2.0\to.contracts.pdb
+C:\_cc\swyx_1\TotalOrderCore\src\to.security\to.security\obj\Debug\netcoreapp2.0\to.security.csprojAssemblyReference.cache
+C:\_cc\swyx_1\TotalOrderCore\src\to.security\to.security\obj\Debug\netcoreapp2.0\to.security.csproj.CoreCompileInputs.cache
+C:\_cc\swyx_1\TotalOrderCore\src\to.security\to.security\obj\Debug\netcoreapp2.0\to.security.AssemblyInfoInputs.cache
+C:\_cc\swyx_1\TotalOrderCore\src\to.security\to.security\obj\Debug\netcoreapp2.0\to.security.AssemblyInfo.cs
+C:\_cc\swyx_1\TotalOrderCore\src\to.security\to.security\obj\Debug\netcoreapp2.0\to.security.csproj.CopyComplete
+C:\_cc\swyx_1\TotalOrderCore\src\to.security\to.security\obj\Debug\netcoreapp2.0\to.security.dll
+C:\_cc\swyx_1\TotalOrderCore\src\to.security\to.security\obj\Debug\netcoreapp2.0\to.security.pdb

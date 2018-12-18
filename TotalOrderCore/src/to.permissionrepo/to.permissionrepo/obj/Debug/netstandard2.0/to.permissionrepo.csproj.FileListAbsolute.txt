@@ -1,0 +1,12 @@
+C:\_cc\swyx_1\TotalOrderCore\src\to.permissionrepo\to.permissionrepo\bin\Debug\netstandard2.0\permissions.json
+C:\_cc\swyx_1\TotalOrderCore\src\to.permissionrepo\to.permissionrepo\bin\Debug\netstandard2.0\to.permissionrepo.deps.json
+C:\_cc\swyx_1\TotalOrderCore\src\to.permissionrepo\to.permissionrepo\bin\Debug\netstandard2.0\to.permissionrepo.dll
+C:\_cc\swyx_1\TotalOrderCore\src\to.permissionrepo\to.permissionrepo\bin\Debug\netstandard2.0\to.permissionrepo.pdb
+C:\_cc\swyx_1\TotalOrderCore\src\to.permissionrepo\to.permissionrepo\bin\Debug\netstandard2.0\to.contracts.dll
+C:\_cc\swyx_1\TotalOrderCore\src\to.permissionrepo\to.permissionrepo\bin\Debug\netstandard2.0\to.contracts.pdb
+C:\_cc\swyx_1\TotalOrderCore\src\to.permissionrepo\to.permissionrepo\obj\Debug\netstandard2.0\to.permissionrepo.csproj.CoreCompileInputs.cache
+C:\_cc\swyx_1\TotalOrderCore\src\to.permissionrepo\to.permissionrepo\obj\Debug\netstandard2.0\to.permissionrepo.AssemblyInfoInputs.cache
+C:\_cc\swyx_1\TotalOrderCore\src\to.permissionrepo\to.permissionrepo\obj\Debug\netstandard2.0\to.permissionrepo.AssemblyInfo.cs
+C:\_cc\swyx_1\TotalOrderCore\src\to.permissionrepo\to.permissionrepo\obj\Debug\netstandard2.0\to.permissionrepo.csproj.CopyComplete
+C:\_cc\swyx_1\TotalOrderCore\src\to.permissionrepo\to.permissionrepo\obj\Debug\netstandard2.0\to.permissionrepo.dll
+C:\_cc\swyx_1\TotalOrderCore\src\to.permissionrepo\to.permissionrepo\obj\Debug\netstandard2.0\to.permissionrepo.pdb

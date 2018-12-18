@@ -1,0 +1,38 @@
+﻿@model to.frontend.Models.Backlog.CreateBacklogViewModel
+@{
+    ViewBag.Title = "Create";
+}
+
+<form action="/Backlogs/Create" method="post">
+    <div class="row" style="margin-top: 30px;">
+        <div class="col-md-6">
+            @Html.LabelFor(p => p.Title)<br/>
+            @Html.TextBoxFor(p => p.Title)<br/>
+        </div>
+    </div><br/>
+    <div class="row">
+        <div class="col-md-6 userStories">
+            @Html.LabelFor(p => p.UserStories)&nbsp;<button id="addUserStory">+</button><br/><br/>
+            @Html.EditorFor(p => p.UserStories)<br/><br/> 
+        </div>
+    </div><br/>
+    <div class="row">
+        <div class="col-md-6">
+            <button type="submit">Anlegen</button>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#addUserStory").on("click", function(e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            var numItems = $(".userStories input").length;
+            var html = '<input class="text-box single-line" id="UserStories_'+ numItems +'_" name="UserStories['+ numItems +']" type="text"></input><br/><br/>';
+            $(".userStories").append(html);
+            $(".userStories input:last").focus();
+        });
+    });
+</script>

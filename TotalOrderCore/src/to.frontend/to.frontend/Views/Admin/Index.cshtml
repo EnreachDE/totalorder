@@ -1,0 +1,45 @@
+﻿@using to.contracts
+@model to.contracts.UserListResult
+
+<h1>Administration</h1>
+<button id="createUser">Create User</button><br/><br/>
+<table class="table">
+    @foreach (var user in Model.Users)
+    {
+        <tr>
+            <td>@user.Username</td>
+            <td>@user.UserRole</td>
+            <td class="noButtonWrap">
+                @if (User.HasPermission(Permission.EditUser))
+                {
+                    <button class="editUser" data-id="@user.Id">Edit</button>
+                }
+                @if (User.HasPermission(Permission.DeleteUser))
+                {
+                    <button class="deleteUser" data-id="@user.Id">Delete</button>
+                }
+            </td>
+        </tr>
+    }
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".editUser").on("click", function() {
+            var id = $(this).data("id");
+            window.location.href = "/Admin/EditUser/"+ id;
+        });
+
+        $("#createUser").on("click", function(e) {
+            window.location.href = "/Admin/CreateUser";
+        });
+
+        $(".deleteUser").on("click", function (e) {
+            var id = $(this).data("id");
+            $.post("/Admin/DeleteUser", { id: id },
+                function() {
+                    window.location.reload();
+                });
+        });
+    });
+</script>

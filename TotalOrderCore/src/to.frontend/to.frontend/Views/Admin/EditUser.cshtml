@@ -1,0 +1,35 @@
+﻿@using to.contracts.data.domain
+@model to.contracts.UserQueryResult
+<h1>Edit User</h1>
+<form action="/Admin/EditUser/@Model.Id" method="post">
+    <input type="hidden" id="id" name="Id" value="@Model.Id"/>
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" name="UserName" aria-describedby="username" placeholder="The username" value="@Model.Username" disabled="disabled">
+        <small id="usernameHelp" class="form-text text-muted">The username of the user to edit</small>
+    </div>
+    <div class="form-group">
+        <label for="userrole">User Role</label>
+        <select id="userrole" name="UserRole" class="form-control" aria-describedby="userrole">
+            @{
+                var userRole = Model.UserRole.ToString();
+                var roles = Enum.GetValues(typeof(UserRole));
+                foreach (var role in roles)
+                {
+                    var selected = role.ToString().Equals(userRole) ? " selected='selected'" : "";
+                    @Html.Raw($"<option value='{role}'{selected}>{role}</option>")
+                }
+            }
+        </select>
+        <small id="userroleHelp" class="form-text text-muted">The role of the user to edit</small>
+    </div>
+    <button id="back">Cancel</button>
+    <button type="submit">Save</button>
+</form>
+<script type="text/javascript">
+    $("#back").on("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.history.back();
+    });
+</script>

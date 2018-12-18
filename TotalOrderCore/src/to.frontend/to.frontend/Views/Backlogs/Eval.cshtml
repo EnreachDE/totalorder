@@ -1,0 +1,31 @@
+﻿@model to.frontend.Models.Backlog.BacklogEvalViewModel
+@{
+    ViewBag.Title = "Evaluate";
+}
+
+<div class="row" style="margin-top: 30px;">
+    <div class="col-md-6">
+        <h3>@Model.Title</h3>
+        Submissions: @Model.NumberOfSubmissions<br/>
+        ID: @Model.Id
+    </div>
+</div><br />
+<div class="row">
+    <div class="col-md-6 userStories">
+        <ul class="nobullets userStories">
+            @{
+                var counter = 1;
+                foreach (var userStory in Model.UserStories)
+                {
+                    <li data-value="@counter">@counter. @userStory</li>
+                    counter++;
+                }
+            }
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    setTimeout(function() {
+        window.location.reload();
+    }, 10000);
+</script>

@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <ApplicationIcon />
+    <OutputType>Exe</OutputType>
+    <StartupObject />
+    <DockerComposeProjectPath>..\..\..\buildAll\to.build\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>bin\Debug\</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>bin\Release</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="6.2.2" />
+    <PackageReference Include="jQuery" Version="3.3.1" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
+    <PackageReference Include="Modernizr" Version="2.8.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\to.backlogrepo\to.backlogrepo\to.backlogrepo.csproj" />
+    <ProjectReference Include="..\..\to.contracts\to.contracts\to.contracts.csproj" />
+    <ProjectReference Include="..\..\to.permissionrepo\to.permissionrepo\to.permissionrepo.csproj" />
+    <ProjectReference Include="..\..\to.requesthandler\to.requesthandler\to.requesthandler.csproj" />
+    <ProjectReference Include="..\..\to.security\to.security\to.security.csproj" />
+    <ProjectReference Include="..\..\to.totalorder\to.totalorder\to.totalorder.csproj" />
+    <ProjectReference Include="..\..\to.userrepo\to.userrepo\to.userrepo.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\Admin\CreateUser.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Backlogs\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+  </ItemGroup>
+
+</Project>

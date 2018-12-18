@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "to.security.test", "to.security.test\to.security.test.csproj", "{367B73BE-C7C4-4D22-9E16-01E530C46864}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "to.security", "to.security\to.security.csproj", "{C402B207-25B2-4A02-BB67-BEE8069B45E4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{367B73BE-C7C4-4D22-9E16-01E530C46864}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{367B73BE-C7C4-4D22-9E16-01E530C46864}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{367B73BE-C7C4-4D22-9E16-01E530C46864}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{367B73BE-C7C4-4D22-9E16-01E530C46864}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C402B207-25B2-4A02-BB67-BEE8069B45E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C402B207-25B2-4A02-BB67-BEE8069B45E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C402B207-25B2-4A02-BB67-BEE8069B45E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C402B207-25B2-4A02-BB67-BEE8069B45E4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {149C838B-9C7A-490A-BFAE-45E20F0C83CA}
+	EndGlobalSection
+EndGlobal

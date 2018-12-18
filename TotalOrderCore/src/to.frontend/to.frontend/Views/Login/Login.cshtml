@@ -1,0 +1,30 @@
+﻿@model to.frontend.Models.Login.UserLoginViewModel
+
+@{
+    ViewBag.Title = "Login";
+    var actionUrl = (!string.IsNullOrEmpty(ViewBag.ReturnUrl)) ? "/Login?ReturnUrl=" + ViewBag.ReturnUrl : "/Login";
+}
+
+<form action="@actionUrl" method="post">
+    <div class="row" style="margin-top: 30px;">
+        <div class="col-md-6">
+            @Html.LabelFor(p => p.UserName)<br />
+            @Html.TextBoxFor(p => p.UserName)<br />
+        </div>
+    </div><br />
+    <div class="row">
+        <div class="col-md-6">
+            @Html.LabelFor(p => p.Password)<br />
+            @Html.PasswordFor(p => p.Password)<br />
+        </div>
+    </div><br />
+    @if (!ViewData.ModelState.IsValid)
+    {
+        @Html.ValidationSummary(false, "", new { @class = "alert alert-danger nobullets" })
+    }
+    <div class="row">
+        <div class="col-md-6">
+            <button type="submit">Login</button>
+        </div>
+    </div>
+</form>

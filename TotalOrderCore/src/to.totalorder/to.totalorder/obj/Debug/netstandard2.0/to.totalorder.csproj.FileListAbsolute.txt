@@ -1,0 +1,11 @@
+C:\_cc\swyx_1\TotalOrderCore\src\to.totalorder\to.totalorder\bin\Debug\netstandard2.0\to.totalorder.deps.json
+C:\_cc\swyx_1\TotalOrderCore\src\to.totalorder\to.totalorder\bin\Debug\netstandard2.0\to.totalorder.dll
+C:\_cc\swyx_1\TotalOrderCore\src\to.totalorder\to.totalorder\bin\Debug\netstandard2.0\to.totalorder.pdb
+C:\_cc\swyx_1\TotalOrderCore\src\to.totalorder\to.totalorder\bin\Debug\netstandard2.0\to.contracts.dll
+C:\_cc\swyx_1\TotalOrderCore\src\to.totalorder\to.totalorder\bin\Debug\netstandard2.0\to.contracts.pdb
+C:\_cc\swyx_1\TotalOrderCore\src\to.totalorder\to.totalorder\obj\Debug\netstandard2.0\to.totalorder.csproj.CoreCompileInputs.cache
+C:\_cc\swyx_1\TotalOrderCore\src\to.totalorder\to.totalorder\obj\Debug\netstandard2.0\to.totalorder.AssemblyInfoInputs.cache
+C:\_cc\swyx_1\TotalOrderCore\src\to.totalorder\to.totalorder\obj\Debug\netstandard2.0\to.totalorder.AssemblyInfo.cs
+C:\_cc\swyx_1\TotalOrderCore\src\to.totalorder\to.totalorder\obj\Debug\netstandard2.0\to.totalorder.csproj.CopyComplete
+C:\_cc\swyx_1\TotalOrderCore\src\to.totalorder\to.totalorder\obj\Debug\netstandard2.0\to.totalorder.dll
+C:\_cc\swyx_1\TotalOrderCore\src\to.totalorder\to.totalorder\obj\Debug\netstandard2.0\to.totalorder.pdb

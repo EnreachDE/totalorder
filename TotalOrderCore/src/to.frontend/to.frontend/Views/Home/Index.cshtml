@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Total Order</h1>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Create a new Backlog</h2>
+        <p><a class="btn btn-default" href="Backlogs/Create">Create &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Evaluate a Backlog</h2>
+        <p><input type="text" id="evaluateId" class="inputField"/></p>
+        <p><button id="evaluateButton" class="btn btn-default">Evaluate &raquo;</button></p>    
+    </div>
+    <div class="col-md-4">
+        <h2>Order an existing Backlog</h2>
+        <p><input type="text" id="orderId" class="inputField" /></p>
+        <p><button id="orderButton" class="btn btn-default">Order &raquo;</button></p>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#evaluateButton").on("click", function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            var id = $("#evaluateId").val();
+            window.location.href = "Backlogs/Eval/" + id;
+        });
+
+        $("#orderButton").on("click", function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            var id = $("#orderId").val();
+            window.location.href = "Backlogs/Order/" + id;
+        });
+
+        $(".inputField").on("keypress", function(e) {
+            var charCode = (e.which) ? e.which : e.keyCode;
+            if (charCode === 13) {
+                $(this).parent().next().find("button").trigger("click");
+            }
+        });
+    });
+</script>

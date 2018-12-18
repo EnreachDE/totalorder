@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "to.userrepo.test": {
+      "commandName": "Project"
+    }
+  }
+}

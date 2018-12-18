@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  to.frontend:
+    image: tofrontend
+    build:
+      context: .
+      dockerfile: src/to.frontend/to.frontend/Dockerfile

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "to.userrepo", "to.userrepo\to.userrepo.csproj", "{05548C9F-7E68-4E97-BADE-6467C92A3D0A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "to.userrepo.test", "to.userrepo.test\to.userrepo.test.csproj", "{311486BA-5346-4BC5-ADB6-9529850B8604}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05548C9F-7E68-4E97-BADE-6467C92A3D0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05548C9F-7E68-4E97-BADE-6467C92A3D0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05548C9F-7E68-4E97-BADE-6467C92A3D0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05548C9F-7E68-4E97-BADE-6467C92A3D0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{311486BA-5346-4BC5-ADB6-9529850B8604}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{311486BA-5346-4BC5-ADB6-9529850B8604}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{311486BA-5346-4BC5-ADB6-9529850B8604}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{311486BA-5346-4BC5-ADB6-9529850B8604}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8A933B46-606A-4B03-A2A7-2F279C25DEE8}
+	EndGlobalSection
+EndGlobal
