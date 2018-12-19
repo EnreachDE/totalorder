@@ -302,3 +302,5 @@ __pycache__/
 /SWConfigDataSharedLib/Globalization/ConfigDataStoreMsg.cs
 /SWConfigDataUpdateLib/IpPbx.Sdc.Reporting.Database.dacpac
 /SWConfigDataUpdateLib/IpPbx.Database.dacpac
+.vscode/tasks.json
+.vscode/launch.json
