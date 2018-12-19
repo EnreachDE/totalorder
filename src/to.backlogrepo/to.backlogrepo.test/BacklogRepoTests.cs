@@ -40,7 +40,7 @@ namespace to.backlogrepo.test
             var id = repo.GenerateBacklogId();
 
             id.Should().Be("BCD456");
-            Directory.Exists("TestDB\\" + id).Should().BeTrue();
+            Directory.Exists(Path.Combine("TestDB",id)).Should().BeTrue();
         }
 
         [Test]
