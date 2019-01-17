@@ -11,4 +11,4 @@ Und der Backlog-Owner bekommt die errechnete Gesamtordnung als Ergebnis zu sehen
 Backlog-Owner müssen sich registrieren und anmelden, um Backlogs anzulegen und zu verwalten.
 Wer ein Backlog ordnen will, musss sich allerdings nur anmelden, wenn das als Voraussetzung im Backlog eingestellt ist (persönliche Einschätzung).
 Bei persönlichen Einschätzungen hat jeder Benutzer nur eine Stimme; mit der kann er seine Einschätzung auch revidieren, wenn das laut Backlog-Einstellung erlaubt ist.
-Bei unpersönlichen/anoymen Einschätzungen hingegen kann jeder Code-Inhaber potenziell mehrfach Backlog-Ordnungen herstellen, die dann auch nicht änderbar sind.
+Bei unpersönlichen/anonymen Einschätzungen hingegen kann jeder Code-Inhaber potenziell mehrfach Backlog-Ordnungen herstellen, die dann auch nicht änderbar sind.
