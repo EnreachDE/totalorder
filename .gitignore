@@ -287,18 +287,9 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 
-# CDS Generated Code and Artifacts
-/Swyx.ConfigDataStoreClient.Native/IpPbxCDSWrap/include/Generated
-/Swyx.ConfigDataStoreClient.Native/IpPbxCDSWrap/Generated
-/IpPbxRCW/IpPbxSrvIDL/include
-/Swyx.ConfigDataStoreClient.Native/ClientWrapperGenerator/temp
-/ConfigDataStoreServiceMsg/MSG00409.bin
-/ConfigDataStoreServiceMsg/ConfigDataStoreMsg.rc
-/ConfigDataStoreServiceMsg/ConfigDataStoreMsg.i
-/ConfigDataStoreServiceMsg/ConfigDataStoreMsg.h
-/ConfigDataStoreServiceMsg/ConfigDataStoreMsg.cs
-/IpPbxPresMgr/IpPbxPresMgrSubs.dll
-/IpPbxRCW/IpPbxSrvRCW/DataSetActiveCalls.h
-/SWConfigDataSharedLib/Globalization/ConfigDataStoreMsg.cs
-/SWConfigDataUpdateLib/IpPbx.Sdc.Reporting.Database.dacpac
-/SWConfigDataUpdateLib/IpPbx.Database.dacpac
+# visual studio code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
