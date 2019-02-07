@@ -4,6 +4,7 @@ using to.contracts;
 using to.contracts.data.domain;
 using to.frontend.Factories;
 using to.frontend.Models.Admin;
+using System;
 
 namespace to.frontend.Controllers
 {
@@ -30,7 +31,7 @@ namespace to.frontend.Controllers
                 errorMessage => { TempData[ErrorMessageString] = errorMessage; }
             );
             
-            return View("Index", userList);
+            return View("Index", new Tuple<UserListResult,int>(userList, 1));
         }
 
         [HttpGet]
