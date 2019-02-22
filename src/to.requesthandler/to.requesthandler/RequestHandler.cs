@@ -39,7 +39,7 @@ namespace to.requesthandler
             }
             catch (Exception)
             {
-                return new Failure();
+                return new Failure("Error occured while retrieving backlogs.");
             }
 
             BacklogShowQueryResult.BacklogDisplayItem Transform(Backlog backlog)
@@ -125,24 +125,18 @@ namespace to.requesthandler
 
         }
 
-        public void HandleLoginQuery(LoginRequest request, Action<UserLoginQueryResult> OnSuccess, Action<string> OnFailure)
+        public (Status, UserLoginQueryResult) HandleLoginQuery(LoginRequest request)
         {
-            _userRepo.LoadUser(request.Username,
-                user => _security.ValidatePassword(request.Password, user.PasswordHash,
-                    () =>
-                    {
-                        var (status, permissions) = _permissionsRepo.LoadPermissions(user.UserRole);
-                        if (status is Success)
-                        {
-                            OnSuccess(new UserLoginQueryResult(user, permissions.ToList()));
-                        }
-                        else
-                        {
-                            OnFailure("Could not load permissions");
-                        }
-                    },
-                    OnFailure),
-                OnFailure);
+            var (status, user) = _userRepo.LoadUser(request.Username);
+            if (status is Failure) return (status, null);
+
+            status = _security.ValidatePassword(request.Password, user.PasswordHash);
+            if (status is Failure) return (status, null);
+
+            var (statusP, permissions) = _permissionsRepo.LoadPermissions(user.UserRole);
+            if (statusP is Failure) return (new Failure("Could not load permissions"), null);
+
+            return (new Success(), new UserLoginQueryResult(user, permissions.ToList()));
         }
 
         public void HandleUserUpdateRequest(UserUpdateRequest request, Action<UserListResult> OnSuccess,
@@ -167,10 +161,17 @@ namespace to.requesthandler
         public void HandleUserEditRequest(UserEditRequest request, Action<UserQueryResult> OnSuccess,
             Action<string> OnFailure)
         {
-            _userRepo.LoadUser(
-                request.Id,
-                user => OnSuccess(new UserQueryResult(user)),
-                OnFailure);
+            var (status, user) =_userRepo.LoadUser(request.Id);
+
+            switch (status)
+            {
+                case Failure f:
+                    OnFailure?.Invoke(($"{f.ErrorMessage}"));
+                    break;
+                default:
+                    OnSuccess?.Invoke(new UserQueryResult(user));
+                    break;
+            }
         }
 
         public void HandleUserListRequest(Action<UserListResult> OnSuccess, Action<string> OnFailure)

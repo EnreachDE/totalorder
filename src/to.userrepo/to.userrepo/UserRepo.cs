@@ -10,6 +10,8 @@ using to.userrepo.Domain;
 
 namespace to.userrepo
 {
+    using contracts.data.result;
+
     public class UserRepo : IUserRepo
     {
         private readonly string _rootpath;
@@ -35,32 +37,28 @@ namespace to.userrepo
             _idGenerator = idGenerator;
         }
 
-        public void LoadUser(string username, Action<User> onSuccess, Action<string> onFailure)
+        public (Status, User) LoadUser(string username)
         {
-            Debug.Assert(onSuccess != null, "at least for the success case a delegate must be provided!");
-
             var users = ReadUserList();
 
             var user = users.GetUserByName(username);
 
             if (user != null)
-                onSuccess(user);
-            else
-                onFailure(String.Format("User {0} does not exist", username));
+                return (new Success(), user);
+
+            return (new Failure($"User {username} does not exist"), null);
         }
 
-        public void LoadUser(int id, Action<User> onSuccess, Action<string> onFailure)
+        public (Status, User) LoadUser(int id)
         {
-            Debug.Assert(onSuccess != null, "at least for the success case a delegate must be provided!");
-
             var users = ReadUserList();
 
             var user = users.GetById(id);
 
             if (user != null)
-                onSuccess(user);
-            else
-                onFailure(String.Format("User with ID {0} does not exist", id));
+                return (new Success(), user);
+
+            return (new Failure($"User with ID {id} does not exist"), null);
         }
 
 

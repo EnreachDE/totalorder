@@ -2,6 +2,11 @@
 {
     public class Failure : Status
     {
-        public string ErrorMessage { get; set; }
+        public Failure(string errorMessage)
+        {
+            this.ErrorMessage = errorMessage;
+        }
+
+        public string ErrorMessage { get; }
     }
 }

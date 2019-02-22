@@ -9,6 +9,8 @@ using to.contracts.data.domain;
 
 namespace to.userrepo.test
 {
+    using contracts.data.result;
+
     [TestFixture]
     public class UserRepoTests
     {
@@ -30,10 +32,10 @@ namespace to.userrepo.test
         public void TestLoadUserFromName(string username, string password)
         {
             var repo = new UserRepo(TestRootDir, UsersTestJson);
-            User result = null;
-            repo.LoadUser(username.ToUpperInvariant(),
-                (user) => result = user,
-                _ => Assert.Fail());
+
+            var (status, result)  = repo.LoadUser(username.ToUpperInvariant());
+
+            Assert.IsInstanceOf(typeof(Success), status);
             Assert.AreEqual(username, result.Username);
             Assert.AreEqual(password, result.PasswordHash);
         }
@@ -43,10 +45,8 @@ namespace to.userrepo.test
         [TestCase(2, "klaus", "y")]
         public void TestLoadUserFromId(int id, string username, string password)
         {
-            User result = null;
-            _userRepo.LoadUser(id,
-                user => result = user,
-                s => Assert.Fail());
+            var (status, result) = _userRepo.LoadUser(id);
+            Assert.IsInstanceOf(typeof(Success), status);
             Assert.AreEqual(username, result.Username);
             Assert.AreEqual(password, result.PasswordHash);
         }
@@ -54,23 +54,19 @@ namespace to.userrepo.test
         [Test]
         public void TestLoadUserFromNameFailed()
         {
-            string result = null;
-            _userRepo.LoadUser("unknown",
-                user => Assert.Fail("OnSuccess should not be called here!"),
-                error => result = error);
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Contains("unknown does not exist"));
+            var (status, result) = _userRepo.LoadUser("unknown");
+            Assert.IsInstanceOf(typeof(Failure), status);
+            Assert.IsNull(result);
+            Assert.IsTrue(((Failure)status).ErrorMessage.Contains("unknown does not exist"));
         }
 
         [Test]
         public void TestLoadUserFromIdFailed()
         {
-            string result = null;
-            _userRepo.LoadUser(999,
-                user => Assert.Fail("OnSuccess should not be called here!"),
-                error => result = error);
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Contains("999 does not exist"));
+            var (status, result) =_userRepo.LoadUser(999);
+            Assert.IsInstanceOf(typeof(Failure), status);
+            Assert.IsNull(result);
+            Assert.IsTrue(((Failure)status).ErrorMessage.Contains("999 does not exist"));
         }
 
         [Test]

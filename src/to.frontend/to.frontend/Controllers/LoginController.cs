@@ -13,6 +13,8 @@ using to.frontend.Models.Login;
 
 namespace to.frontend.Controllers
 {
+    using contracts.data.result;
+
     public class LoginController : Controller
     {
         private const string errorMessageString = "errorMessage";
@@ -31,7 +33,7 @@ namespace to.frontend.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public ActionResult PostLogin(UserLoginViewModel model, string returnUrl)
+        public async Task<ActionResult> PostLogin(UserLoginViewModel model, string returnUrl)
         {
             try
             {
@@ -45,15 +47,14 @@ namespace to.frontend.Controllers
                 var handlerFactory = new RequestHandlerFactory();
                 var requestHandler = handlerFactory.GetHandler();
 
-                requestHandler.HandleLoginQuery(loginRequest,
-                    // onSuccess
-                    async (user) =>
-                    {
-                        await CreateCookie(user);
+                var (status, userResult) = requestHandler.HandleLoginQuery(loginRequest);
+
+                if (status is Failure failure) { TempData[errorMessageString] = failure.ErrorMessage; }
+                else
+                {
+                        await CreateCookie(userResult);
                         redirectUrl = returnUrl ?? "/Home";
-                    },
-                    //onFailure
-                    errorMessage => { TempData[errorMessageString] = errorMessage; });
+                }
 
                 return Redirect(redirectUrl);
             }

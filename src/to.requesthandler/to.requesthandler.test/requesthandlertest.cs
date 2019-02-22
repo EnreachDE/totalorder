@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using to.contracts;
 using to.contracts.data.domain;
 using to.contracts.data.result;
@@ -14,7 +13,7 @@ using to.totalorder;
 namespace to.requesthandlertest
 {
     [TestFixture]
-    public class requesthandlertest
+    public class RequestHandlerTest
     {
         private RequestHandler _sut;
         private Mock<IBacklogRepo> _backlogrepo;
@@ -122,14 +121,13 @@ namespace to.requesthandlertest
                 Username = user.Username,
                 UserRole = user.UserRole
             };
-            _userRepo.Setup(p => p.LoadUser(request.Id, It.IsAny<Action<User>>(), dummyFailureAction))
-                .Callback((int id, Action<User> onSuccess, Action<string> onFailure) => onSuccess(user));
+            _userRepo.Setup(p => p.LoadUser(request.Id)).Returns((new Success(), user));
 
             // Act
             _sut.HandleUserEditRequest(request, result => actualResult = result, dummyFailureAction);
 
             // Assert
-            _userRepo.Verify(p => p.LoadUser(request.Id, It.IsAny<Action<User>>(), dummyFailureAction));
+            _userRepo.Verify(p => p.LoadUser(request.Id));
             actualResult.Should().BeEquivalentTo(expectedResult);
         }
 

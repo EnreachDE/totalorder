@@ -87,7 +87,7 @@ namespace to.frontend.Controllers
                 case Success<BacklogShowQueryResult> s:
                     return View(new BacklogShowViewModel { Result = new Success(), Backlogs = s.Data });
                 default:
-                    return View(new BacklogShowViewModel { Result = new Failure(), Backlogs = null });
+                    return View(new BacklogShowViewModel { Result = new Failure("Error occured while listing backlogs."), Backlogs = null });
             }
         }
 

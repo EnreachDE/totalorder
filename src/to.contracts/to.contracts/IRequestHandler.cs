@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using to.contracts.data.domain;
 using to.contracts.data.result;
-using static to.contracts.UserQueryResult;
 
 namespace to.contracts
 {
@@ -16,7 +14,7 @@ namespace to.contracts
         BacklogEvalQueryResult HandleBacklogEvalQuery(string id);
         BacklogOrderQueryResult HandleBacklogOrderQuery(string id);
         BacklogEvalQueryResult HandleBacklogOrderSubmissionRequest(BacklogOrderRequest request);
-        void HandleLoginQuery(LoginRequest request, Action<UserLoginQueryResult> OnSuccess, Action<string> OnFailure);
+        (Status, UserLoginQueryResult) HandleLoginQuery(LoginRequest request);
         void HandleUserUpdateRequest(UserUpdateRequest request, Action<UserListResult> OnSuccess, Action<string> OnFailure);
         void HandleUserEditRequest(UserEditRequest request, Action<UserQueryResult> OnSuccess, Action<string> OnFailure);
         void HandleUserListRequest(Action<UserListResult> OnSuccess, Action<string> OnFailure);

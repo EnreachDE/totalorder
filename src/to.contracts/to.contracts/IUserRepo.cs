@@ -4,15 +4,13 @@ using to.contracts.data.domain;
 
 namespace to.contracts
 {
+    using data.result;
+
     public interface IUserRepo
     {
-        void LoadUser(string username,
-            Action<User> onSuccess,
-            Action<string> onFailure);
+        (Status, User) LoadUser(string username);
 
-        void LoadUser(int id,
-            Action<User> onSuccess,
-            Action<string> onFailure);
+        (Status, User) LoadUser(int id);
 
 
         void UpdateUser(int id, UserRole role, Action onSuccess, Action<string> onFailure);

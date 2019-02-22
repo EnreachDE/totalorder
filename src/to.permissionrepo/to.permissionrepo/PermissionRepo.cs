@@ -27,10 +27,10 @@ namespace to.permissionrepo
         public (Status, IEnumerable<Permission>) LoadPermissions(UserRole role)
         {
             var dict = ReadPermissionDictionary();
-            return RetrieveRoles(role, dict);
+            return RetrieveRolePermissions(role, dict);
         }
 
-        private static (Status, IEnumerable<Permission>) RetrieveRoles(UserRole role, Dictionary<UserRole, List<Permission>> dict)
+        private static (Status, IEnumerable<Permission>) RetrieveRolePermissions(UserRole role, Dictionary<UserRole, List<Permission>> dict)
         {
             dict.TryGetValue(role, out var permissions);
             if (permissions != null)
@@ -38,7 +38,7 @@ namespace to.permissionrepo
                 return (new Success(), permissions);
             }
 
-            return (new Failure(), null);
+            return (new Failure($"Not able to retrieve permissions for role {role}."), null);
         }
 
         private Dictionary<UserRole, List<Permission>> ReadPermissionDictionary()
