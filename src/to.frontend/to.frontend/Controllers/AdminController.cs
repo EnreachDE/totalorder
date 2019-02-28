@@ -8,6 +8,8 @@ using System;
 
 namespace to.frontend.Controllers
 {
+    using contracts.data.result;
+
     [Authorize(Roles = nameof(UserRole.Administrator))]
     public class AdminController : Controller
     {
@@ -113,15 +115,8 @@ namespace to.frontend.Controllers
         [Authorize(Policy = nameof(Permission.DeleteUser))]
         public IActionResult DeleteUser(int id)
         {
-            _handler.HandleUserDeleteRequest(new UserDeleteRequest
-                {
-                    Id = id
-                },
-                // Success
-                userListResult => { },
-                // Failure
-                errorMessage => { TempData[ErrorMessageString] = errorMessage; }
-            );
+            var (status, result) = _handler.HandleUserDeleteRequest(new UserDeleteRequest {Id = id});
+            if (status is Failure f) TempData[ErrorMessageString] = f.ErrorMessage;
 
             return RedirectToAction(nameof(Index));
         }

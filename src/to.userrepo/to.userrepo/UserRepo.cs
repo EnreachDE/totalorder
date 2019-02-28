@@ -114,21 +114,20 @@ namespace to.userrepo
             onSuccess();
         }
 
-        public void DeleteUser(int id, Action<IEnumerable<User>> onSuccess, Action<string> onFailure)
+        public (Status, IEnumerable<User>) DeleteUser(int id)
         {
             var users = ReadUserList();
-
             var user = users.GetById(id);
+
             if (user == null)
             {
-                onFailure("User not found");
-                return;
+                return (new Failure("User not found"), null);
             }
 
             users.Remove(user);
             SaveUserList(users);
 
-            onSuccess(users.ToList());
+            return (new Success(), users.ToList());
         }
 
         private void SaveUserList(UserList users)

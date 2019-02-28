@@ -134,9 +134,9 @@ namespace to.userrepo.test
             var repo = new UserRepo(TestRootDir, UsersTestJson, g => 3);
 
             var idToDelete = 1;
-            IEnumerable<User> result = null;
-            repo.DeleteUser(idToDelete, userList => result = userList.ToList(), s => { });
+            var (status, result) = repo.DeleteUser(idToDelete);
 
+            status.Should().BeOfType<Success>();
             result.Should().NotBeEmpty();
             result.Any(u => u.Id == idToDelete).Should().BeFalse();
         }
@@ -147,10 +147,11 @@ namespace to.userrepo.test
             var repo = new UserRepo(TestRootDir, UsersTestJson, g => 3);
 
             var idToDelete = 666;
-            string result = null;
-            repo.DeleteUser(idToDelete, userList => { }, s => { result = s; });
+            var (status, result) = repo.DeleteUser(idToDelete);
 
-            Assert.AreEqual("User not found", result);
+            status.Should().BeOfType<Failure>();
+            ((Failure) status).ErrorMessage.Should().BeEquivalentTo("User not found");
+            result.Should().BeNull();
         }
     }
 }

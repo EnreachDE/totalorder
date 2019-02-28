@@ -19,7 +19,7 @@ namespace to.contracts
         void HandleUserEditRequest(UserEditRequest request, Action<UserQueryResult> OnSuccess, Action<string> OnFailure);
         void HandleUserListRequest(Action<UserListResult> OnSuccess, Action<string> OnFailure);
         void HandleUserCreateRequest(UserCreateRequest request, Action<UserListResult> OnSuccess, Action<string> OnFailure);
-        void HandleUserDeleteRequest(UserDeleteRequest request, Action<UserListResult> OnSuccess, Action<string> OnFailure);
+        (Status, UserListResult) HandleUserDeleteRequest(UserDeleteRequest request);
     }
 
     public class BacklogShowQueryResult

@@ -6,6 +6,8 @@ using to.contracts.data.result;
 
 namespace to.requesthandler
 {
+    using System.Collections.Generic;
+
     public class RequestHandler : IRequestHandler
     {
         private readonly IBacklogRepo _backlogrepo;
@@ -201,16 +203,21 @@ namespace to.requesthandler
                 OnFailure);
         }
 
-        public void HandleUserDeleteRequest(UserDeleteRequest request, Action<UserListResult> OnSuccess, Action<string> OnFailure)
+        public (Status, UserListResult) HandleUserDeleteRequest(UserDeleteRequest request)
         {
-            _userRepo.DeleteUser(request.Id, userList =>
+            var (status, result) = _userRepo.DeleteUser(request.Id);
+            if (status is Failure) return (status, null);
+
+            return (new Success(), CreateUserListResult(result));
+        }
+
+        private static UserListResult CreateUserListResult(IEnumerable<User> result)
+        {
+            var userListResult = new UserListResult
             {
-                var userListResult = new UserListResult
-                {
-                    Users = userList.Select(p => new UserQueryResult(p)).ToArray()
-                };
-                OnSuccess(userListResult);
-            }, OnFailure);
+                Users = result.Select(p => new UserQueryResult(p)).ToArray()
+            };
+            return userListResult;
         }
     }
 }
