@@ -134,7 +134,7 @@ namespace to.requesthandler
             if (status is Failure) return (status, null);
 
             var (statusP, permissions) = _permissionsRepo.LoadPermissions(user.UserRole);
-            if (statusP is Failure) return (new Failure("Could not load permissions"), null);
+            if (statusP is Failure) return (statusP, null);
 
             return (new Success(), new UserLoginQueryResult(user, permissions.ToList()));
         }
