@@ -96,7 +96,7 @@ namespace to.requesthandler
             return EvalSubmissions(id);
         }
 
-        public BacklogOrderQueryResult HandleBacklogOrderQuery(string id)
+        public (Status, BacklogOrderQueryResult) HandleBacklogOrderQuery(string id)
         {
             var backlog = _backlogrepo.ReadBacklog(id);
 
@@ -113,7 +113,7 @@ namespace to.requesthandler
                 result.UserStoryIndexes[i] = i;
             }
 
-            return result;
+            return (new Success(), result);
         }
 
         public BacklogEvalQueryResult HandleBacklogOrderSubmissionRequest(BacklogOrderRequest request)
