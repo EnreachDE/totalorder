@@ -60,11 +60,16 @@ namespace to.frontend.Controllers
         public ActionResult PostOrder(BacklogOrderRequestViewModel model)
         {
             var orderRequest = Mapper.Map<BacklogOrderRequest>(model);
-            var result = _handler.HandleBacklogOrderSubmissionRequest(orderRequest);
-
-            var viewModel = Mapper.Map<BacklogEvalViewModel>(result);
-
-            return RedirectToAction(nameof(Eval), new { viewModel.Id });
+            var (status, result) = _handler.HandleBacklogOrderSubmissionRequest(orderRequest);
+            if (status is Failure failure) { 
+                TempData[ErrorMessageString] = failure.ErrorMessage;
+                return Redirect(redirectUrl);
+            }
+            else
+            {
+                var viewModel = Mapper.Map<BacklogEvalViewModel>(result);
+                return RedirectToAction(nameof(Eval), new { viewModel.Id });
+            }            
         }
 
         [HttpGet]
