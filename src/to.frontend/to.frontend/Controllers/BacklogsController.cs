@@ -63,7 +63,7 @@ namespace to.frontend.Controllers
             var (status, result) = _handler.HandleBacklogOrderSubmissionRequest(orderRequest);
             if (status is Failure failure) { 
                 TempData[ErrorMessageString] = failure.ErrorMessage;
-                return Redirect(redirectUrl);
+                return Redirect("/Home");
             }
             else
             {

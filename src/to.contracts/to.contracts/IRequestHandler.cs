@@ -10,8 +10,8 @@ namespace to.contracts
     {
         Status HandleBacklogDeleteRequest(string id);
         Status HandleBacklogsShowRequest();
-        BacklogEvalQueryResult HandleBacklogCreationRequest(BacklogCreationRequest request);
-        BacklogEvalQueryResult HandleBacklogEvalQuery(string id);
+        (Status, BacklogEvalQueryResult) HandleBacklogCreationRequest(BacklogCreationRequest request);
+        (Status, BacklogEvalQueryResult) HandleBacklogEvalQuery(string id);
         BacklogOrderQueryResult HandleBacklogOrderQuery(string id);
         (Status, BacklogEvalQueryResult) HandleBacklogOrderSubmissionRequest(BacklogOrderRequest request);
         (Status, UserLoginQueryResult) HandleLoginQuery(LoginRequest request);
