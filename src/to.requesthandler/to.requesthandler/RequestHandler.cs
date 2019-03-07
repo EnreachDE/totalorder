@@ -49,7 +49,7 @@ namespace to.requesthandler
             }
         }
 
-        public BacklogEvalQueryResult HandleBacklogCreationRequest(BacklogCreationRequest request)
+        public (Status, BacklogEvalQueryResult) HandleBacklogCreationRequest(BacklogCreationRequest request)
         {
             var backlog = new Backlog
             {
@@ -61,19 +61,19 @@ namespace to.requesthandler
             return EvalSubmissions(backlogid);
         }
 
-        private BacklogEvalQueryResult EvalSubmissions(string backlogid)
+        private (Status,BacklogEvalQueryResult) EvalSubmissions(string backlogid)
         {
             var submissions = _backlogrepo.ReadSubmissions(backlogid);
             int[] currentOrder = _totalorder.Order(submissions);
             var backlog = _backlogrepo.ReadBacklog(backlogid);
 
-            return new BacklogEvalQueryResult
+            return (new Success(), new BacklogEvalQueryResult
             {
                 Id = backlogid,
                 Title = backlog.Title,
                 UserStories = applyOrder(backlog.UserStories, currentOrder),
                 NumberOfSubmissions = submissions.Length
-            };
+            });
         }
 
         public static string[] applyOrder(string[] backlogUserStories, int[] currentOrder)
@@ -91,7 +91,7 @@ namespace to.requesthandler
             return result;
         }
 
-        public BacklogEvalQueryResult HandleBacklogEvalQuery(string id)
+        public (Status, BacklogEvalQueryResult) HandleBacklogEvalQuery(string id)
         {
             return EvalSubmissions(id);
         }
@@ -116,7 +116,7 @@ namespace to.requesthandler
             return result;
         }
 
-        public BacklogEvalQueryResult HandleBacklogOrderSubmissionRequest(BacklogOrderRequest request)
+        public (Status,BacklogEvalQueryResult) HandleBacklogOrderSubmissionRequest(BacklogOrderRequest request)
         {
             var submission = new Submission() { Indexes = request.UserStoryIndexes };
             _backlogrepo.WriteSubmission(request.Id, submission);

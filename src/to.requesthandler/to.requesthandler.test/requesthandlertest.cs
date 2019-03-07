@@ -70,7 +70,8 @@ namespace to.requesthandlertest
                 Title = "The backlog",
                 UserStories = new string[] { "A", "B", "C" }
             };
-            var result = requestHandler.HandleBacklogCreationRequest(backlogCreationRequest);
+            var (status, result) = requestHandler.HandleBacklogCreationRequest(backlogCreationRequest);
+            status.Should().BeOfType(typeof(Success));
 
             // expected result
             BacklogEvalQueryResult expectedResult = new BacklogEvalQueryResult
