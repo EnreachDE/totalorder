@@ -93,17 +93,16 @@ namespace to.requesthandlertest
                 new User { Username = "Peter", UserRole = UserRole.ProductOwner },
                 new User { Username = "Fuchs", UserRole = UserRole.Developer }
             };
-            var actualResult = new UserListResult();
             var expectedResult = new UserListResult { Users = userList.Select(p => new UserQueryResult(p)).ToArray() };
-            Action<string> dummyFailureAction = s => { };
-            _userRepo.Setup(p => p.GetExistingUsers(It.IsAny<Action<IEnumerable<User>>>(), dummyFailureAction))
-                .Callback((Action<IEnumerable<User>> onSuccess, Action<string> onFailure) => onSuccess(userList));
+
+            _userRepo.Setup(p => p.GetExistingUsers()).Returns((new Success(), userList));
 
             // Act
-            _sut.HandleUserListRequest(result => { actualResult = result; }, dummyFailureAction);
+            var (status, actualResult) = _sut.HandleUserListRequest();
 
             // Assert
-            _userRepo.Verify(p => p.GetExistingUsers(It.IsAny<Action<IEnumerable<User>>>(), dummyFailureAction));
+            _userRepo.Verify(p => p.GetExistingUsers());
+            status.Should().BeOfType<Success>();
             actualResult.Should().BeEquivalentTo(expectedResult);
         }
 
@@ -113,8 +112,6 @@ namespace to.requesthandlertest
             // Arrange
             var request = new UserEditRequest { Id = 111 };
             var user = new User { Id = 111, Username = "Peter", UserRole = UserRole.ProductOwner, PasswordHash = "blablabla" };
-            Action<string> dummyFailureAction = s => { };
-            var actualResult = new UserQueryResult();
             var expectedResult = new UserQueryResult
             {
                 Id = user.Id,
@@ -124,10 +121,11 @@ namespace to.requesthandlertest
             _userRepo.Setup(p => p.LoadUser(request.Id)).Returns((new Success(), user));
 
             // Act
-            _sut.HandleUserEditRequest(request, result => actualResult = result, dummyFailureAction);
+            var (status, actualResult) = _sut.HandleUserEditRequest(request);
 
             // Assert
             _userRepo.Verify(p => p.LoadUser(request.Id));
+            status.Should().BeOfType<Success>();
             actualResult.Should().BeEquivalentTo(expectedResult);
         }
 

@@ -72,60 +72,48 @@ namespace to.userrepo.test
         [Test]
         public void TestUpdateUser()
         {
-            string result = null;
-            List<User> userList = new List<User>();
+            var status =_userRepo.UpdateUser(1, UserRole.Guest);
+            status.Should().BeOfType<Success>();
 
+            var (status1, userList) = _userRepo.GetExistingUsers();
+            status1.Should().BeOfType<Success>();
 
-            _userRepo.UpdateUser(1, UserRole.Guest, () => result = "success", error => result = error);
-            Assert.AreEqual("success", result);
-
-            result = null;
-            _userRepo.GetExistingUsers(users => userList = users.ToList(), error => result = error);
-            Assert.IsNull(result);
-
-            var user = userList.Find(u => u.Id == 1);
-            Assert.AreEqual(UserRole.Guest, user.UserRole);
+            var user = userList.ToList().Find(u => u.Id == 1);
+            user.UserRole.Should().BeEquivalentTo(UserRole.Guest);
         }
 
         [Test]
         public void TestUpdateUserFailed()
         {
-            string result = null;
-
-
-            _userRepo.UpdateUser(100, UserRole.Guest, () => result = "success", error => result = error);
-            Assert.AreNotEqual(null, result);
-            Assert.AreNotEqual("success", result);
+            var status = _userRepo.UpdateUser(100, UserRole.Guest);
+            status.Should().BeOfType<Failure>();
+            ((Failure) status).ErrorMessage.Should().NotBeNullOrEmpty();
         }
 
         [Test]
         public void TestAddUserSuccessful()
         {
-            string result = null;
-            var userList = new List<User>();
             var user = new User { Id = 0, PasswordHash = "abc", Username = "testuser", UserRole = UserRole.Guest };
             var expectedUser = new User { Id = 3, PasswordHash = "abc", Username = "testuser", UserRole = UserRole.Guest };
             var repo = new UserRepo(TestRootDir, UsersTestJson, g => 3);
 
-            repo.AddUser(user, () => result = "success", s => { });
+            var status = repo.AddUser(user);
+            status.Should().BeOfType<Success>();
 
-            Assert.AreEqual("success", result);
-            result = null;
-            repo.GetExistingUsers(users => userList = users.ToList(), error => result = error);
-            Assert.IsNull(result);
+            var (status1, userList) = repo.GetExistingUsers();
+            status1.Should().BeOfType<Success>();
             userList.FirstOrDefault(p => p.Id == 3).Should().BeEquivalentTo(expectedUser);
         }
 
         [Test]
         public void TestAddUserFailedAlreadyExists()
         {
-            string result = null;
             var user = new User { Id = 1, PasswordHash = "x", Username = "peter", UserRole = UserRole.Guest };
             var repo = new UserRepo(TestRootDir, UsersTestJson, g => 3);
 
-            repo.AddUser(user, () => {}, s => { result = s; });
-
-            Assert.AreEqual("User already exists", result);
+            var status = repo.AddUser(user);
+            status.Should().BeOfType<Failure>();
+            ((Failure) status).ErrorMessage.Should().NotBeNullOrEmpty();
         }
 
         [Test]
