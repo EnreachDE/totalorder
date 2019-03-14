@@ -39,7 +39,7 @@ namespace to.frontend.Controllers
 
             var result = _handler.HandleBacklogCreationRequest(request);
 
-            var evalModel = Mapper.Map<BacklogEvalQueryResult>(result);
+            var evalModel = Mapper.Map<BacklogEvalQueryResult>(result.Item2);
             return RedirectToAction(nameof(Eval), new { evalModel.Id });
         }
 
