@@ -6,6 +6,8 @@ using to.contracts.data.result;
 
 namespace to.requesthandler
 {
+    using System.Collections.Generic;
+
     public class RequestHandler : IRequestHandler
     {
         private readonly IBacklogRepo _backlogrepo;
@@ -133,59 +135,51 @@ namespace to.requesthandler
             if (status is Failure) return (status, null);
 
             var (statusP, permissions) = _permissionsRepo.LoadPermissions(user.UserRole);
-            if (statusP is Failure) return (new Failure("Could not load permissions"), null);
+            if (statusP is Failure) return (statusP, null);
 
             return (new Success(), new UserLoginQueryResult(user, permissions.ToList()));
         }
 
-        public void HandleUserUpdateRequest(UserUpdateRequest request, Action<UserListResult> OnSuccess,
-            Action<string> OnFailure)
+        public (Status, UserListResult) HandleUserUpdateRequest(UserUpdateRequest request)
         {
-            _userRepo.UpdateUser(request.Id, 
-                request.UserRole, 
-                () => LoadUsers(OnSuccess, OnFailure), 
-                OnFailure);
+            var status = _userRepo.UpdateUser(request.Id, request.UserRole);
+            if (status is Failure) return (status, null);
+
+            return LoadUsers();
         }
 
-        private void LoadUsers(Action<UserListResult> OnSuccess, Action<string> OnFailure)
+        private (Status, UserListResult) LoadUsers()
         {
-            _userRepo.GetExistingUsers(users =>
-                {
-                    var usersList = users.Select(p => new UserQueryResult(p)).ToArray();
-                    var result = new UserListResult { Users = usersList };
-                    OnSuccess(result);
-                }, OnFailure);
+            var (status, users) = _userRepo.GetExistingUsers();
+            if (status is Failure) return (new Failure("Could not retrieve existing users."), null);
+
+            var usersList = users.Select(p => new UserQueryResult(p)).ToArray();
+
+            return (new Success(), new UserListResult {Users = usersList});
         }
 
-        public void HandleUserEditRequest(UserEditRequest request, Action<UserQueryResult> OnSuccess,
-            Action<string> OnFailure)
+        public (Status, UserQueryResult) HandleUserEditRequest(UserEditRequest request)
         {
             var (status, user) =_userRepo.LoadUser(request.Id);
+            if (status is Failure) return (status, null);
 
-            switch (status)
-            {
-                case Failure f:
-                    OnFailure?.Invoke(($"{f.ErrorMessage}"));
-                    break;
-                default:
-                    OnSuccess?.Invoke(new UserQueryResult(user));
-                    break;
-            }
+            return (new Success(), new UserQueryResult(user));
         }
 
-        public void HandleUserListRequest(Action<UserListResult> OnSuccess, Action<string> OnFailure)
+        public (Status, UserListResult) HandleUserListRequest()
         {
-            _userRepo.GetExistingUsers(userList =>
+            var (status, userList) = _userRepo.GetExistingUsers();
+            if (status is Failure) return (status, null);
+
+            var userListResult = new UserListResult
             {
-                var userListResult = new UserListResult
-                {
-                    Users = userList.Select(p => new UserQueryResult(p)).ToArray()
-                };
-                OnSuccess(userListResult);
-            }, OnFailure);
+                Users = userList.Select(p => new UserQueryResult(p)).ToArray()
+            };
+
+            return (new Success(), userListResult);
         }
 
-        public void HandleUserCreateRequest(UserCreateRequest request, Action<UserListResult> OnSuccess, Action<string> OnFailure)
+        public (Status, UserListResult) HandleUserCreateRequest(UserCreateRequest request)
         {
             var hashedPassword = _security.HashPassword(request.Password);
             var user = new User
@@ -195,21 +189,27 @@ namespace to.requesthandler
                 Username = request.UserName
             };
 
-            _userRepo.AddUser(user,
-                () => LoadUsers(OnSuccess, OnFailure), 
-                OnFailure);
+            var status = _userRepo.AddUser(user);
+            if (status is Failure) return (status, null);
+
+            return LoadUsers();
         }
 
-        public void HandleUserDeleteRequest(UserDeleteRequest request, Action<UserListResult> OnSuccess, Action<string> OnFailure)
+        public (Status, UserListResult) HandleUserDeleteRequest(UserDeleteRequest request)
         {
-            _userRepo.DeleteUser(request.Id, userList =>
+            var (status, result) = _userRepo.DeleteUser(request.Id);
+            if (status is Failure) return (status, null);
+
+            return (new Success(), CreateUserListResult(result));
+        }
+
+        private static UserListResult CreateUserListResult(IEnumerable<User> result)
+        {
+            var userListResult = new UserListResult
             {
-                var userListResult = new UserListResult
-                {
-                    Users = userList.Select(p => new UserQueryResult(p)).ToArray()
-                };
-                OnSuccess(userListResult);
-            }, OnFailure);
+                Users = result.Select(p => new UserQueryResult(p)).ToArray()
+            };
+            return userListResult;
         }
     }
 }

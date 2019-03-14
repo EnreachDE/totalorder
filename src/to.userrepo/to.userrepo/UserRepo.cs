@@ -62,73 +62,60 @@ namespace to.userrepo
         }
 
 
-        public void UpdateUser(int id, UserRole role, Action onSuccess, Action<string> onFailure)
+        public Status UpdateUser(int id, UserRole role)
         {
-            Debug.Assert(onSuccess != null, "at least for the success case a delegate must be provided!");
-
             var users = ReadUserList();
 
             var user = users.GetById(id);
-
-            if (user == null)
-            {
-                onFailure(String.Format("User with id {0} does not exist", id));
-                return;
-            }
+            if (user == null) return (new Failure($"User with id {id} does not exist."));
 
             user.UserRole = role;
-
             SaveUserList(users);
 
-            onSuccess();
+            return new Success();
         }
 
-        public void GetExistingUsers(Action<IEnumerable<User>> onSuccess, Action<string> onFailure)
+        public (Status, IEnumerable<User>) GetExistingUsers()
         {
-            Debug.Assert(onSuccess != null, "at least for the success case a delegate must be provided!");
-
             var userList = ReadUserList().ToList();
 
-            if (userList.Any())
+            if (!userList.Any())
             {
-                onSuccess(userList);
+                return (new Failure("No users found."), null);
             }
-            else
-            {
-                onFailure("No users found");
-            }
+
+            return (new Success(), userList);
         }
 
-        public void AddUser(User user, Action onSuccess, Action<string> onFailure)
+        public Status AddUser(User user)
         {
             var users = ReadUserList();
 
             if (users.Exists(user))
             {
-                onFailure("User already exists");
-                return;
+                return (new Failure("User already exists"));
             }
 
             users.Add(user);
             SaveUserList(users);
-            onSuccess();
+            
+            return new Success();
         }
 
-        public void DeleteUser(int id, Action<IEnumerable<User>> onSuccess, Action<string> onFailure)
+        public (Status, IEnumerable<User>) DeleteUser(int id)
         {
             var users = ReadUserList();
-
             var user = users.GetById(id);
+
             if (user == null)
             {
-                onFailure("User not found");
-                return;
+                return (new Failure("User not found"), null);
             }
 
             users.Remove(user);
             SaveUserList(users);
 
-            onSuccess(users.ToList());
+            return (new Success(), users.ToList());
         }
 
         private void SaveUserList(UserList users)

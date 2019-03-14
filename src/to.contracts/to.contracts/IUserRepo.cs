@@ -9,13 +9,10 @@ namespace to.contracts
     public interface IUserRepo
     {
         (Status, User) LoadUser(string username);
-
         (Status, User) LoadUser(int id);
-
-
-        void UpdateUser(int id, UserRole role, Action onSuccess, Action<string> onFailure);
-        void GetExistingUsers(Action<IEnumerable<User>> onSuccess, Action<string> onFailure);
-        void AddUser(User user, Action onSuccess, Action<string> onFailure);
-        void DeleteUser(int id, Action<IEnumerable<User>> onSuccess, Action<string> onFailure);
+        Status UpdateUser(int id, UserRole role);
+        (Status, IEnumerable<User>) GetExistingUsers();
+        Status AddUser(User user);
+        (Status, IEnumerable<User>) DeleteUser(int id);
     }
 }

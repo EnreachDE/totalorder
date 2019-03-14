@@ -8,6 +8,8 @@ using System;
 
 namespace to.frontend.Controllers
 {
+    using contracts.data.result;
+
     [Authorize(Roles = nameof(UserRole.Administrator))]
     public class AdminController : Controller
     {
@@ -23,15 +25,16 @@ namespace to.frontend.Controllers
         [Authorize(Policy = nameof(Permission.ListUser))]
         public IActionResult Index()
         {
-            var userList = new UserListResult();
-            _handler.HandleUserListRequest(
-                // Success
-                userListResult => { userList = userListResult; },
-                // Failure
-                errorMessage => { TempData[ErrorMessageString] = errorMessage; }
-            );
-            
-            return View("Index", new Tuple<UserListResult,int>(userList, 1));
+            var (status, userList) = _handler.HandleUserListRequest();
+
+            switch (status)
+            {
+                case Failure f:
+                    TempData[ErrorMessageString] = f.ErrorMessage;
+                    break;
+            }
+
+            return View("Index", new Tuple<UserListResult,int>(userList,1));
         }
 
         [HttpGet]
@@ -39,13 +42,15 @@ namespace to.frontend.Controllers
         [Authorize(Policy = nameof(Permission.EditUser))]
         public IActionResult GetEditUser(int userId)
         {
-            UserQueryResult user = null;
-            _handler.HandleUserEditRequest(new UserEditRequest {Id = userId},
-                // Success
-                userQueryResult => { user = userQueryResult; },
-                // Failure
-                errorMessage => { TempData[ErrorMessageString] = errorMessage; }
-            );
+            var (status, user) = _handler.HandleUserEditRequest(new UserEditRequest {Id = userId});
+
+            switch (status)
+            {
+                case Failure f:
+                    TempData[ErrorMessageString] = f.ErrorMessage;
+                    break;
+            }
+
             return View("EditUser", user);
         }
 
@@ -54,16 +59,18 @@ namespace to.frontend.Controllers
         [Authorize(Policy = nameof(Permission.EditUser))]
         public IActionResult PostEditUser(int userId, EditUserModel model)
         {
-            _handler.HandleUserUpdateRequest(new UserUpdateRequest
-                {
-                    Id = model.Id,
-                    UserRole = model.UserRole
-                },
-                // Success
-                userListResult => {},
-                // Failure
-                errorMessage => { TempData[ErrorMessageString] = errorMessage; }
-            );
+            var (status, userList) = _handler.HandleUserUpdateRequest(new UserUpdateRequest
+            {
+                Id = model.Id,
+                UserRole = model.UserRole
+            });
+
+            switch (status)
+            {
+                case Failure f:
+                    TempData[ErrorMessageString] = f.ErrorMessage;
+                    break;
+            }
 
             return RedirectToAction(nameof(Index));
         }
@@ -86,19 +93,20 @@ namespace to.frontend.Controllers
                 return View("CreateUser", model);
             }
 
-            _handler.HandleUserCreateRequest(new UserCreateRequest
-                {
-                    UserName = model.Username,
-                    Password = model.Password,
-                    UserRole = model.UserRole
-                },
-                userListResult => { },
-                errorMessage =>
-                {
-                    ModelState.AddModelError(string.Empty, errorMessage);
-                    TempData[ErrorMessageString] = errorMessage;
-                }
-            );
+            var (status, userList) = _handler.HandleUserCreateRequest(new UserCreateRequest
+            {
+                UserName = model.Username,
+                Password = model.Password,
+                UserRole = model.UserRole
+            });
+
+            switch (status)
+            {
+                case Failure f:
+                    ModelState.AddModelError(string.Empty, f.ErrorMessage);
+                    TempData[ErrorMessageString] = f.ErrorMessage;
+                    break;
+            }
 
             if (!ModelState.IsValid)
             {
@@ -113,15 +121,8 @@ namespace to.frontend.Controllers
         [Authorize(Policy = nameof(Permission.DeleteUser))]
         public IActionResult DeleteUser(int id)
         {
-            _handler.HandleUserDeleteRequest(new UserDeleteRequest
-                {
-                    Id = id
-                },
-                // Success
-                userListResult => { },
-                // Failure
-                errorMessage => { TempData[ErrorMessageString] = errorMessage; }
-            );
+            var (status, result) = _handler.HandleUserDeleteRequest(new UserDeleteRequest {Id = id});
+            if (status is Failure f) TempData[ErrorMessageString] = f.ErrorMessage;
 
             return RedirectToAction(nameof(Index));
         }

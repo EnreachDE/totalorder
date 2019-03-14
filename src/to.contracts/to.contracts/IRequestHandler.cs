@@ -15,11 +15,11 @@ namespace to.contracts
         BacklogOrderQueryResult HandleBacklogOrderQuery(string id);
         (Status, BacklogEvalQueryResult) HandleBacklogOrderSubmissionRequest(BacklogOrderRequest request);
         (Status, UserLoginQueryResult) HandleLoginQuery(LoginRequest request);
-        void HandleUserUpdateRequest(UserUpdateRequest request, Action<UserListResult> OnSuccess, Action<string> OnFailure);
-        void HandleUserEditRequest(UserEditRequest request, Action<UserQueryResult> OnSuccess, Action<string> OnFailure);
-        void HandleUserListRequest(Action<UserListResult> OnSuccess, Action<string> OnFailure);
-        void HandleUserCreateRequest(UserCreateRequest request, Action<UserListResult> OnSuccess, Action<string> OnFailure);
-        void HandleUserDeleteRequest(UserDeleteRequest request, Action<UserListResult> OnSuccess, Action<string> OnFailure);
+        (Status, UserListResult) HandleUserUpdateRequest(UserUpdateRequest request);
+        (Status, UserQueryResult) HandleUserEditRequest(UserEditRequest request);
+        (Status, UserListResult) HandleUserListRequest();
+        (Status, UserListResult) HandleUserCreateRequest(UserCreateRequest request);
+        (Status, UserListResult) HandleUserDeleteRequest(UserDeleteRequest request);
     }
 
     public class BacklogShowQueryResult
