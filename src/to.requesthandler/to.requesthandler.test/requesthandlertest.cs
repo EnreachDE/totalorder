@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions.Common;
 using to.contracts;
 using to.contracts.data.domain;
 using to.contracts.data.result;
@@ -61,9 +62,9 @@ namespace to.requesthandlertest
         public void AcceptanceCreateBacklogTest()
         {
             IBacklogRepo repo = new BacklogRepoTest();
-            ITotalOrder toalOrder = new TotalOrder();
+            ITotalOrder totalOrder = new TotalOrder();
 
-            RequestHandler requestHandler = new RequestHandler(repo, toalOrder, null, null, null);
+            RequestHandler requestHandler = new RequestHandler(repo, totalOrder, null, null, null);
 
             BacklogCreationRequest backlogCreationRequest = new BacklogCreationRequest
             {

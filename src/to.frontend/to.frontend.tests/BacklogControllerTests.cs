@@ -43,7 +43,7 @@ namespace to.frontend.tests
                 UserStories = DummyUserStories
             };
             _handler.Setup(p => p.HandleBacklogCreationRequest(It.IsAny<BacklogCreationRequest>()))
-                .Returns((new Success(),new BacklogEvalQueryResult { Id = dummyid }))
+                .Returns((new Success(), new BacklogEvalQueryResult { Id = dummyid }))
                 .Callback<BacklogCreationRequest>(r => actualRequest = r);
             _handlerFactory.Setup(p => p.GetHandler()).Returns(_handler.Object);
             _sut = new BacklogsController(_handlerFactory.Object);

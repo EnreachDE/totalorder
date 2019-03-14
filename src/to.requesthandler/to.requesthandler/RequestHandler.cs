@@ -63,7 +63,7 @@ namespace to.requesthandler
             return EvalSubmissions(backlogid);
         }
 
-        private (Status,BacklogEvalQueryResult) EvalSubmissions(string backlogid)
+        private (Status, BacklogEvalQueryResult) EvalSubmissions(string backlogid)
         {
             var submissions = _backlogrepo.ReadSubmissions(backlogid);
             int[] currentOrder = _totalorder.Order(submissions);
