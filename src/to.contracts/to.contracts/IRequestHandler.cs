@@ -12,7 +12,7 @@ namespace to.contracts
         Status HandleBacklogsShowRequest();
         (Status, BacklogEvalQueryResult) HandleBacklogCreationRequest(BacklogCreationRequest request);
         (Status, BacklogEvalQueryResult) HandleBacklogEvalQuery(string id);
-        BacklogOrderQueryResult HandleBacklogOrderQuery(string id);
+        (Status, BacklogOrderQueryResult) HandleBacklogOrderQuery(string id);
         (Status, BacklogEvalQueryResult) HandleBacklogOrderSubmissionRequest(BacklogOrderRequest request);
         (Status, UserLoginQueryResult) HandleLoginQuery(LoginRequest request);
         (Status, UserListResult) HandleUserUpdateRequest(UserUpdateRequest request);

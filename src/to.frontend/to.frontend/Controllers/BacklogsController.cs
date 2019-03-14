@@ -48,7 +48,14 @@ namespace to.frontend.Controllers
         [Authorize(Policy = nameof(Permission.OrderBacklog))]
         public ActionResult GetOrder(string id)
         {
-            var backlog = _handler.HandleBacklogOrderQuery(id);
+            var (status, backlog) = _handler.HandleBacklogOrderQuery(id);
+            switch (status)
+            {
+                case Failure f:
+                    TempData[ErrorMessageString] = f.ErrorMessage;
+                    return Redirect("/Home");
+            }
+
             var viewModel = Mapper.Map<BacklogEvalViewModel>(backlog);
 
             return View("Order", viewModel);
