@@ -1,35 +1,36 @@
-﻿using System;
-using System.Security.Cryptography;
-using System.Text;
-using to.contracts;
+﻿
 
 namespace to.security
 {
+    using contracts.data.result;
+    using System.Security.Cryptography;
+    using System.Text;
+    using contracts;
+
     public class Security : ISecurity
     {
-        public void ValidatePassword(string passwordToValidate, string hashedPassword,
-            Action onSuccess,
-            Action<string> onFailure)
+        public Status ValidatePassword(string passwordToValidate, string hashedPassword)
         {
             string hashToValidate = HashPassword(passwordToValidate);
 
             if (hashToValidate == hashedPassword)
-                onSuccess();
-            else
-                onFailure("Password failure");
+                return new Success();
+            return new Failure("Password failure");
         }
 
         public string HashPassword(string passwordToHash)
         {
-            SHA256 mySHA256 = SHA256Managed.Create();
+            SHA256 mySHA256 = SHA256.Create();
 
             byte[] buffer = mySHA256.ComputeHash(Encoding.UTF8.GetBytes(passwordToHash));
 
             StringBuilder result = new StringBuilder();
-            for (int i = 0; i < buffer.Length; i++)
+
+            foreach (var t in buffer)
             {
-                result.Append(buffer[i].ToString("x2"));
+                result.Append(t.ToString("x2"));
             }
+
             return result.ToString();
         }
     }

@@ -9,6 +9,8 @@ using to.contracts.data.domain;
 
 namespace to.userrepo.test
 {
+    using contracts.data.result;
+
     [TestFixture]
     public class UserRepoTests
     {
@@ -30,10 +32,10 @@ namespace to.userrepo.test
         public void TestLoadUserFromName(string username, string password)
         {
             var repo = new UserRepo(TestRootDir, UsersTestJson);
-            User result = null;
-            repo.LoadUser(username.ToUpperInvariant(),
-                (user) => result = user,
-                _ => Assert.Fail());
+
+            var (status, result)  = repo.LoadUser(username.ToUpperInvariant());
+
+            Assert.IsInstanceOf(typeof(Success), status);
             Assert.AreEqual(username, result.Username);
             Assert.AreEqual(password, result.PasswordHash);
         }
@@ -43,10 +45,8 @@ namespace to.userrepo.test
         [TestCase(2, "klaus", "y")]
         public void TestLoadUserFromId(int id, string username, string password)
         {
-            User result = null;
-            _userRepo.LoadUser(id,
-                user => result = user,
-                s => Assert.Fail());
+            var (status, result) = _userRepo.LoadUser(id);
+            Assert.IsInstanceOf(typeof(Success), status);
             Assert.AreEqual(username, result.Username);
             Assert.AreEqual(password, result.PasswordHash);
         }
@@ -54,82 +54,66 @@ namespace to.userrepo.test
         [Test]
         public void TestLoadUserFromNameFailed()
         {
-            string result = null;
-            _userRepo.LoadUser("unknown",
-                user => Assert.Fail("OnSuccess should not be called here!"),
-                error => result = error);
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Contains("unknown does not exist"));
+            var (status, result) = _userRepo.LoadUser("unknown");
+            Assert.IsInstanceOf(typeof(Failure), status);
+            Assert.IsNull(result);
+            Assert.IsTrue(((Failure)status).ErrorMessage.Contains("unknown does not exist"));
         }
 
         [Test]
         public void TestLoadUserFromIdFailed()
         {
-            string result = null;
-            _userRepo.LoadUser(999,
-                user => Assert.Fail("OnSuccess should not be called here!"),
-                error => result = error);
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Contains("999 does not exist"));
+            var (status, result) =_userRepo.LoadUser(999);
+            Assert.IsInstanceOf(typeof(Failure), status);
+            Assert.IsNull(result);
+            Assert.IsTrue(((Failure)status).ErrorMessage.Contains("999 does not exist"));
         }
 
         [Test]
         public void TestUpdateUser()
         {
-            string result = null;
-            List<User> userList = new List<User>();
+            var status =_userRepo.UpdateUser(1, UserRole.Guest);
+            status.Should().BeOfType<Success>();
 
+            var (status1, userList) = _userRepo.GetExistingUsers();
+            status1.Should().BeOfType<Success>();
 
-            _userRepo.UpdateUser(1, UserRole.Guest, () => result = "success", error => result = error);
-            Assert.AreEqual("success", result);
-
-            result = null;
-            _userRepo.GetExistingUsers(users => userList = users.ToList(), error => result = error);
-            Assert.IsNull(result);
-
-            var user = userList.Find(u => u.Id == 1);
-            Assert.AreEqual(UserRole.Guest, user.UserRole);
+            var user = userList.ToList().Find(u => u.Id == 1);
+            user.UserRole.Should().BeEquivalentTo(UserRole.Guest);
         }
 
         [Test]
         public void TestUpdateUserFailed()
         {
-            string result = null;
-
-
-            _userRepo.UpdateUser(100, UserRole.Guest, () => result = "success", error => result = error);
-            Assert.AreNotEqual(null, result);
-            Assert.AreNotEqual("success", result);
+            var status = _userRepo.UpdateUser(100, UserRole.Guest);
+            status.Should().BeOfType<Failure>();
+            ((Failure) status).ErrorMessage.Should().NotBeNullOrEmpty();
         }
 
         [Test]
         public void TestAddUserSuccessful()
         {
-            string result = null;
-            var userList = new List<User>();
             var user = new User { Id = 0, PasswordHash = "abc", Username = "testuser", UserRole = UserRole.Guest };
             var expectedUser = new User { Id = 3, PasswordHash = "abc", Username = "testuser", UserRole = UserRole.Guest };
             var repo = new UserRepo(TestRootDir, UsersTestJson, g => 3);
 
-            repo.AddUser(user, () => result = "success", s => { });
+            var status = repo.AddUser(user);
+            status.Should().BeOfType<Success>();
 
-            Assert.AreEqual("success", result);
-            result = null;
-            repo.GetExistingUsers(users => userList = users.ToList(), error => result = error);
-            Assert.IsNull(result);
+            var (status1, userList) = repo.GetExistingUsers();
+            status1.Should().BeOfType<Success>();
             userList.FirstOrDefault(p => p.Id == 3).Should().BeEquivalentTo(expectedUser);
         }
 
         [Test]
         public void TestAddUserFailedAlreadyExists()
         {
-            string result = null;
             var user = new User { Id = 1, PasswordHash = "x", Username = "peter", UserRole = UserRole.Guest };
             var repo = new UserRepo(TestRootDir, UsersTestJson, g => 3);
 
-            repo.AddUser(user, () => {}, s => { result = s; });
-
-            Assert.AreEqual("User already exists", result);
+            var status = repo.AddUser(user);
+            status.Should().BeOfType<Failure>();
+            ((Failure) status).ErrorMessage.Should().NotBeNullOrEmpty();
         }
 
         [Test]
@@ -138,9 +122,9 @@ namespace to.userrepo.test
             var repo = new UserRepo(TestRootDir, UsersTestJson, g => 3);
 
             var idToDelete = 1;
-            IEnumerable<User> result = null;
-            repo.DeleteUser(idToDelete, userList => result = userList.ToList(), s => { });
+            var (status, result) = repo.DeleteUser(idToDelete);
 
+            status.Should().BeOfType<Success>();
             result.Should().NotBeEmpty();
             result.Any(u => u.Id == idToDelete).Should().BeFalse();
         }
@@ -151,10 +135,11 @@ namespace to.userrepo.test
             var repo = new UserRepo(TestRootDir, UsersTestJson, g => 3);
 
             var idToDelete = 666;
-            string result = null;
-            repo.DeleteUser(idToDelete, userList => { }, s => { result = s; });
+            var (status, result) = repo.DeleteUser(idToDelete);
 
-            Assert.AreEqual("User not found", result);
+            status.Should().BeOfType<Failure>();
+            ((Failure) status).ErrorMessage.Should().BeEquivalentTo("User not found");
+            result.Should().BeNull();
         }
     }
 }

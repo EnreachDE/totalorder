@@ -39,7 +39,7 @@ namespace to.frontend.Controllers
 
             var result = _handler.HandleBacklogCreationRequest(request);
 
-            var evalModel = Mapper.Map<BacklogEvalQueryResult>(result);
+            var evalModel = Mapper.Map<BacklogEvalQueryResult>(result.Item2);
             return RedirectToAction(nameof(Eval), new { evalModel.Id });
         }
 
@@ -48,7 +48,14 @@ namespace to.frontend.Controllers
         [Authorize(Policy = nameof(Permission.OrderBacklog))]
         public ActionResult GetOrder(string id)
         {
-            var backlog = _handler.HandleBacklogOrderQuery(id);
+            var (status, backlog) = _handler.HandleBacklogOrderQuery(id);
+            switch (status)
+            {
+                case Failure f:
+                    TempData[ErrorMessageString] = f.ErrorMessage;
+                    return Redirect("/Home");
+            }
+
             var viewModel = Mapper.Map<BacklogEvalViewModel>(backlog);
 
             return View("Order", viewModel);
@@ -60,11 +67,16 @@ namespace to.frontend.Controllers
         public ActionResult PostOrder(BacklogOrderRequestViewModel model)
         {
             var orderRequest = Mapper.Map<BacklogOrderRequest>(model);
-            var result = _handler.HandleBacklogOrderSubmissionRequest(orderRequest);
-
-            var viewModel = Mapper.Map<BacklogEvalViewModel>(result);
-
-            return RedirectToAction(nameof(Eval), new { viewModel.Id });
+            var (status, result) = _handler.HandleBacklogOrderSubmissionRequest(orderRequest);
+            if (status is Failure failure) { 
+                TempData[ErrorMessageString] = failure.ErrorMessage;
+                return Redirect("/Home");
+            }
+            else
+            {
+                var viewModel = Mapper.Map<BacklogEvalViewModel>(result);
+                return RedirectToAction(nameof(Eval), new { viewModel.Id });
+            }            
         }
 
         [HttpGet]
@@ -87,7 +99,7 @@ namespace to.frontend.Controllers
                 case Success<BacklogShowQueryResult> s:
                     return View(new BacklogShowViewModel { Result = new Success(), Backlogs = s.Data });
                 default:
-                    return View(new BacklogShowViewModel { Result = new Failure(), Backlogs = null });
+                    return View(new BacklogShowViewModel { Result = new Failure("Error occured while listing backlogs."), Backlogs = null });
             }
         }
 

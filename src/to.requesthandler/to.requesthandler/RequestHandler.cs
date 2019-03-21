@@ -6,6 +6,8 @@ using to.contracts.data.result;
 
 namespace to.requesthandler
 {
+    using System.Collections.Generic;
+
     public class RequestHandler : IRequestHandler
     {
         private readonly IBacklogRepo _backlogrepo;
@@ -39,7 +41,7 @@ namespace to.requesthandler
             }
             catch (Exception)
             {
-                return new Failure();
+                return new Failure("Error occured while retrieving backlogs.");
             }
 
             BacklogShowQueryResult.BacklogDisplayItem Transform(Backlog backlog)
@@ -49,7 +51,7 @@ namespace to.requesthandler
             }
         }
 
-        public BacklogEvalQueryResult HandleBacklogCreationRequest(BacklogCreationRequest request)
+        public (Status, BacklogEvalQueryResult) HandleBacklogCreationRequest(BacklogCreationRequest request)
         {
             var backlog = new Backlog
             {
@@ -61,19 +63,19 @@ namespace to.requesthandler
             return EvalSubmissions(backlogid);
         }
 
-        private BacklogEvalQueryResult EvalSubmissions(string backlogid)
+        private (Status, BacklogEvalQueryResult) EvalSubmissions(string backlogid)
         {
             var submissions = _backlogrepo.ReadSubmissions(backlogid);
             int[] currentOrder = _totalorder.Order(submissions);
             var backlog = _backlogrepo.ReadBacklog(backlogid);
 
-            return new BacklogEvalQueryResult
+            return (new Success(), new BacklogEvalQueryResult
             {
                 Id = backlogid,
                 Title = backlog.Title,
                 UserStories = applyOrder(backlog.UserStories, currentOrder),
                 NumberOfSubmissions = submissions.Length
-            };
+            });
         }
 
         public static string[] applyOrder(string[] backlogUserStories, int[] currentOrder)
@@ -91,12 +93,12 @@ namespace to.requesthandler
             return result;
         }
 
-        public BacklogEvalQueryResult HandleBacklogEvalQuery(string id)
+        public (Status, BacklogEvalQueryResult) HandleBacklogEvalQuery(string id)
         {
             return EvalSubmissions(id);
         }
 
-        public BacklogOrderQueryResult HandleBacklogOrderQuery(string id)
+        public (Status, BacklogOrderQueryResult) HandleBacklogOrderQuery(string id)
         {
             var backlog = _backlogrepo.ReadBacklog(id);
 
@@ -113,79 +115,71 @@ namespace to.requesthandler
                 result.UserStoryIndexes[i] = i;
             }
 
-            return result;
+            return (new Success(), result);
         }
 
-        public BacklogEvalQueryResult HandleBacklogOrderSubmissionRequest(BacklogOrderRequest request)
+        public (Status, BacklogEvalQueryResult) HandleBacklogOrderSubmissionRequest(BacklogOrderRequest request)
         {
             var submission = new Submission() { Indexes = request.UserStoryIndexes };
             _backlogrepo.WriteSubmission(request.Id, submission);
 
             return EvalSubmissions(request.Id);
-
         }
 
-        public void HandleLoginQuery(LoginRequest request, Action<UserLoginQueryResult> OnSuccess, Action<string> OnFailure)
+        public (Status, UserLoginQueryResult) HandleLoginQuery(LoginRequest request)
         {
-            _userRepo.LoadUser(request.Username,
-                user => _security.ValidatePassword(request.Password, user.PasswordHash,
-                    () =>
-                    {
-                        var (status, permissions) = _permissionsRepo.LoadPermissions(user.UserRole);
-                        if (status is Success)
-                        {
-                            OnSuccess(new UserLoginQueryResult(user, permissions.ToList()));
-                        }
-                        else
-                        {
-                            OnFailure("Could not load permissions");
-                        }
-                    },
-                    OnFailure),
-                OnFailure);
+            var (status, user) = _userRepo.LoadUser(request.Username);
+            if (status is Failure) return (status, null);
+
+            status = _security.ValidatePassword(request.Password, user.PasswordHash);
+            if (status is Failure) return (status, null);
+
+            var (statusP, permissions) = _permissionsRepo.LoadPermissions(user.UserRole);
+            if (statusP is Failure) return (statusP, null);
+
+            return (new Success(), new UserLoginQueryResult(user, permissions.ToList()));
         }
 
-        public void HandleUserUpdateRequest(UserUpdateRequest request, Action<UserListResult> OnSuccess,
-            Action<string> OnFailure)
+        public (Status, UserListResult) HandleUserUpdateRequest(UserUpdateRequest request)
         {
-            _userRepo.UpdateUser(request.Id, 
-                request.UserRole, 
-                () => LoadUsers(OnSuccess, OnFailure), 
-                OnFailure);
+            var status = _userRepo.UpdateUser(request.Id, request.UserRole);
+            if (status is Failure) return (status, null);
+
+            return LoadUsers();
         }
 
-        private void LoadUsers(Action<UserListResult> OnSuccess, Action<string> OnFailure)
+        private (Status, UserListResult) LoadUsers()
         {
-            _userRepo.GetExistingUsers(users =>
-                {
-                    var usersList = users.Select(p => new UserQueryResult(p)).ToArray();
-                    var result = new UserListResult { Users = usersList };
-                    OnSuccess(result);
-                }, OnFailure);
+            var (status, users) = _userRepo.GetExistingUsers();
+            if (status is Failure) return (new Failure("Could not retrieve existing users."), null);
+
+            var usersList = users.Select(p => new UserQueryResult(p)).ToArray();
+
+            return (new Success(), new UserListResult {Users = usersList});
         }
 
-        public void HandleUserEditRequest(UserEditRequest request, Action<UserQueryResult> OnSuccess,
-            Action<string> OnFailure)
+        public (Status, UserQueryResult) HandleUserEditRequest(UserEditRequest request)
         {
-            _userRepo.LoadUser(
-                request.Id,
-                user => OnSuccess(new UserQueryResult(user)),
-                OnFailure);
+            var (status, user) =_userRepo.LoadUser(request.Id);
+            if (status is Failure) return (status, null);
+
+            return (new Success(), new UserQueryResult(user));
         }
 
-        public void HandleUserListRequest(Action<UserListResult> OnSuccess, Action<string> OnFailure)
+        public (Status, UserListResult) HandleUserListRequest()
         {
-            _userRepo.GetExistingUsers(userList =>
+            var (status, userList) = _userRepo.GetExistingUsers();
+            if (status is Failure) return (status, null);
+
+            var userListResult = new UserListResult
             {
-                var userListResult = new UserListResult
-                {
-                    Users = userList.Select(p => new UserQueryResult(p)).ToArray()
-                };
-                OnSuccess(userListResult);
-            }, OnFailure);
+                Users = userList.Select(p => new UserQueryResult(p)).ToArray()
+            };
+
+            return (new Success(), userListResult);
         }
 
-        public void HandleUserCreateRequest(UserCreateRequest request, Action<UserListResult> OnSuccess, Action<string> OnFailure)
+        public (Status, UserListResult) HandleUserCreateRequest(UserCreateRequest request)
         {
             var hashedPassword = _security.HashPassword(request.Password);
             var user = new User
@@ -195,21 +189,27 @@ namespace to.requesthandler
                 Username = request.UserName
             };
 
-            _userRepo.AddUser(user,
-                () => LoadUsers(OnSuccess, OnFailure), 
-                OnFailure);
+            var status = _userRepo.AddUser(user);
+            if (status is Failure) return (status, null);
+
+            return LoadUsers();
         }
 
-        public void HandleUserDeleteRequest(UserDeleteRequest request, Action<UserListResult> OnSuccess, Action<string> OnFailure)
+        public (Status, UserListResult) HandleUserDeleteRequest(UserDeleteRequest request)
         {
-            _userRepo.DeleteUser(request.Id, userList =>
+            var (status, result) = _userRepo.DeleteUser(request.Id);
+            if (status is Failure) return (status, null);
+
+            return (new Success(), CreateUserListResult(result));
+        }
+
+        private static UserListResult CreateUserListResult(IEnumerable<User> result)
+        {
+            var userListResult = new UserListResult
             {
-                var userListResult = new UserListResult
-                {
-                    Users = userList.Select(p => new UserQueryResult(p)).ToArray()
-                };
-                OnSuccess(userListResult);
-            }, OnFailure);
+                Users = result.Select(p => new UserQueryResult(p)).ToArray()
+            };
+            return userListResult;
         }
     }
 }

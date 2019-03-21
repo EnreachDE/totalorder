@@ -1,12 +1,11 @@
-﻿using System;
-
-namespace to.contracts
+﻿namespace to.contracts
 {
+    using System;
+    using data.result;
+
     public interface ISecurity
     {
-        void ValidatePassword(string passwordToValidate, string hashedPassword,
-            Action onSuccess,
-            Action<string> onFailure);
+        Status ValidatePassword(string passwordToValidate, string hashedPassword);
 
         string HashPassword(string passwordToHash);
     }

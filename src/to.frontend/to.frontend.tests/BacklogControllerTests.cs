@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using to.contracts;
+using to.contracts.data.result;
 using to.frontend.Controllers;
 using to.frontend.Factories;
 using to.frontend.Models.Backlog;
@@ -42,7 +43,7 @@ namespace to.frontend.tests
                 UserStories = DummyUserStories
             };
             _handler.Setup(p => p.HandleBacklogCreationRequest(It.IsAny<BacklogCreationRequest>()))
-                .Returns(new BacklogEvalQueryResult { Id = dummyid })
+                .Returns((new Success(), new BacklogEvalQueryResult { Id = dummyid }))
                 .Callback<BacklogCreationRequest>(r => actualRequest = r);
             _handlerFactory.Setup(p => p.GetHandler()).Returns(_handler.Object);
             _sut = new BacklogsController(_handlerFactory.Object);

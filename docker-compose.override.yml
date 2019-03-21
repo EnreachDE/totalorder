@@ -6,3 +6,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - "80"
+    volumes:
+      - type: bind
+        source: ./data
+        target: /TotalOrder
+

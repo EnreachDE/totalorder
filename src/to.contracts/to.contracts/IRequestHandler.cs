@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using to.contracts.data.domain;
 using to.contracts.data.result;
-using static to.contracts.UserQueryResult;
 
 namespace to.contracts
 {
@@ -12,16 +10,16 @@ namespace to.contracts
     {
         Status HandleBacklogDeleteRequest(string id);
         Status HandleBacklogsShowRequest();
-        BacklogEvalQueryResult HandleBacklogCreationRequest(BacklogCreationRequest request);
-        BacklogEvalQueryResult HandleBacklogEvalQuery(string id);
-        BacklogOrderQueryResult HandleBacklogOrderQuery(string id);
-        BacklogEvalQueryResult HandleBacklogOrderSubmissionRequest(BacklogOrderRequest request);
-        void HandleLoginQuery(LoginRequest request, Action<UserLoginQueryResult> OnSuccess, Action<string> OnFailure);
-        void HandleUserUpdateRequest(UserUpdateRequest request, Action<UserListResult> OnSuccess, Action<string> OnFailure);
-        void HandleUserEditRequest(UserEditRequest request, Action<UserQueryResult> OnSuccess, Action<string> OnFailure);
-        void HandleUserListRequest(Action<UserListResult> OnSuccess, Action<string> OnFailure);
-        void HandleUserCreateRequest(UserCreateRequest request, Action<UserListResult> OnSuccess, Action<string> OnFailure);
-        void HandleUserDeleteRequest(UserDeleteRequest request, Action<UserListResult> OnSuccess, Action<string> OnFailure);
+        (Status, BacklogEvalQueryResult) HandleBacklogCreationRequest(BacklogCreationRequest request);
+        (Status, BacklogEvalQueryResult) HandleBacklogEvalQuery(string id);
+        (Status, BacklogOrderQueryResult) HandleBacklogOrderQuery(string id);
+        (Status, BacklogEvalQueryResult) HandleBacklogOrderSubmissionRequest(BacklogOrderRequest request);
+        (Status, UserLoginQueryResult) HandleLoginQuery(LoginRequest request);
+        (Status, UserListResult) HandleUserUpdateRequest(UserUpdateRequest request);
+        (Status, UserQueryResult) HandleUserEditRequest(UserEditRequest request);
+        (Status, UserListResult) HandleUserListRequest();
+        (Status, UserListResult) HandleUserCreateRequest(UserCreateRequest request);
+        (Status, UserListResult) HandleUserDeleteRequest(UserDeleteRequest request);
     }
 
     public class BacklogShowQueryResult

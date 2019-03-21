@@ -4,20 +4,15 @@ using to.contracts.data.domain;
 
 namespace to.contracts
 {
+    using data.result;
+
     public interface IUserRepo
     {
-        void LoadUser(string username,
-            Action<User> onSuccess,
-            Action<string> onFailure);
-
-        void LoadUser(int id,
-            Action<User> onSuccess,
-            Action<string> onFailure);
-
-
-        void UpdateUser(int id, UserRole role, Action onSuccess, Action<string> onFailure);
-        void GetExistingUsers(Action<IEnumerable<User>> onSuccess, Action<string> onFailure);
-        void AddUser(User user, Action onSuccess, Action<string> onFailure);
-        void DeleteUser(int id, Action<IEnumerable<User>> onSuccess, Action<string> onFailure);
+        (Status, User) LoadUser(string username);
+        (Status, User) LoadUser(int id);
+        Status UpdateUser(int id, UserRole role);
+        (Status, IEnumerable<User>) GetExistingUsers();
+        Status AddUser(User user);
+        (Status, IEnumerable<User>) DeleteUser(int id);
     }
 }
