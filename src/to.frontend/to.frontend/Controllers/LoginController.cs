@@ -14,11 +14,18 @@ using to.frontend.Models.Login;
 namespace to.frontend.Controllers
 {
     using contracts.data.result;
+    using Microsoft.Extensions.Configuration;
 
     public class LoginController : Controller
     {
+        private IConfiguration configuration;
+
         private const string errorMessageString = "errorMessage";
 
+        public LoginController(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
         [Route("Login")]
         [HttpGet]
         public ViewResult Login(string returnUrl)
@@ -44,7 +51,7 @@ namespace to.frontend.Controllers
                     Username = model.UserName
                 };
 
-                var handlerFactory = new RequestHandlerFactory();
+                var handlerFactory = new RequestHandlerFactory(configuration);
                 var requestHandler = handlerFactory.GetHandler();
 
                 var (status, userResult) = requestHandler.HandleLoginQuery(loginRequest);

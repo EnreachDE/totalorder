@@ -5,6 +5,7 @@ using to.security;
 using to.totalorder;
 using to.userrepo;
 using to.permissionrepo;
+using Microsoft.Extensions.Configuration;
 
 namespace to.frontend.Factories
 {
@@ -15,12 +16,20 @@ namespace to.frontend.Factories
 
     public class RequestHandlerFactory : IRequestHandlerFactory
     {
-        public IRequestHandler GetHandler()
-            => new RequestHandler(
-                new BacklogRepo(@"/TotalOrder"),
+        private IConfiguration _configuration;
+        
+        public RequestHandlerFactory(IConfiguration configuration)
+        {
+            this._configuration = configuration;
+        }
+        public IRequestHandler GetHandler() {
+            string rootPath = this._configuration.GetValue<string>("App:DataRootPath");
+            return new RequestHandler(
+                new BacklogRepo(rootPath),
                 new TotalOrder(),
-                new UserRepo(@"/TotalOrder", "users.json"),
+                new UserRepo(rootPath, "users.json"),
                 new Security(),
-                new PermissionRepo(@"/TotalOrder", "permissions.json"));
+                new PermissionRepo(rootPath, "permissions.json"));
+        }
     }
 }
