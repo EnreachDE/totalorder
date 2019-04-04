@@ -211,6 +211,11 @@ namespace to.requesthandlertest
             throw new NotImplementedException();
         }
 
+        public List<Backlog> GetUserBacklogs(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Submission[] ReadSubmissions(string id)
         {
             Submission submission = new Submission();

@@ -16,6 +16,8 @@ namespace to.userrepo.test
     {
         private UserRepo _userRepo;
         private const string TestRootDir = "SampleData";
+        private const string UserBacklogsFileName = "UserBacklogs.json";
+        private const string UserInfoFileName = "UserInfo.json";
         private const string UsersTestJson = "usersTest.json";
 
         [SetUp]
@@ -140,6 +142,19 @@ namespace to.userrepo.test
             status.Should().BeOfType<Failure>();
             ((Failure) status).ErrorMessage.Should().BeEquivalentTo("User not found");
             result.Should().BeNull();
+        }
+
+        [Test]
+        public void TestGetUserBacklogIds()
+        {
+            Directory.CreateDirectory(Path.Combine(TestRootDir, "Users", "1"));
+            File.Copy(Path.Combine(TestRootDir, "UserBacklogsTest.json"), Path.Combine(TestRootDir, "Users", "1", UserBacklogsFileName), true);
+            var repo = new UserRepo(TestRootDir, UserBacklogsFileName, UserInfoFileName, g => 3);
+            var (status, backlogIds) = repo.GetUserBacklogIds(1);
+
+            status.Should().BeOfType<Success>();
+            backlogIds.Should().HaveCount(3);
+            backlogIds.Should().BeEquivalentTo(new[] {"1", "2", "3"});
         }
     }
 }

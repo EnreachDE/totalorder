@@ -51,6 +51,13 @@ namespace to.requesthandler
             }
         }
 
+        public (Status, BacklogShowQueryResult) HandleBacklogsShowRequest(int userId)
+        {
+            var backlogs = _backlogrepo.GetUserBacklogs(userId);
+
+            return (new Failure("not implemented"), null);
+        }
+
         public (Status, BacklogEvalQueryResult) HandleBacklogCreationRequest(BacklogCreationRequest request)
         {
             var backlog = new Backlog

@@ -154,5 +154,10 @@ namespace to.backlogrepo
             string path = Path.Combine(this.rootpath, id);
             Directory.Delete(path, true);
         }
+
+        public List<Backlog> GetUserBacklogs(int userId)
+        {
+            return new List<Backlog>();
+        }
     }
 }
