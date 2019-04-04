@@ -1,18 +1,17 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using to.contracts;
-using to.contracts.data.domain;
-using to.frontend.Constants;
-using to.frontend.Factories;
-using to.frontend.Models.Login;
-
-namespace to.frontend.Controllers
+﻿namespace to.frontend.Controllers
 {
+    using Microsoft.AspNetCore.Authentication;
+    using Microsoft.AspNetCore.Authentication.Cookies;
+    using Microsoft.AspNetCore.Mvc;
+    using System;
+    using System.Collections.Generic;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using to.contracts;
+    using to.contracts.data.domain;
+    using to.frontend.Constants;
+    using to.frontend.Factories;
+    using to.frontend.Models.Login;
     using contracts.data.result;
     using Microsoft.Extensions.Configuration;
 
@@ -22,10 +21,15 @@ namespace to.frontend.Controllers
 
         private const string errorMessageString = "errorMessage";
 
-        public LoginController(IConfiguration configuration)
+        private IRequestHandler requestHandler;
+
+        public LoginController(IConfiguration configuration,
+                               IRequestHandlerFactory requestHandlerFactory)
         {
             this.configuration = configuration;
+            this.requestHandler = requestHandlerFactory.GetHandler();
         }
+
         [Route("Login")]
         [HttpGet]
         public ViewResult Login(string returnUrl)
@@ -51,16 +55,13 @@ namespace to.frontend.Controllers
                     Username = model.UserName
                 };
 
-                var handlerFactory = new RequestHandlerFactory(configuration);
-                var requestHandler = handlerFactory.GetHandler();
-
-                var (status, userResult) = requestHandler.HandleLoginQuery(loginRequest);
+                var (status, userResult) = this.requestHandler.HandleLoginQuery(loginRequest);
 
                 if (status is Failure failure) { TempData[errorMessageString] = failure.ErrorMessage; }
                 else
                 {
-                        await CreateCookie(userResult);
-                        redirectUrl = returnUrl ?? "/Home";
+                    await CreateCookie(userResult);
+                    redirectUrl = returnUrl ?? "/Home";
                 }
 
                 return Redirect(redirectUrl);
@@ -87,11 +88,11 @@ namespace to.frontend.Controllers
             }
 
             var userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            
+
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(userIdentity),
-                new AuthenticationProperties{ IsPersistent = true });
+                new AuthenticationProperties { IsPersistent = true });
         }
 
         [HttpGet]
