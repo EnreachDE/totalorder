@@ -84,9 +84,16 @@ namespace to.frontend.Controllers
         [Authorize(Policy = nameof(Permission.EvaluateBacklog))]
         public ActionResult Eval(string id)
         {
-            var result = _handler.HandleBacklogEvalQuery(id);
-            var viewModel = Mapper.Map<BacklogEvalViewModel>(result);
-            return View(viewModel);
+            var (status, result) = _handler.HandleBacklogEvalQuery(id);
+            if (status is Failure failure) { 
+                TempData[ErrorMessageString] = failure.ErrorMessage;
+                return Redirect("/Home");
+            }
+            else
+            {
+                var viewModel = Mapper.Map<BacklogEvalViewModel>(result);
+                return View(viewModel);
+            }
         }
 
         [HttpGet]
