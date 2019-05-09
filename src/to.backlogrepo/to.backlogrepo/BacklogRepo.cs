@@ -19,10 +19,11 @@ namespace to.backlogrepo
 
         private readonly Func<int, int> rnd;
         private readonly Func<Guid> guidGenerator;
+        private const string _backlogsSubFolder = "Backlogs";
 
         public BacklogRepo()
         {
-            this.rootpath = Environment.CurrentDirectory;
+            this.rootpath = Path.Combine(Environment.CurrentDirectory, _backlogsSubFolder);
             var x = new Random();
             this.rnd = g => x.Next(0, g);
             this.guidGenerator = Guid.NewGuid;
@@ -30,7 +31,7 @@ namespace to.backlogrepo
 
         public BacklogRepo(string rootpath)
         {
-            this.rootpath = rootpath;
+            this.rootpath = Path.Combine(rootpath, _backlogsSubFolder);
             var x = new Random();
             this.rnd = g => x.Next(0, g);
             this.guidGenerator = Guid.NewGuid;
@@ -38,13 +39,13 @@ namespace to.backlogrepo
 
         internal BacklogRepo(string rootpath, Func<int, int> rnd)
         {
-            this.rootpath = rootpath;
+            this.rootpath = Path.Combine(rootpath, _backlogsSubFolder);
             this.rnd = rnd;
         }
 
         internal BacklogRepo(string rootpath, Func<Guid> guidGenerator)
         {
-            this.rootpath = rootpath;
+            this.rootpath = Path.Combine(rootpath, _backlogsSubFolder);
             this.guidGenerator = guidGenerator;
         }
 

@@ -16,7 +16,8 @@ namespace to.backlogrepo.test
     {
         private const string TestRootDir = "TestDB";
         private const string TestId = "XXX987";
-        private readonly string _testDir = Path.Combine(TestRootDir, TestId);
+        private const string BacklogsSubFolder = "Backlogs";
+        private readonly string _testDir = Path.Combine(TestRootDir, BacklogsSubFolder, TestId);
 
         [SetUp]
         public void Initialize()
@@ -24,9 +25,10 @@ namespace to.backlogrepo.test
             Environment.CurrentDirectory = TestContext.CurrentContext.TestDirectory;
 
             // Precondition: Cleanup from last test run
-            if (Directory.Exists(TestRootDir))
+            var path = Path.Combine(TestRootDir, BacklogsSubFolder);
+            if (Directory.Exists(path))
             {
-                Directory.Delete(TestRootDir, true);
+                Directory.Delete(path, true);
             }
 
         }
@@ -40,7 +42,7 @@ namespace to.backlogrepo.test
             var id = repo.GenerateBacklogId();
 
             id.Should().Be("BCD456");
-            Directory.Exists(Path.Combine("TestDB",id)).Should().BeTrue();
+            Directory.Exists(Path.Combine("TestDB", BacklogsSubFolder, id)).Should().BeTrue();
         }
 
         [Test]
