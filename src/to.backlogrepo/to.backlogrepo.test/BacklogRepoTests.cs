@@ -34,21 +34,9 @@ namespace to.backlogrepo.test
         }
 
         [Test]
-        public void GenerateBacklogIdTest()
-        {
-            var q = new Queue<int>(new[] { 1, 2, 3, 4, 5, 6 });
-            var repo = new BacklogRepo(TestRootDir, g => q.Dequeue());
-
-            var id = repo.GenerateBacklogId();
-
-            id.Should().Be("BCD456");
-            Directory.Exists(Path.Combine("TestDB", BacklogsSubFolder, id)).Should().BeTrue();
-        }
-
-        [Test]
         public void SaveBacklogTest()
         {
-            var repo = new BacklogRepo(TestRootDir, g => 1);
+            var repo = new BacklogRepo(TestRootDir, Guid.NewGuid);
             Backlog testBacklog = new Backlog()
             {
                 Id = String.Empty,
@@ -73,7 +61,7 @@ namespace to.backlogrepo.test
         [Test]
         public void ReadBacklogTest()
         {
-            var repo = new BacklogRepo(TestRootDir, g => 1);
+            var repo = new BacklogRepo(TestRootDir, Guid.NewGuid);
             var expectedBacklog = new Backlog()
             {
                 Id = TestId,
@@ -93,7 +81,7 @@ namespace to.backlogrepo.test
         [Test]
         public void ReadSubmissionsTest()
         {
-            var repo = new BacklogRepo(TestRootDir, g => 1);
+            var repo = new BacklogRepo(TestRootDir, Guid.NewGuid);
 
             var expectedSubmission1 = new Submission() { Indexes = new int[] { 1, 2, 3, 4 } };
             var expectedSubmission2 = new Submission() { Indexes = new int[] { 2, 4, 1, 3 } };
@@ -125,8 +113,9 @@ namespace to.backlogrepo.test
         [Test]
         public void GetAllTest()
         {
-            var q = new Queue<int>(new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 });
-            var repo = new BacklogRepo(TestRootDir, g => q.Dequeue());
+
+            var q = new Queue<Guid>(new[] { Guid.NewGuid(), Guid.NewGuid()});
+            var repo = new BacklogRepo(TestRootDir, () => q.Dequeue());
 
             var repo1 = repo.CreateBacklog(new Backlog
             {
