@@ -41,7 +41,7 @@ namespace to.backlogrepo.test
             {
                 Id = String.Empty,
                 Title = "TestBacklog",
-                UserStories = new []{ "A", "B", "C", "D" }
+                UserStories = new[] { "A", "B", "C", "D" }
             };
 
             var expectedBacklogContent = @"{""Id"":""XXX987"",""Title"":""TestBacklog"",""UserStories"":[""A"",""B"",""C"",""D""]}";
@@ -71,7 +71,7 @@ namespace to.backlogrepo.test
 
             string testDirectory = Path.Combine(Environment.CurrentDirectory, _testDir);
             Directory.CreateDirectory(testDirectory);
-            File.Copy("TestBacklog.json", Path.Combine(testDirectory, "Backlog.json"));           
+            File.Copy("TestBacklog.json", Path.Combine(testDirectory, "Backlog.json"));
 
             var actualBacklog = repo.ReadBacklog(TestId);
 
@@ -114,13 +114,13 @@ namespace to.backlogrepo.test
         public void GetAllTest()
         {
 
-            var q = new Queue<Guid>(new[] { Guid.NewGuid(), Guid.NewGuid()});
+            var q = new Queue<Guid>(new[] { Guid.NewGuid(), Guid.NewGuid() });
             var repo = new BacklogRepo(TestRootDir, () => q.Dequeue());
 
             var repo1 = repo.CreateBacklog(new Backlog
             {
                 Title = "Backlog 123456",
-                UserStories = new string[] {"UserStory 1", "UserStory 2"}
+                UserStories = new string[] { "UserStory 1", "UserStory 2" }
             });
 
             var repo2 = repo.CreateBacklog(new Backlog
@@ -128,7 +128,7 @@ namespace to.backlogrepo.test
                 Title = "Backlog ABCDEF",
                 UserStories = new string[] { "UserStory Hurra", "UserStory Ein Test" }
             });
-            
+
             var backlogs = repo.GetAll();
 
             Assert.That(backlogs.Count == 2);
@@ -142,13 +142,15 @@ namespace to.backlogrepo.test
             var testGuid = Guid.NewGuid();
             var repo = new BacklogRepo(TestRootDir, () => testGuid);
 
-            var testBacklog = new Backlog() {
-                                Id = String.Empty,
-                                Title = "TestBacklog",
-                                UserStories = new []{ "A", "B", "C", "D" } };
+            var testBacklog = new Backlog()
+            {
+                Id = String.Empty,
+                Title = "TestBacklog",
+                UserStories = new[] { "A", "B", "C", "D" }
+            };
 
             repo.SaveBacklog(testBacklog, TestId);
-            repo.WriteSubmission(TestId, new Submission() { Indexes = new [] {3, 2, 1, 0} });
+            repo.WriteSubmission(TestId, new Submission() { Indexes = new[] { 3, 2, 1, 0 } });
 
             var backlogFolderPath = Path.Combine(Environment.CurrentDirectory, _testDir);
 
@@ -160,6 +162,41 @@ namespace to.backlogrepo.test
 
             Action act = () => repo.DeleteBacklog("Rubbish");
             act.Should().Throw<DirectoryNotFoundException>("directory \"Rubbish\" does not exist");
+        }
+
+        [Test]
+        public void GetAllUserBacklogsTest()
+        {
+            var firstBacklogId = Guid.NewGuid();
+            var secondBacklogId = Guid.NewGuid();
+            var thirdBacklogId = Guid.NewGuid();
+
+            var q = new Queue<Guid>(new[] { firstBacklogId, secondBacklogId, thirdBacklogId });
+            var repo = new BacklogRepo(TestRootDir, () => q.Dequeue());
+
+            var repo1 = repo.CreateBacklog(new Backlog
+            {
+                Title = "Backlog 123456",
+                UserStories = new string[] { "UserStory 1", "UserStory 2" }
+            });
+
+            var repo2 = repo.CreateBacklog(new Backlog
+            {
+                Title = "Backlog ABCDEF",
+                UserStories = new string[] { "UserStory Hurra", "UserStory Ein Test" }
+            });
+
+            var repo3 = repo.CreateBacklog(new Backlog
+            {
+                Title = "Backlog BlaBla",
+                UserStories = new string[] { "UserStory Hurra", "UserStory Ein Test" }
+            });
+
+            var backlogs = repo.GetBacklogsByIds(new[] { firstBacklogId.ToString(), secondBacklogId.ToString() });
+
+            backlogs.Should().HaveCount(2);
+            Assert.That(backlogs.FirstOrDefault(b => b.Id == repo1) != null);
+            Assert.That(backlogs.FirstOrDefault(b => b.Id == repo2) != null);
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿// some .cs file included in your project
+
+using System.Linq;
 using System.Runtime.CompilerServices;
 using to.contracts.data.domain;
 
@@ -121,9 +123,9 @@ namespace to.backlogrepo
             Directory.Delete(path, true);
         }
 
-        public List<Backlog> GetUserBacklogs(int userId)
+        public List<Backlog> GetBacklogsByIds(IEnumerable<string> ids)
         {
-            return new List<Backlog>();
+            return ids.Select(ReadBacklog).ToList();
         }
     }
 }

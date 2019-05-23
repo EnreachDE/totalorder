@@ -25,9 +25,13 @@ namespace to.requesthandler
             _permissionsRepo = permissionsRepo;
         }
 
-        public Status HandleBacklogDeleteRequest(string id)
+        public Status HandleBacklogDeleteRequest(string backlogId, int userId)
         {
-            _backlogrepo.DeleteBacklog(id);
+            var status = _userRepo.DeleteUserBacklogId(userId, backlogId);
+            if (status is Failure) return status;
+
+            _backlogrepo.DeleteBacklog(backlogId);
+
             return new Success();
         }
 
@@ -53,9 +57,10 @@ namespace to.requesthandler
 
         public (Status, BacklogShowQueryResult) HandleBacklogsShowRequest(int userId)
         {
-            var backlogs = _backlogrepo.GetUserBacklogs(userId);
+            var (status, backlogIds) = _userRepo.GetUserBacklogIds(userId);
+            if (status is Failure) return (status, null);
 
-            return (new Failure("not implemented"), null);
+            var backlogs = _backlogrepo.GetBacklogsByIds(backlogIds);
         }
 
         public (Status, BacklogEvalQueryResult) HandleBacklogCreationRequest(BacklogCreationRequest request)
@@ -66,19 +71,22 @@ namespace to.requesthandler
                 UserStories = request.UserStories
             };
 
-            string backlogid = _backlogrepo.CreateBacklog(backlog);
-            return EvalSubmissions(backlogid);
+            var backlogId = _backlogrepo.CreateBacklog(backlog);
+            var status = _userRepo.AddUserBacklogId(request.UserId, backlogId);
+            if (status is Failure) return (status, null);
+
+            return EvalSubmissions(backlogId);
         }
 
-        private (Status, BacklogEvalQueryResult) EvalSubmissions(string backlogid)
+        private (Status, BacklogEvalQueryResult) EvalSubmissions(string backlogId)
         {
-            var submissions = _backlogrepo.ReadSubmissions(backlogid);
+            var submissions = _backlogrepo.ReadSubmissions(backlogId);
             int[] currentOrder = _totalorder.Order(submissions);
-            var backlog = _backlogrepo.ReadBacklog(backlogid);
+            var backlog = _backlogrepo.ReadBacklog(backlogId);
 
             return (new Success(), new BacklogEvalQueryResult
             {
-                Id = backlogid,
+                Id = backlogId,
                 Title = backlog.Title,
                 UserStories = applyOrder(backlog.UserStories, currentOrder),
                 NumberOfSubmissions = submissions.Length
