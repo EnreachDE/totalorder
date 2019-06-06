@@ -47,12 +47,6 @@ namespace to.requesthandler
             {
                 return new Failure("Error occured while retrieving backlogs.");
             }
-
-            BacklogShowQueryResult.BacklogDisplayItem Transform(Backlog backlog)
-            {
-                var submissions = _backlogrepo.ReadSubmissions(backlog.Id);
-                return BacklogShowQueryResult.BacklogDisplayItem.FromBacklog(backlog, submissions);
-            }
         }
 
         public (Status, BacklogShowQueryResult) HandleBacklogsShowRequest(int userId)
@@ -61,6 +55,8 @@ namespace to.requesthandler
             if (status is Failure) return (status, null);
 
             var backlogs = _backlogrepo.GetBacklogsByIds(backlogIds);
+            var displayItems = backlogs.Select(Transform);
+            return (new Success(), new BacklogShowQueryResult(displayItems));
         }
 
         public (Status, BacklogEvalQueryResult) HandleBacklogCreationRequest(BacklogCreationRequest request)
@@ -225,6 +221,12 @@ namespace to.requesthandler
                 Users = result.Select(p => new UserQueryResult(p)).ToArray()
             };
             return userListResult;
+        }
+
+        private BacklogShowQueryResult.BacklogDisplayItem Transform(Backlog backlog)
+        {
+            var submissions = _backlogrepo.ReadSubmissions(backlog.Id);
+            return BacklogShowQueryResult.BacklogDisplayItem.FromBacklog(backlog, submissions);
         }
     }
 }

@@ -13,6 +13,7 @@
     using to.frontend.Factories;
     using to.frontend.Models.Login;
     using contracts.data.result;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Configuration;
 
     public class LoginController : Controller
@@ -61,6 +62,7 @@
                 else
                 {
                     await CreateCookie(userResult);
+                    HttpContext.Session.SetInt32("userId", userResult.Id);
                     redirectUrl = returnUrl ?? "/Home";
                 }
 
