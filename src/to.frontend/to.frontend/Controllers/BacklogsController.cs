@@ -38,7 +38,7 @@ namespace to.frontend.Controllers
         public ActionResult PostCreate(CreateBacklogViewModel model)
         {
             var request = Mapper.Map<BacklogCreationRequest>(model);
-            request.UserId = HttpContext.Session.GetInt32("userId").Value;
+            request.UserId = User.GetId();
 
             var result = _handler.HandleBacklogCreationRequest(request);
 
@@ -104,7 +104,7 @@ namespace to.frontend.Controllers
         [Authorize(Policy = nameof(Permission.ListBacklog))]
         public IActionResult Index()
         {
-            var userId = HttpContext.Session.GetInt32("userId").Value;
+            var userId = User.GetId();
             var (status, result) = _handler.HandleBacklogsShowRequest(userId);
             if (status is Failure failure) { 
                 TempData[ErrorMessageString] = failure.ErrorMessage;
@@ -118,8 +118,8 @@ namespace to.frontend.Controllers
         [Authorize(Policy = nameof(Permission.DeleteBacklog))]
         public IActionResult DeleteBacklog(string id)
         {
-            int? userId = HttpContext.Session.GetInt32("userId");
-            var result = _handler.HandleBacklogDeleteRequest(id, userId.Value);
+            int userId = User.GetId();
+            var result = _handler.HandleBacklogDeleteRequest(id, userId);
 
             switch (result)
             {
