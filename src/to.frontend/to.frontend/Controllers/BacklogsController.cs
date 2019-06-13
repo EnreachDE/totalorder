@@ -48,7 +48,7 @@ namespace to.frontend.Controllers
 
         [HttpGet]
         [Route("Backlogs/Order/{id}")]
-        [Authorize(Policy = nameof(Permission.OrderBacklog))]
+        [AllowAnonymous]
         public ActionResult GetOrder(string id)
         {
             var (status, backlog) = _handler.HandleBacklogOrderQuery(id);
@@ -66,7 +66,7 @@ namespace to.frontend.Controllers
 
         [HttpPost]
         [Route("Backlogs/Order")]
-        [Authorize(Policy = nameof(Permission.OrderBacklog))]
+        [AllowAnonymous]
         public ActionResult PostOrder(BacklogOrderRequestViewModel model)
         {
             var orderRequest = Mapper.Map<BacklogOrderRequest>(model);
@@ -84,7 +84,7 @@ namespace to.frontend.Controllers
 
         [HttpGet]
         [Route("Backlogs/Eval/{id}")]
-        [Authorize(Policy = nameof(Permission.EvaluateBacklog))]
+        [AllowAnonymous]
         public ActionResult Eval(string id)
         {
             var (status, result) = _handler.HandleBacklogEvalQuery(id);

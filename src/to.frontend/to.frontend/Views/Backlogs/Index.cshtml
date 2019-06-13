@@ -34,6 +34,7 @@
                  @if(User.HasPermission(Permission.OrderBacklog))
                  {
                      <button class="orderBacklog" data-id="@backlog.Id">Order</button>
+                     <button class="createOrderLink" data-id="@backlog.Id">Copy Link to Clipboard</button>
                  }
                  @if(User.HasPermission(Permission.DeleteBacklog))
                  {
@@ -71,6 +72,16 @@ else
                 function () {
                     window.location.reload();
                 });
+        });
+
+        $(".createOrderLink").on("click", function() {
+            var id = $(this).data("id");
+            var el = document.createElement('textarea');
+            el.value = window.location +"/Order/"+ id;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
         });
     });
 </script>
