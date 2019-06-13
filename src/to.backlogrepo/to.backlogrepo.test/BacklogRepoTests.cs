@@ -16,7 +16,8 @@ namespace to.backlogrepo.test
     {
         private const string TestRootDir = "TestDB";
         private const string TestId = "XXX987";
-        private readonly string _testDir = Path.Combine(TestRootDir, TestId);
+        private const string BacklogsSubFolder = "Backlogs";
+        private readonly string _testDir = Path.Combine(TestRootDir, BacklogsSubFolder, TestId);
 
         [SetUp]
         public void Initialize()
@@ -24,34 +25,23 @@ namespace to.backlogrepo.test
             Environment.CurrentDirectory = TestContext.CurrentContext.TestDirectory;
 
             // Precondition: Cleanup from last test run
-            if (Directory.Exists(TestRootDir))
+            var path = Path.Combine(TestRootDir, BacklogsSubFolder);
+            if (Directory.Exists(path))
             {
-                Directory.Delete(TestRootDir, true);
+                Directory.Delete(path, true);
             }
 
         }
 
         [Test]
-        public void GenerateBacklogIdTest()
-        {
-            var q = new Queue<int>(new[] { 1, 2, 3, 4, 5, 6 });
-            var repo = new BacklogRepo(TestRootDir, g => q.Dequeue());
-
-            var id = repo.GenerateBacklogId();
-
-            id.Should().Be("BCD456");
-            Directory.Exists(Path.Combine("TestDB",id)).Should().BeTrue();
-        }
-
-        [Test]
         public void SaveBacklogTest()
         {
-            var repo = new BacklogRepo(TestRootDir, g => 1);
+            var repo = new BacklogRepo(TestRootDir, Guid.NewGuid);
             Backlog testBacklog = new Backlog()
             {
                 Id = String.Empty,
                 Title = "TestBacklog",
-                UserStories = new []{ "A", "B", "C", "D" }
+                UserStories = new[] { "A", "B", "C", "D" }
             };
 
             var expectedBacklogContent = @"{""Id"":""XXX987"",""Title"":""TestBacklog"",""UserStories"":[""A"",""B"",""C"",""D""]}";
@@ -71,7 +61,7 @@ namespace to.backlogrepo.test
         [Test]
         public void ReadBacklogTest()
         {
-            var repo = new BacklogRepo(TestRootDir, g => 1);
+            var repo = new BacklogRepo(TestRootDir, Guid.NewGuid);
             var expectedBacklog = new Backlog()
             {
                 Id = TestId,
@@ -81,7 +71,7 @@ namespace to.backlogrepo.test
 
             string testDirectory = Path.Combine(Environment.CurrentDirectory, _testDir);
             Directory.CreateDirectory(testDirectory);
-            File.Copy("TestBacklog.json", Path.Combine(testDirectory, "Backlog.json"));           
+            File.Copy("TestBacklog.json", Path.Combine(testDirectory, "Backlog.json"));
 
             var actualBacklog = repo.ReadBacklog(TestId);
 
@@ -91,7 +81,7 @@ namespace to.backlogrepo.test
         [Test]
         public void ReadSubmissionsTest()
         {
-            var repo = new BacklogRepo(TestRootDir, g => 1);
+            var repo = new BacklogRepo(TestRootDir, Guid.NewGuid);
 
             var expectedSubmission1 = new Submission() { Indexes = new int[] { 1, 2, 3, 4 } };
             var expectedSubmission2 = new Submission() { Indexes = new int[] { 2, 4, 1, 3 } };
@@ -123,13 +113,14 @@ namespace to.backlogrepo.test
         [Test]
         public void GetAllTest()
         {
-            var q = new Queue<int>(new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 });
-            var repo = new BacklogRepo(TestRootDir, g => q.Dequeue());
+
+            var q = new Queue<Guid>(new[] { Guid.NewGuid(), Guid.NewGuid() });
+            var repo = new BacklogRepo(TestRootDir, () => q.Dequeue());
 
             var repo1 = repo.CreateBacklog(new Backlog
             {
                 Title = "Backlog 123456",
-                UserStories = new string[] {"UserStory 1", "UserStory 2"}
+                UserStories = new string[] { "UserStory 1", "UserStory 2" }
             });
 
             var repo2 = repo.CreateBacklog(new Backlog
@@ -137,7 +128,7 @@ namespace to.backlogrepo.test
                 Title = "Backlog ABCDEF",
                 UserStories = new string[] { "UserStory Hurra", "UserStory Ein Test" }
             });
-            
+
             var backlogs = repo.GetAll();
 
             Assert.That(backlogs.Count == 2);
@@ -151,13 +142,15 @@ namespace to.backlogrepo.test
             var testGuid = Guid.NewGuid();
             var repo = new BacklogRepo(TestRootDir, () => testGuid);
 
-            var testBacklog = new Backlog() {
-                                Id = String.Empty,
-                                Title = "TestBacklog",
-                                UserStories = new []{ "A", "B", "C", "D" } };
+            var testBacklog = new Backlog()
+            {
+                Id = String.Empty,
+                Title = "TestBacklog",
+                UserStories = new[] { "A", "B", "C", "D" }
+            };
 
             repo.SaveBacklog(testBacklog, TestId);
-            repo.WriteSubmission(TestId, new Submission() { Indexes = new [] {3, 2, 1, 0} });
+            repo.WriteSubmission(TestId, new Submission() { Indexes = new[] { 3, 2, 1, 0 } });
 
             var backlogFolderPath = Path.Combine(Environment.CurrentDirectory, _testDir);
 
@@ -169,6 +162,41 @@ namespace to.backlogrepo.test
 
             Action act = () => repo.DeleteBacklog("Rubbish");
             act.Should().Throw<DirectoryNotFoundException>("directory \"Rubbish\" does not exist");
+        }
+
+        [Test]
+        public void GetAllUserBacklogsTest()
+        {
+            var firstBacklogId = Guid.NewGuid();
+            var secondBacklogId = Guid.NewGuid();
+            var thirdBacklogId = Guid.NewGuid();
+
+            var q = new Queue<Guid>(new[] { firstBacklogId, secondBacklogId, thirdBacklogId });
+            var repo = new BacklogRepo(TestRootDir, () => q.Dequeue());
+
+            var repo1 = repo.CreateBacklog(new Backlog
+            {
+                Title = "Backlog 123456",
+                UserStories = new string[] { "UserStory 1", "UserStory 2" }
+            });
+
+            var repo2 = repo.CreateBacklog(new Backlog
+            {
+                Title = "Backlog ABCDEF",
+                UserStories = new string[] { "UserStory Hurra", "UserStory Ein Test" }
+            });
+
+            var repo3 = repo.CreateBacklog(new Backlog
+            {
+                Title = "Backlog BlaBla",
+                UserStories = new string[] { "UserStory Hurra", "UserStory Ein Test" }
+            });
+
+            var backlogs = repo.GetBacklogsByIds(new[] { firstBacklogId.ToString(), secondBacklogId.ToString() });
+
+            backlogs.Should().HaveCount(2);
+            Assert.That(backlogs.FirstOrDefault(b => b.Id == repo1) != null);
+            Assert.That(backlogs.FirstOrDefault(b => b.Id == repo2) != null);
         }
     }
 }

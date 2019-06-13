@@ -1,4 +1,6 @@
 ﻿// some .cs file included in your project
+
+using System.Linq;
 using System.Runtime.CompilerServices;
 using to.contracts.data.domain;
 
@@ -17,40 +19,32 @@ namespace to.backlogrepo
     {
         private readonly string rootpath;
 
-        private readonly Func<int, int> rnd;
         private readonly Func<Guid> guidGenerator;
+        private const string _backlogsSubFolder = "Backlogs";
 
         public BacklogRepo()
         {
-            this.rootpath = Environment.CurrentDirectory;
+            this.rootpath = Path.Combine(Environment.CurrentDirectory, _backlogsSubFolder);
             var x = new Random();
-            this.rnd = g => x.Next(0, g);
             this.guidGenerator = Guid.NewGuid;
         }
 
         public BacklogRepo(string rootpath)
         {
-            this.rootpath = rootpath;
+            this.rootpath = Path.Combine(rootpath, _backlogsSubFolder);
             var x = new Random();
-            this.rnd = g => x.Next(0, g);
             this.guidGenerator = Guid.NewGuid;
-        }
-
-        internal BacklogRepo(string rootpath, Func<int, int> rnd)
-        {
-            this.rootpath = rootpath;
-            this.rnd = rnd;
         }
 
         internal BacklogRepo(string rootpath, Func<Guid> guidGenerator)
         {
-            this.rootpath = rootpath;
+            this.rootpath = Path.Combine(rootpath, _backlogsSubFolder);
             this.guidGenerator = guidGenerator;
         }
 
         public string CreateBacklog(Backlog backlog)
         {
-            var id = GenerateBacklogId();
+            var id = guidGenerator().ToString();
             SaveBacklog(backlog, id);
             return id;
         }
@@ -68,32 +62,6 @@ namespace to.backlogrepo
             var backlogPath = Path.Combine(this.rootpath, id);
             Directory.CreateDirectory(backlogPath);
             return backlogPath;
-        }
-
-        internal string GenerateBacklogId()
-        {
-            var backlogId = new StringBuilder();
-            string fullPath;
-
-            do
-            {
-                for (var i = 0; i < 3; i++)
-                {
-                    backlogId.Append((char) (this.rnd(25) + 65));
-                }
-
-                for (var i = 0; i < 3; i++)
-                {
-                    backlogId.Append(this.rnd(9));
-                }
-
-                fullPath = Path.Combine(this.rootpath, backlogId.ToString());
-            }
-            while (Directory.Exists(fullPath));
-
-            Directory.CreateDirectory(fullPath);
-
-            return backlogId.ToString();
         }
 
         public Submission[] ReadSubmissions(string id)
@@ -153,6 +121,11 @@ namespace to.backlogrepo
         {
             string path = Path.Combine(this.rootpath, id);
             Directory.Delete(path, true);
+        }
+
+        public List<Backlog> GetBacklogsByIds(IEnumerable<string> ids)
+        {
+            return ids.Select(ReadBacklog).ToList();
         }
     }
 }

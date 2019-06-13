@@ -14,5 +14,8 @@ namespace to.contracts
         (Status, IEnumerable<User>) GetExistingUsers();
         Status AddUser(User user);
         (Status, IEnumerable<User>) DeleteUser(int id);
+        (Status, IEnumerable<string>) GetUserBacklogIds(int userId);
+        Status AddUserBacklogId(int userId, string backlogId);
+        Status DeleteUserBacklogId(int userId, string backlogId);
     }
 }

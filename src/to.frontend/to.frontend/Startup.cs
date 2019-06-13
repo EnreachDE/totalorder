@@ -37,7 +37,9 @@ namespace to.frontend
             });
 
             services.AddSingleton<IRequestHandlerFactory, RequestHandlerFactory>();
+            services.AddSession();
             services.AddMvc();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +56,8 @@ namespace to.frontend
             }
 
             app.UseStaticFiles();
+
+            app.UseSession();
 
             app.UseAuthentication();
 

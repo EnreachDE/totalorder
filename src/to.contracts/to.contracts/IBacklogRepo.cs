@@ -11,5 +11,6 @@ namespace to.contracts
         void WriteSubmission(string id, Submission submission);
         List<Backlog> GetAll();
         void DeleteBacklog(string id);
+        List<Backlog> GetBacklogsByIds(IEnumerable<string> ids);
     }
 }

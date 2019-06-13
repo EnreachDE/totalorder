@@ -8,8 +8,9 @@ namespace to.contracts
 {
     public interface IRequestHandler
     {
-        Status HandleBacklogDeleteRequest(string id);
+        Status HandleBacklogDeleteRequest(string backlogId, int userId);
         Status HandleBacklogsShowRequest();
+        (Status, BacklogShowQueryResult) HandleBacklogsShowRequest(int userId);
         (Status, BacklogEvalQueryResult) HandleBacklogCreationRequest(BacklogCreationRequest request);
         (Status, BacklogEvalQueryResult) HandleBacklogEvalQuery(string id);
         (Status, BacklogOrderQueryResult) HandleBacklogOrderQuery(string id);
@@ -114,6 +115,7 @@ namespace to.contracts
     public class BacklogCreationRequest
     {
         public string Title { get; set; }
+        public int UserId { get; set; }
         public string[] UserStories { get; set; }
     }
 

@@ -16,6 +16,9 @@ namespace to.userrepo.test
     {
         private UserRepo _userRepo;
         private const string TestRootDir = "SampleData";
+        private const string UserBacklogsFileName = "UserBacklogs.json";
+        private const string UserInfoFileName = "UserInfo.json";
+        private const string UsersDirectoryName = "Users";
         private const string UsersTestJson = "usersTest.json";
 
         [SetUp]
@@ -23,7 +26,14 @@ namespace to.userrepo.test
         {
             Environment.CurrentDirectory = TestContext.CurrentContext.TestDirectory;
             _userRepo = new UserRepo(TestRootDir, UsersTestJson);
-            File.Copy(Path.Combine(TestRootDir, "users.json"), Path.Combine(TestRootDir, UsersTestJson), true);
+            
+            var usersDirectory = Path.Combine(TestRootDir, UsersDirectoryName);
+            if (Directory.Exists(usersDirectory))
+            {
+                Directory.Delete(usersDirectory, true);
+            }
+            Directory.CreateDirectory(usersDirectory);
+            File.Copy(Path.Combine(TestRootDir, "users.json"), Path.Combine(TestRootDir, UsersDirectoryName, UsersTestJson), true);
         }
 
         [Test]
@@ -103,6 +113,12 @@ namespace to.userrepo.test
             var (status1, userList) = repo.GetExistingUsers();
             status1.Should().BeOfType<Success>();
             userList.FirstOrDefault(p => p.Id == 3).Should().BeEquivalentTo(expectedUser);
+
+            var userDirectory = Path.Combine(TestRootDir, UsersDirectoryName, user.Id.ToString());
+            Directory.Exists(userDirectory).Should().BeTrue();
+
+            var backlogsFile = Path.Combine(userDirectory, UserBacklogsFileName);
+            File.Exists(backlogsFile).Should().BeTrue();
         }
 
         [Test]
@@ -122,11 +138,23 @@ namespace to.userrepo.test
             var repo = new UserRepo(TestRootDir, UsersTestJson, g => 3);
 
             var idToDelete = 1;
+            var userDirectory = Path.Combine(TestRootDir, UsersDirectoryName, idToDelete.ToString());
+            var userBacklogsFile = Path.Combine(userDirectory, UserBacklogsFileName);
+            if (!Directory.Exists(userDirectory))
+            {
+                Directory.CreateDirectory(userDirectory);
+            }
+            if (!File.Exists(userBacklogsFile))
+            {
+                File.WriteAllText(userBacklogsFile, "{}");
+            }
+
             var (status, result) = repo.DeleteUser(idToDelete);
 
             status.Should().BeOfType<Success>();
             result.Should().NotBeEmpty();
             result.Any(u => u.Id == idToDelete).Should().BeFalse();
+            Directory.Exists(userDirectory).Should().BeFalse();
         }
 
         [Test]
@@ -140,6 +168,64 @@ namespace to.userrepo.test
             status.Should().BeOfType<Failure>();
             ((Failure) status).ErrorMessage.Should().BeEquivalentTo("User not found");
             result.Should().BeNull();
+        }
+
+        [Test]
+        public void TestGetUserBacklogIds()
+        {
+            Directory.CreateDirectory(Path.Combine(TestRootDir, UsersDirectoryName, "1"));
+            File.Copy(Path.Combine(TestRootDir, "UserBacklogsTest.json"), Path.Combine(TestRootDir, UsersDirectoryName, "1", UserBacklogsFileName), true);
+            var repo = new UserRepo(TestRootDir, UserBacklogsFileName, UserInfoFileName, g => 3);
+            var (status, backlogIds) = repo.GetUserBacklogIds(1);
+
+            status.Should().BeOfType<Success>();
+            backlogIds.Should().HaveCount(3);
+            backlogIds.Should().BeEquivalentTo(new[] {"1", "2", "3"});
+        }
+
+        [Test]
+        public void TestAddBacklogForUser()
+        {
+            var repo = new UserRepo(TestRootDir, UsersTestJson, g => 3);
+            var user = new User { Id = 0, PasswordHash = "x", Username = "newuser", UserRole = UserRole.Guest };
+
+            var status = repo.AddUser(user);
+            status.Should().BeOfType<Success>();
+
+            const string backlogId = "newrepoid";
+
+            var addStatus = repo.AddUserBacklogId(3, backlogId);
+            addStatus.Should().BeOfType<Success>();
+
+            var (getStatus, backlogIds) = repo.GetUserBacklogIds(3);
+            getStatus.Should().BeOfType<Success>();
+            backlogIds.Contains(backlogId).Should().BeTrue();
+        }
+
+        [Test]
+        public void TestDeleteBacklogForUser()
+        {
+            var repo = new UserRepo(TestRootDir, UsersTestJson, g => 3);
+            var user = new User { Id = 0, PasswordHash = "x", Username = "newuser", UserRole = UserRole.Guest };
+
+            var status = repo.AddUser(user);
+            status.Should().BeOfType<Success>();
+
+            const string backlogId = "newrepoid";
+
+            var addStatus = repo.AddUserBacklogId(3, backlogId);
+            addStatus.Should().BeOfType<Success>();
+
+            var (getStatus, backlogIds) = repo.GetUserBacklogIds(3);
+            getStatus.Should().BeOfType<Success>();
+            backlogIds.Contains(backlogId).Should().BeTrue();
+
+            var deleteStatus = repo.DeleteUserBacklogId(3, backlogId);
+            deleteStatus.Should().BeOfType<Success>();
+
+            (getStatus, backlogIds) = repo.GetUserBacklogIds(3);
+            getStatus.Should().BeOfType<Success>();
+            backlogIds.Contains(backlogId).Should().BeFalse();
         }
     }
 }

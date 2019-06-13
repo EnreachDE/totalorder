@@ -64,12 +64,13 @@ namespace to.requesthandlertest
             IBacklogRepo repo = new BacklogRepoTest();
             ITotalOrder totalOrder = new TotalOrder();
 
-            RequestHandler requestHandler = new RequestHandler(repo, totalOrder, null, null, null);
+            RequestHandler requestHandler = new RequestHandler(repo, totalOrder, _userRepo.Object, null, null);
 
             BacklogCreationRequest backlogCreationRequest = new BacklogCreationRequest
             {
                 Title = "The backlog",
-                UserStories = new string[] { "A", "B", "C" }
+                UserStories = new string[] { "A", "B", "C" },
+                UserId = 123
             };
             var (status, result) = requestHandler.HandleBacklogCreationRequest(backlogCreationRequest);
             status.Should().BeOfType(typeof(Success));
@@ -207,6 +208,16 @@ namespace to.requesthandlertest
         }
 
         public void DeleteBacklog(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Backlog> GetBacklogsByIds(IEnumerable<string> ids)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Backlog> GetBacklogsByIds(int userId)
         {
             throw new NotImplementedException();
         }

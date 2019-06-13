@@ -9,6 +9,8 @@ using to.frontend.Models.Backlog;
 
 namespace to.frontend.Controllers
 {
+    using Microsoft.AspNetCore.Http;
+
     [Authorize(Roles = nameof(UserRole.Developer) +", "+ nameof(UserRole.ProductOwner) +", "+ nameof(UserRole.Administrator))]
     public class BacklogsController : Controller
     {
@@ -36,6 +38,7 @@ namespace to.frontend.Controllers
         public ActionResult PostCreate(CreateBacklogViewModel model)
         {
             var request = Mapper.Map<BacklogCreationRequest>(model);
+            request.UserId = HttpContext.Session.GetInt32("userId").Value;
 
             var result = _handler.HandleBacklogCreationRequest(request);
 
@@ -101,13 +104,13 @@ namespace to.frontend.Controllers
         [Authorize(Policy = nameof(Permission.ListBacklog))]
         public IActionResult Index()
         {
-            switch(_handler.HandleBacklogsShowRequest())
-            {
-                case Success<BacklogShowQueryResult> s:
-                    return View(new BacklogShowViewModel { Result = new Success(), Backlogs = s.Data });
-                default:
-                    return View(new BacklogShowViewModel { Result = new Failure("Error occured while listing backlogs."), Backlogs = null });
+            var userId = HttpContext.Session.GetInt32("userId").Value;
+            var (status, result) = _handler.HandleBacklogsShowRequest(userId);
+            if (status is Failure failure) { 
+                TempData[ErrorMessageString] = failure.ErrorMessage;
+                return Redirect("/Home");
             }
+            return View(new BacklogShowViewModel { Result = new Success(), Backlogs = result });
         }
 
         [HttpPost]
@@ -115,7 +118,8 @@ namespace to.frontend.Controllers
         [Authorize(Policy = nameof(Permission.DeleteBacklog))]
         public IActionResult DeleteBacklog(string id)
         {
-            var result = _handler.HandleBacklogDeleteRequest(id);
+            int? userId = HttpContext.Session.GetInt32("userId");
+            var result = _handler.HandleBacklogDeleteRequest(id, userId.Value);
 
             switch (result)
             {
