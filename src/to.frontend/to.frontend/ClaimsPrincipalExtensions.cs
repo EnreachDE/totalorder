@@ -21,5 +21,15 @@ namespace to.frontend
 
             return false;
         }
+
+        public static int GetId(this ClaimsPrincipal user)
+        {
+            if (user.Identity.IsAuthenticated)
+            {
+                return int.Parse(user.Claims.First(x => x.Type == CustomClaims.UserId).Value);
+            }
+
+            return -1;
+        }
     }
 }

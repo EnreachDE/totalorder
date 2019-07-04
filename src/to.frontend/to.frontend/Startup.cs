@@ -37,7 +37,6 @@ namespace to.frontend
             });
 
             services.AddSingleton<IRequestHandlerFactory, RequestHandlerFactory>();
-            services.AddSession();
             services.AddMvc();
             
         }
@@ -56,8 +55,6 @@ namespace to.frontend
             }
 
             app.UseStaticFiles();
-
-            app.UseSession();
 
             app.UseAuthentication();
 

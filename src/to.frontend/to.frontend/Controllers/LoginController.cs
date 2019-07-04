@@ -1,20 +1,19 @@
 ﻿namespace to.frontend.Controllers
 {
+    using contracts.data.result;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Configuration;
     using System;
     using System.Collections.Generic;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using to.contracts;
-    using to.contracts.data.domain;
     using to.frontend.Constants;
     using to.frontend.Factories;
     using to.frontend.Models.Login;
-    using contracts.data.result;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Configuration;
 
     public class LoginController : Controller
     {
@@ -62,7 +61,6 @@
                 else
                 {
                     await CreateCookie(userResult);
-                    HttpContext.Session.SetInt32("userId", userResult.Id);
                     redirectUrl = returnUrl ?? "/Home";
                 }
 
@@ -81,7 +79,8 @@
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, user.UserRole.ToString())
+                new Claim(ClaimTypes.Role, user.UserRole.ToString()),
+                new Claim(CustomClaims.UserId, user.Id.ToString())
             };
 
             foreach (var permission in user.Permissions)
