@@ -34,6 +34,9 @@
                  @if(User.HasPermission(Permission.OrderBacklog))
                  {
                      <button class="orderBacklog" data-id="@backlog.Id">Order</button>
+                 }
+                 @if(User.HasPermission(Permission.CreateBacklog))
+                 {
                      <button class="createOrderLink" data-id="@backlog.Id">Copy Link to Clipboard</button>
                  }
                  @if(User.HasPermission(Permission.DeleteBacklog))
