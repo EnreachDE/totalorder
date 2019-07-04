@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using to.contracts.data.domain;
-using to.contracts.data.result;
-
-namespace to.contracts
+﻿namespace to.contracts
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using data.domain;
+    using data.result;
+
     public interface IRequestHandler
     {
         Status HandleBacklogDeleteRequest(string backlogId, int userId);
@@ -27,8 +27,9 @@ namespace to.contracts
     {
         public BacklogShowQueryResult(IEnumerable<BacklogDisplayItem> backlogs)
         {
-            Backlogs = backlogs.ToList();
+            this.Backlogs = backlogs.ToList();
         }
+
         public List<BacklogDisplayItem> Backlogs { get; set; }
 
         public class BacklogDisplayItem
@@ -38,12 +39,14 @@ namespace to.contracts
             public int UserStoryCount { get; set; }
             public int VoteCount { get; set; }
 
-            public static BacklogDisplayItem FromBacklog(Backlog backlog, Submission[] submissions) => new BacklogDisplayItem() {
-                Id = backlog.Id,
-                Title = backlog.Title,
-                UserStoryCount = backlog.UserStories.Length,
-                VoteCount = submissions.Length
-            };
+            public static BacklogDisplayItem FromBacklog(Backlog backlog, Submission[] submissions) =>
+                new BacklogDisplayItem
+                {
+                    Id = backlog.Id,
+                    Title = backlog.Title,
+                    UserStoryCount = backlog.UserStories.Length,
+                    VoteCount = submissions.Length
+                };
         }
     }
 
@@ -55,7 +58,7 @@ namespace to.contracts
 
     public class UserListResult
     {
-        public UserQueryResult[] Users{ get; set; }
+        public UserQueryResult[] Users { get; set; }
     }
 
     public class UserEditRequest
@@ -70,32 +73,30 @@ namespace to.contracts
 
     public class UserQueryResult
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public UserRole UserRole { get; set; }
-
         public UserQueryResult()
         {
-            
         }
 
         public UserQueryResult(User user)
         {
-            Id = user.Id;
-            UserRole = user.UserRole;
-            Username = user.Username;
+            this.Id = user.Id;
+            this.UserRole = user.UserRole;
+            this.Username = user.Username;
         }
+
+        public int Id { get; set; }
+        public string Username { get; set; }
+        public UserRole UserRole { get; set; }
     }
 
     public class UserLoginQueryResult : UserQueryResult
     {
         public UserLoginQueryResult(User user, List<Permission> permissions) : base(user)
         {
-            Permissions = permissions;
+            this.Permissions = permissions;
         }
 
         public List<Permission> Permissions { get; set; }
-
     }
 
     public class BacklogOrderRequest

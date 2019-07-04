@@ -2,60 +2,60 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Total Order</title>
-    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/bootstrap-theme.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="~/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="~/css/site.css"/>
     <script type="text/javascript" src="~/js/jquery-1.10.2.min.js"></script>
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Total Order", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    @if (User.HasPermission(Permission.ListBacklog))
-                    {
-                        <li>@Html.ActionLink("Backlogs", "Index", "Backlogs")</li>
-                    }
-                    @if (User.HasPermission(Permission.ListUser))
-                    {
-                        <li>@Html.ActionLink("Administration", "Index", "Admin")</li>
-                    }
-                </ul>
-            </div>
-            @if (User.Identity.IsAuthenticated)
-            {
-                <div class="logoutLink">
-                    <a class="btn btn-primary" href="/Logout">Logout</a>
-                </div>
-            }
-            else
-            {
-                <div class="logoutLink">
-                    <a class="btn btn-primary" href="/Login">Login</a>
-                </div>
-            }
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @Html.ActionLink("Total Order", "Index", "Home", new {area = ""}, new {@class = "navbar-brand"})
         </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                @if (User.HasPermission(Permission.ListBacklog))
+                {
+                    <li>@Html.ActionLink("Backlogs", "Index", "Backlogs")</li>
+                }
+                @if (User.HasPermission(Permission.ListUser))
+                {
+                    <li>@Html.ActionLink("Administration", "Index", "Admin")</li>
+                }
+            </ul>
+        </div>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="logoutLink">
+                <a class="btn btn-primary" href="/Logout">Logout</a>
+            </div>
+        }
+        else
+        {
+            <div class="logoutLink">
+                <a class="btn btn-primary" href="/Login">Login</a>
+            </div>
+        }
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Swyx Solutions GmbH</p>
-        </footer>
-    </div>
+</div>
+<div class="container body-content">
+    @RenderBody()
+    <hr/>
+    <footer>
+        <p>&copy; @DateTime.Now.Year - Swyx Solutions GmbH</p>
+    </footer>
+</div>
 
-    @RenderSection("scripts", required: false)
+@RenderSection("scripts", false)
 </body>
 </html>

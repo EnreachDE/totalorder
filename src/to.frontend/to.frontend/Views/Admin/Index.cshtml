@@ -29,21 +29,25 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $(".editUser").on("click", function() {
-            var id = $(this).data("id");
-            window.location.href = "/Admin/EditUser/"+ id;
-        });
+        $(".editUser").on("click",
+            function() {
+                var id = $(this).data("id");
+                window.location.href = "/Admin/EditUser/" + id;
+            });
 
-        $("#createUser").on("click", function(e) {
-            window.location.href = "/Admin/CreateUser";
-        });
+        $("#createUser").on("click",
+            function(e) {
+                window.location.href = "/Admin/CreateUser";
+            });
 
-        $(".deleteUser").on("click", function (e) {
-            var id = $(this).data("id");
-            $.post("/Admin/DeleteUser", { id: id },
-                function() {
-                    window.location.reload();
-                });
-        });
+        $(".deleteUser").on("click",
+            function(e) {
+                var id = $(this).data("id");
+                $.post("/Admin/DeleteUser",
+                    { id: id },
+                    function() {
+                        window.location.reload();
+                    });
+            });
     });
 </script>

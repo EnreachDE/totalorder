@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2037
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29025.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "to.contracts", "src\to.contracts\to.contracts\to.contracts.csproj", "{64A69B9A-0AA7-4F70-873D-F7EC5A286651}"
 EndProject
@@ -70,9 +70,7 @@ Global
 		{A4F94D66-6155-4343-A18E-CCD153A6A1E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4F94D66-6155-4343-A18E-CCD153A6A1E4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0E4861C1-193F-452A-BD04-98981C634D6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0E4861C1-193F-452A-BD04-98981C634D6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E4861C1-193F-452A-BD04-98981C634D6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0E4861C1-193F-452A-BD04-98981C634D6D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{64659305-7FAC-4869-8AC2-1725A9331266}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{64659305-7FAC-4869-8AC2-1725A9331266}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64659305-7FAC-4869-8AC2-1725A9331266}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -1,9 +1,11 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using to.frontend.Models;
-
-namespace to.frontend.Controllers
+﻿namespace to.frontend.Controllers
 {
+    using System.Diagnostics;
+
+    using Microsoft.AspNetCore.Mvc;
+
+    using Models;
+
     public class HomeController : Controller
     {
         public IActionResult Index()
@@ -13,7 +15,7 @@ namespace to.frontend.Controllers
 
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier});
         }
     }
 }

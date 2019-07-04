@@ -1,6 +1,5 @@
 ﻿namespace to.contracts
 {
-    using System;
     using data.result;
 
     public interface ISecurity

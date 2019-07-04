@@ -175,7 +175,7 @@ namespace to.userrepo.test
         {
             Directory.CreateDirectory(Path.Combine(TestRootDir, UsersDirectoryName, "1"));
             File.Copy(Path.Combine(TestRootDir, "UserBacklogsTest.json"), Path.Combine(TestRootDir, UsersDirectoryName, "1", UserBacklogsFileName), true);
-            var repo = new UserRepo(TestRootDir, UserBacklogsFileName, UserInfoFileName, g => 3);
+            var repo = new UserRepo(TestRootDir, UserInfoFileName, g => 3);
             var (status, backlogIds) = repo.GetUserBacklogIds(1);
 
             status.Should().BeOfType<Success>();

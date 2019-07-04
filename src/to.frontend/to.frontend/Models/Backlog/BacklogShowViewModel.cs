@@ -1,8 +1,8 @@
-﻿using to.contracts;
-using to.contracts.data.result;
-
-namespace to.frontend.Models.Backlog
+﻿namespace to.frontend.Models.Backlog
 {
+    using contracts;
+    using contracts.data.result;
+
     public class BacklogShowViewModel
     {
         public Status Result { get; set; }

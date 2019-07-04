@@ -1,22 +1,22 @@
 ﻿@using to.contracts.data.domain
 @model to.frontend.Models.Admin.CreateUserModel
 <h1>Create User</h1>
-@Html.ValidationSummary(true, "", new { @class = "alert alert-danger hidden" })
+@Html.ValidationSummary(true, "", new {@class = "alert alert-danger hidden"})
 <form action="/Admin/CreateUser" method="post">
     <div class="form-group">
         <label for="username">Username</label>
         <input type="text" class="form-control" id="username" name="@nameof(Model.Username)" aria-describedby="username" placeholder="The username" value="@Model.Username">
-        @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
+        @Html.ValidationMessageFor(m => m.Username, "", new {@class = "text-danger"})
     </div>
     <div class="form-group">
         <label for="password">Password</label>
         <input type="password" class="form-control" id="password" name="@nameof(Model.Password)" aria-describedby="password" placeholder="The password">
-        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+        @Html.ValidationMessageFor(m => m.Password, "", new {@class = "text-danger"})
     </div>
     <div class="form-group">
         <label for="passwordRepeat">Repeat password</label>
         <input type="password" class="form-control" id="passwordRepeat" name="@nameof(Model.PasswordRepeat)" aria-describedby="passwordRepeat" placeholder="The password">
-        @Html.ValidationMessageFor(m => m.PasswordRepeat, "", new { @class = "text-danger" })
+        @Html.ValidationMessageFor(m => m.PasswordRepeat, "", new {@class = "text-danger"})
     </div>
     <div class="form-group">
         <label for="userrole">User Role</label>
@@ -38,11 +38,12 @@
 </form>
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#back").on("click", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            window.location.href = "/Admin";
-        });
+        $("#back").on("click",
+            function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.location.href = "/Admin";
+            });
 
         if ($(".validation-summary-errors ul li").length > 0) {
             $(".validation-summary-errors").removeClass("hidden");

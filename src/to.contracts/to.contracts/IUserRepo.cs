@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using to.contracts.data.domain;
-
-namespace to.contracts
+﻿namespace to.contracts
 {
+    using System.Collections.Generic;
+
+    using data.domain;
     using data.result;
 
     public interface IUserRepo

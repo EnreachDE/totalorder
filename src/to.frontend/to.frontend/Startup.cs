@@ -1,22 +1,29 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Linq;
-using to.contracts;
-using to.frontend.Constants;
-using to.frontend.Factories;
-using to.frontend.Models.Backlog;
-
-namespace to.frontend
+﻿namespace to.frontend
 {
+    using System;
+    using System.Linq;
+
+    using AutoMapper;
+
+    using Constants;
+
+    using contracts;
+
+    using Factories;
+
+    using Microsoft.AspNetCore.Authentication.Cookies;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+
+    using Models.Backlog;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -31,14 +38,12 @@ namespace to.frontend
             {
                 var permissions = Enum.GetValues(typeof(Permission));
                 foreach (var permission in permissions)
-                {
-                    options.AddPolicy(permission.ToString(), policy => policy.RequireClaim(CustomClaims.Permission, permission.ToString()));
-                }
+                    options.AddPolicy(permission.ToString(),
+                        policy => policy.RequireClaim(CustomClaims.Permission, permission.ToString()));
             });
 
             services.AddSingleton<IRequestHandlerFactory, RequestHandlerFactory>();
             services.AddMvc();
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,18 +66,20 @@ namespace to.frontend
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
             });
 
-            AutoMapper.Mapper.Initialize(config =>
+            Mapper.Initialize(config =>
             {
                 config.CreateMap<BacklogCreationRequest, CreateBacklogViewModel>().ReverseMap();
                 config.CreateMap<BacklogOrderQueryResult, BacklogEvalViewModel>().ReverseMap();
                 config.CreateMap<BacklogEvalQueryResult, BacklogEvalViewModel>().ReverseMap();
                 config.CreateMap<BacklogOrderRequest, BacklogOrderViewModel>().ReverseMap();
                 config.CreateMap<BacklogOrderRequestViewModel, BacklogOrderRequest>()
-                    .ForMember(d => d.UserStoryIndexes, s => s.MapFrom(str => str.UserStoryIndexes.Split(',', StringSplitOptions.None).Select(Int32.Parse).ToList()));
+                    .ForMember(d => d.UserStoryIndexes,
+                        s => s.MapFrom(str =>
+                            str.UserStoryIndexes.Split(',', StringSplitOptions.None).Select(int.Parse).ToList()));
             });
         }
     }

@@ -5,6 +5,6 @@
         Guest,
         ProductOwner,
         Developer,
-        Administrator,
+        Administrator
     }
 }

@@ -1,30 +1,33 @@
 ﻿namespace to.frontend.Controllers
 {
-    using contracts.data.result;
-    using Microsoft.AspNetCore.Authentication;
-    using Microsoft.AspNetCore.Authentication.Cookies;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Configuration;
     using System;
     using System.Collections.Generic;
     using System.Security.Claims;
     using System.Threading.Tasks;
-    using to.contracts;
-    using to.frontend.Constants;
-    using to.frontend.Factories;
-    using to.frontend.Models.Login;
+
+    using Constants;
+
+    using contracts;
+    using contracts.data.result;
+
+    using Factories;
+
+    using Microsoft.AspNetCore.Authentication;
+    using Microsoft.AspNetCore.Authentication.Cookies;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Configuration;
+
+    using Models.Login;
 
     public class LoginController : Controller
     {
+        private const string ErrorMessageString = "errorMessage";
+
+        private readonly IRequestHandler requestHandler;
         private IConfiguration configuration;
 
-        private const string errorMessageString = "errorMessage";
-
-        private IRequestHandler requestHandler;
-
         public LoginController(IConfiguration configuration,
-                               IRequestHandlerFactory requestHandlerFactory)
+            IRequestHandlerFactory requestHandlerFactory)
         {
             this.configuration = configuration;
             this.requestHandler = requestHandlerFactory.GetHandler();
@@ -34,11 +37,12 @@
         [HttpGet]
         public ViewResult Login(string returnUrl)
         {
-            ViewBag.ReturnUrl = returnUrl;
-            if (TempData != null && !string.IsNullOrEmpty((string)TempData[errorMessageString]))
+            this.ViewBag.ReturnUrl = returnUrl;
+            if (this.TempData != null && !string.IsNullOrEmpty((string) this.TempData[ErrorMessageString]))
             {
-                ModelState.AddModelError("", (string)TempData[errorMessageString]);
+                this.ModelState.AddModelError("", (string) this.TempData[ErrorMessageString]);
             }
+
             return View();
         }
 
@@ -57,7 +61,10 @@
 
                 var (status, userResult) = this.requestHandler.HandleLoginQuery(loginRequest);
 
-                if (status is Failure failure) { TempData[errorMessageString] = failure.ErrorMessage; }
+                if (status is Failure failure)
+                {
+                    this.TempData[ErrorMessageString] = failure.ErrorMessage;
+                }
                 else
                 {
                     await CreateCookie(userResult);
@@ -68,8 +75,8 @@
             }
             catch (Exception ex)
             {
-                TempData["Exception"] = ex;
-                TempData["Model"] = model;
+                this.TempData["Exception"] = ex;
+                this.TempData["Model"] = model;
                 return View("Error");
             }
         }
@@ -84,23 +91,21 @@
             };
 
             foreach (var permission in user.Permissions)
-            {
                 claims.Add(new Claim(CustomClaims.Permission, permission.ToString()));
-            }
 
             var userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-            await HttpContext.SignInAsync(
+            await this.HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(userIdentity),
-                new AuthenticationProperties { IsPersistent = true });
+                new AuthenticationProperties {IsPersistent = true});
         }
 
         [HttpGet]
         [Route("Logout")]
         public async Task<ActionResult> GetLogout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await this.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return Redirect("/Home");
         }
 

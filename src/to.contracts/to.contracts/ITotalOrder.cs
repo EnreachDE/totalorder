@@ -1,7 +1,7 @@
-﻿using to.contracts.data.domain;
-
-namespace to.contracts
+﻿namespace to.contracts
 {
+    using data.domain;
+
     public interface ITotalOrder
     {
         int[] Order(Submission[] submissions);

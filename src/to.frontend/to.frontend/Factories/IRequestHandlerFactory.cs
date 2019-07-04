@@ -1,14 +1,21 @@
-﻿using to.backlogrepo;
-using to.contracts;
-using to.requesthandler;
-using to.security;
-using to.totalorder;
-using to.userrepo;
-using to.permissionrepo;
-using Microsoft.Extensions.Configuration;
-
-namespace to.frontend.Factories
+﻿namespace to.frontend.Factories
 {
+    using backlogrepo;
+
+    using contracts;
+
+    using Microsoft.Extensions.Configuration;
+
+    using permissionrepo;
+
+    using requesthandler;
+
+    using security;
+
+    using totalorder;
+
+    using userrepo;
+
     public interface IRequestHandlerFactory
     {
         IRequestHandler GetHandler();
@@ -16,14 +23,16 @@ namespace to.frontend.Factories
 
     public class RequestHandlerFactory : IRequestHandlerFactory
     {
-        private IConfiguration _configuration;
-        
+        private readonly IConfiguration configuration;
+
         public RequestHandlerFactory(IConfiguration configuration)
         {
-            this._configuration = configuration;
+            this.configuration = configuration;
         }
-        public IRequestHandler GetHandler() {
-            string rootPath = this._configuration.GetValue<string>("App:DataRootPath");
+
+        public IRequestHandler GetHandler()
+        {
+            var rootPath = this.configuration.GetValue<string>("App:DataRootPath");
             return new RequestHandler(
                 new BacklogRepo(rootPath),
                 new TotalOrder(),

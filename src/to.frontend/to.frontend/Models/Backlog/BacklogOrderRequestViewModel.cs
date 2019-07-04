@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace to.frontend.Models.Backlog
+﻿namespace to.frontend.Models.Backlog
 {
     public class BacklogOrderRequestViewModel
     {

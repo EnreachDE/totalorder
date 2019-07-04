@@ -1,50 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using Newtonsoft.Json;
-using to.contracts;
-using to.contracts.data.domain;
-using to.userrepo.Domain;
-
-namespace to.userrepo
+﻿namespace to.userrepo
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+
+    using contracts;
+    using contracts.data.domain;
     using contracts.data.result;
+
+    using Domain;
+
+    using Newtonsoft.Json;
 
     public class UserRepo : IUserRepo
     {
-        private readonly string _rootpath;
-        private readonly string _userListFileName;
-        private const string _userBacklogsFileName = "UserBacklogs.json";
-        private readonly string _userInfoFileName;
-        private const string _usersSubFolder = "Users";
-        private readonly Func<int, int> _idGenerator;
+        private const string UserBacklogsFileName = "UserBacklogs.json";
+        private const string UsersSubFolder = "Users";
+        private readonly Func<int, int> idGenerator;
+        private readonly string rootPath;
+        private readonly string userListFileName;
 
-        public UserRepo(string rootpath, string userListFileName)
+        public UserRepo(string rootPath, string userListFileName)
         {
             var rnd = new Random();
-            _idGenerator = max => rnd.Next(0, max);
-            _rootpath = rootpath;
-            _userListFileName = userListFileName;
+            this.idGenerator = max => rnd.Next(0, max);
+            this.rootPath = rootPath;
+            this.userListFileName = userListFileName;
         }
 
         public UserRepo(Func<int, int> idGenerator) : this(Environment.CurrentDirectory, "users.json", idGenerator)
         {
         }
 
-        public UserRepo(string rootpath, string filename, Func<int, int> idGenerator) 
+        public UserRepo(string rootPath, string filename, Func<int, int> idGenerator)
         {
-            _rootpath = rootpath;
-            _userListFileName = filename;
-            _idGenerator = idGenerator;
-        }
-
-        public UserRepo(string rootpath, string userBacklogsFileName, string userInfoFileName, Func<int, int> idGenerator) 
-        {
-            _rootpath = rootpath;
-            _userInfoFileName = userInfoFileName;
-            _idGenerator = idGenerator;
+            this.rootPath = rootPath;
+            this.userListFileName = filename;
+            this.idGenerator = idGenerator;
         }
 
         public (Status, User) LoadUser(string username)
@@ -54,7 +47,9 @@ namespace to.userrepo
             var user = users.GetUserByName(username);
 
             if (user != null)
+            {
                 return (new Success(), user);
+            }
 
             return (new Failure($"User {username} does not exist"), null);
         }
@@ -66,7 +61,9 @@ namespace to.userrepo
             var user = users.GetById(id);
 
             if (user != null)
+            {
                 return (new Success(), user);
+            }
 
             return (new Failure($"User with ID {id} does not exist"), null);
         }
@@ -77,7 +74,10 @@ namespace to.userrepo
             var users = ReadUserList();
 
             var user = users.GetById(id);
-            if (user == null) return (new Failure($"User with id {id} does not exist."));
+            if (user == null)
+            {
+                return new Failure($"User with id {id} does not exist.");
+            }
 
             user.UserRole = role;
             SaveUserList(users);
@@ -103,7 +103,7 @@ namespace to.userrepo
 
             if (users.Exists(user))
             {
-                return (new Failure("User already exists"));
+                return new Failure("User already exists");
             }
 
             users.Add(user);
@@ -111,30 +111,6 @@ namespace to.userrepo
             CreateUserDirectory(user.Id);
 
             return new Success();
-        }
-
-        private void CreateUserDirectory(int userId)
-        {
-            var path = Path.Combine(_rootpath, _usersSubFolder, userId.ToString());
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-
-            var filePath = Path.Combine(path, _userBacklogsFileName);
-            if (!File.Exists(filePath))
-            {
-                File.AppendAllText(filePath, "[]");
-            }
-        }
-
-        private void DeleteUserDirectory(int userId)
-        {
-            var path = Path.Combine(_rootpath, _usersSubFolder, userId.ToString());
-            if (Directory.Exists(path))
-            {
-                Directory.Delete(path, true);
-            }
         }
 
         public (Status, IEnumerable<User>) DeleteUser(int id)
@@ -156,10 +132,12 @@ namespace to.userrepo
 
         public (Status, IEnumerable<string>) GetUserBacklogIds(int userId)
         {
-            var path = Path.Combine(_rootpath, _usersSubFolder, userId.ToString(), _userBacklogsFileName);
+            var path = Path.Combine(this.rootPath, UsersSubFolder, userId.ToString(), UserBacklogsFileName);
             if (!File.Exists(path))
+            {
                 return (new Failure("Cannot find requested user backlogs."), null);
-            
+            }
+
             var jsonString = File.ReadAllText(path);
             var backlogIds = JsonConvert.DeserializeObject<List<string>>(jsonString);
 
@@ -168,46 +146,72 @@ namespace to.userrepo
 
         public Status AddUserBacklogId(int userId, string backlogId)
         {
-            var path = Path.Combine(_rootpath, _usersSubFolder, userId.ToString(), _userBacklogsFileName);
+            var path = Path.Combine(this.rootPath, UsersSubFolder, userId.ToString(), UserBacklogsFileName);
             var backlogIds = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText(path));
-            if (!backlogIds.Contains(backlogId))
+            if (backlogIds.Contains(backlogId))
             {
-                backlogIds.Add(backlogId);
-                var jsonString = JsonConvert.SerializeObject(backlogIds.ToList());
-                File.WriteAllText(path, jsonString);
-                return new Success();
+                return new Failure("BacklogId exists already");
             }
 
-            return new Failure("BacklogId exists already");
+            backlogIds.Add(backlogId);
+            var jsonString = JsonConvert.SerializeObject(backlogIds.ToList());
+            File.WriteAllText(path, jsonString);
+            return new Success();
+
         }
 
         public Status DeleteUserBacklogId(int userId, string backlogId)
         {
-            var path = Path.Combine(_rootpath, _usersSubFolder, userId.ToString(), _userBacklogsFileName);
+            var path = Path.Combine(this.rootPath, UsersSubFolder, userId.ToString(), UserBacklogsFileName);
             var backlogIds = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText(path));
-            if (backlogIds.Contains(backlogId))
+            if (!backlogIds.Contains(backlogId))
             {
-                backlogIds.Remove(backlogId);
-                var jsonString = JsonConvert.SerializeObject(backlogIds.ToList());
-                File.WriteAllText(path, jsonString);
-                return new Success();
+                return new Failure("BacklogId does not exist");
             }
 
-            return new Failure("BacklogId does not exist");
+            backlogIds.Remove(backlogId);
+            var jsonString = JsonConvert.SerializeObject(backlogIds.ToList());
+            File.WriteAllText(path, jsonString);
+            return new Success();
+
+        }
+
+        private void CreateUserDirectory(int userId)
+        {
+            var path = Path.Combine(this.rootPath, UsersSubFolder, userId.ToString());
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            var filePath = Path.Combine(path, UserBacklogsFileName);
+            if (!File.Exists(filePath))
+            {
+                File.AppendAllText(filePath, "[]");
+            }
+        }
+
+        private void DeleteUserDirectory(int userId)
+        {
+            var path = Path.Combine(this.rootPath, UsersSubFolder, userId.ToString());
+            if (Directory.Exists(path))
+            {
+                Directory.Delete(path, true);
+            }
         }
 
         private void SaveUserList(UserList users)
         {
             var jsonString = JsonConvert.SerializeObject(users.ToList(), Formatting.Indented);
-            File.WriteAllText(Path.Combine(_rootpath,_usersSubFolder, _userListFileName), jsonString);
+            File.WriteAllText(Path.Combine(this.rootPath, UsersSubFolder, this.userListFileName), jsonString);
         }
 
         private UserList ReadUserList()
         {
-            var jsonString = File.ReadAllText(Path.Combine(_rootpath, _usersSubFolder, _userListFileName));
+            var jsonString = File.ReadAllText(Path.Combine(this.rootPath, UsersSubFolder, this.userListFileName));
             var users = JsonConvert.DeserializeObject<List<User>>(jsonString);
 
-            var userList = new UserList(_idGenerator);
+            var userList = new UserList(this.idGenerator);
             userList.Add(users);
             return userList;
         }

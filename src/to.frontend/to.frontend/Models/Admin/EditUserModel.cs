@@ -1,7 +1,7 @@
-﻿using to.contracts.data.domain;
-
-namespace to.frontend.Models.Admin
+﻿namespace to.frontend.Models.Admin
 {
+    using contracts.data.domain;
+
     public class EditUserModel
     {
         public int Id { get; set; }

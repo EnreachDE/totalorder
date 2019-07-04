@@ -1,25 +1,28 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using to.contracts;
-using to.contracts.data.domain;
-using to.contracts.data.result;
-using to.frontend.Factories;
-using to.frontend.Models.Backlog;
-
-namespace to.frontend.Controllers
+﻿namespace to.frontend.Controllers
 {
-    using Microsoft.AspNetCore.Http;
+    using AutoMapper;
 
-    [Authorize(Roles = nameof(UserRole.Developer) +", "+ nameof(UserRole.ProductOwner) +", "+ nameof(UserRole.Administrator))]
+    using contracts;
+    using contracts.data.domain;
+    using contracts.data.result;
+
+    using Factories;
+
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+
+    using Models.Backlog;
+
+    [Authorize(Roles = nameof(UserRole.Developer) + ", " + nameof(UserRole.ProductOwner) + ", " +
+                       nameof(UserRole.Administrator))]
     public class BacklogsController : Controller
     {
-        private readonly IRequestHandler _handler;
         private const string ErrorMessageString = "errorMessage";
+        private readonly IRequestHandler handler;
 
         public BacklogsController(IRequestHandlerFactory factory)
         {
-            _handler = factory.GetHandler();
+            this.handler = factory.GetHandler();
         }
 
         [HttpGet]
@@ -38,12 +41,12 @@ namespace to.frontend.Controllers
         public ActionResult PostCreate(CreateBacklogViewModel model)
         {
             var request = Mapper.Map<BacklogCreationRequest>(model);
-            request.UserId = User.GetId();
+            request.UserId = this.User.GetId();
 
-            var result = _handler.HandleBacklogCreationRequest(request);
+            var result = this.handler.HandleBacklogCreationRequest(request);
 
             var evalModel = Mapper.Map<BacklogEvalQueryResult>(result.Item2);
-            return RedirectToAction(nameof(Eval), new { evalModel.Id });
+            return RedirectToAction(nameof(Eval), new {evalModel.Id});
         }
 
         [HttpGet]
@@ -51,11 +54,11 @@ namespace to.frontend.Controllers
         [AllowAnonymous]
         public ActionResult GetOrder(string id)
         {
-            var (status, backlog) = _handler.HandleBacklogOrderQuery(id);
+            var (status, backlog) = this.handler.HandleBacklogOrderQuery(id);
             switch (status)
             {
                 case Failure f:
-                    TempData[ErrorMessageString] = f.ErrorMessage;
+                    this.TempData[ErrorMessageString] = f.ErrorMessage;
                     return Redirect("/Home");
             }
 
@@ -70,16 +73,15 @@ namespace to.frontend.Controllers
         public ActionResult PostOrder(BacklogOrderRequestViewModel model)
         {
             var orderRequest = Mapper.Map<BacklogOrderRequest>(model);
-            var (status, result) = _handler.HandleBacklogOrderSubmissionRequest(orderRequest);
-            if (status is Failure failure) { 
-                TempData[ErrorMessageString] = failure.ErrorMessage;
+            var (status, result) = this.handler.HandleBacklogOrderSubmissionRequest(orderRequest);
+            if (status is Failure failure)
+            {
+                this.TempData[ErrorMessageString] = failure.ErrorMessage;
                 return Redirect("/Home");
             }
-            else
-            {
-                var viewModel = Mapper.Map<BacklogEvalViewModel>(result);
-                return RedirectToAction(nameof(Eval), new { viewModel.Id });
-            }            
+
+            var viewModel = Mapper.Map<BacklogEvalViewModel>(result);
+            return RedirectToAction(nameof(Eval), new {viewModel.Id});
         }
 
         [HttpGet]
@@ -87,16 +89,15 @@ namespace to.frontend.Controllers
         [AllowAnonymous]
         public ActionResult Eval(string id)
         {
-            var (status, result) = _handler.HandleBacklogEvalQuery(id);
-            if (status is Failure failure) { 
-                TempData[ErrorMessageString] = failure.ErrorMessage;
+            var (status, result) = this.handler.HandleBacklogEvalQuery(id);
+            if (status is Failure failure)
+            {
+                this.TempData[ErrorMessageString] = failure.ErrorMessage;
                 return Redirect("/Home");
             }
-            else
-            {
-                var viewModel = Mapper.Map<BacklogEvalViewModel>(result);
-                return View(viewModel);
-            }
+
+            var viewModel = Mapper.Map<BacklogEvalViewModel>(result);
+            return View(viewModel);
         }
 
         [HttpGet]
@@ -104,13 +105,15 @@ namespace to.frontend.Controllers
         [Authorize(Policy = nameof(Permission.ListBacklog))]
         public IActionResult Index()
         {
-            var userId = User.GetId();
-            var (status, result) = _handler.HandleBacklogsShowRequest(userId);
-            if (status is Failure failure) { 
-                TempData[ErrorMessageString] = failure.ErrorMessage;
+            var userId = this.User.GetId();
+            var (status, result) = this.handler.HandleBacklogsShowRequest(userId);
+            if (status is Failure failure)
+            {
+                this.TempData[ErrorMessageString] = failure.ErrorMessage;
                 return Redirect("/Home");
             }
-            return View(new BacklogShowViewModel { Result = new Success(), Backlogs = result });
+
+            return View(new BacklogShowViewModel {Result = new Success(), Backlogs = result});
         }
 
         [HttpPost]
@@ -118,13 +121,13 @@ namespace to.frontend.Controllers
         [Authorize(Policy = nameof(Permission.DeleteBacklog))]
         public IActionResult DeleteBacklog(string id)
         {
-            int userId = User.GetId();
-            var result = _handler.HandleBacklogDeleteRequest(id, userId);
+            var userId = this.User.GetId();
+            var result = this.handler.HandleBacklogDeleteRequest(id, userId);
 
             switch (result)
             {
                 case Failure f:
-                    TempData[ErrorMessageString] = f.ErrorMessage;
+                    this.TempData[ErrorMessageString] = f.ErrorMessage;
                     break;
             }
 

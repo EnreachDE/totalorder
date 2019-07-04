@@ -1,27 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using Newtonsoft.Json;
-using to.contracts;
-using to.contracts.data.domain;
-using to.contracts.data.result;
-
-namespace to.permissionrepo
+﻿namespace to.permissionrepo
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+
+    using contracts;
+    using contracts.data.domain;
+    using contracts.data.result;
+
+    using Newtonsoft.Json;
+
     public class PermissionRepo : IPermissionRepo
     {
-        private readonly string _rootpath;
-        private readonly string _fileName = "permissions.json";
+        private readonly string fileName = "permissions.json";
+        private readonly string rootPath;
 
         public PermissionRepo()
         {
-            this._rootpath = Environment.CurrentDirectory;
+            this.rootPath = Environment.CurrentDirectory;
         }
 
-        public PermissionRepo(string rootpath, string fileName)
+        public PermissionRepo(string rootPath, string fileName)
         {
-            _rootpath = rootpath;
-            _fileName = fileName;
+            this.rootPath = rootPath;
+            this.fileName = fileName;
         }
 
         public (Status, IEnumerable<Permission>) LoadPermissions(UserRole role)
@@ -30,7 +32,8 @@ namespace to.permissionrepo
             return RetrieveRolePermissions(role, dict);
         }
 
-        private static (Status, IEnumerable<Permission>) RetrieveRolePermissions(UserRole role, Dictionary<UserRole, List<Permission>> dict)
+        private static (Status, IEnumerable<Permission>) RetrieveRolePermissions(UserRole role,
+            Dictionary<UserRole, List<Permission>> dict)
         {
             dict.TryGetValue(role, out var permissions);
             if (permissions != null)
@@ -43,9 +46,8 @@ namespace to.permissionrepo
 
         private Dictionary<UserRole, List<Permission>> ReadPermissionDictionary()
         {
-            var jsonString = File.ReadAllText(Path.Combine(this._rootpath, _fileName));
+            var jsonString = File.ReadAllText(Path.Combine(this.rootPath, this.fileName));
             return JsonConvert.DeserializeObject<Dictionary<UserRole, List<Permission>>>(jsonString);
         }
-
     }
 }

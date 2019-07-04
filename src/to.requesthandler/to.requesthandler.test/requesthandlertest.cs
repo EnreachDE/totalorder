@@ -36,23 +36,23 @@ namespace to.requesthandlertest
         }
 
         [Test]
-        public void applyOrderTest()
+        public void ApplyOrderTest()
         {
             string[] userStories = new[] { "A", "B", "C" };
             int[] currentOrder = { 1, 0, 2 };
 
-            var newUserStoriesOrdered = RequestHandler.applyOrder(userStories, currentOrder);
+            var newUserStoriesOrdered = RequestHandler.ApplyOrder(userStories, currentOrder);
 
             string[] expected = new[] { "B", "A", "C" };
             newUserStoriesOrdered.Should().BeEquivalentTo(expected);
         }
 
         [Test]
-        public void applyOrderWithoutSubmissionTest()
+        public void ApplyOrderWithoutSubmissionTest()
         {
             string[] userStories = new[] { "A", "B", "C" };
             int[] currentOrder = { };
-            var newUserStoriesOrdered = RequestHandler.applyOrder(userStories, currentOrder);
+            var newUserStoriesOrdered = RequestHandler.ApplyOrder(userStories, currentOrder);
 
             string[] expected = new[] { "A", "B", "C" };
             newUserStoriesOrdered.Should().BeEquivalentTo(expected);

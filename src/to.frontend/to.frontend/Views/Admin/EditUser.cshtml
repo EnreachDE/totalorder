@@ -27,9 +27,10 @@
     <button type="submit">Save</button>
 </form>
 <script type="text/javascript">
-    $("#back").on("click", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        window.history.back();
-    });
+    $("#back").on("click",
+        function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.history.back();
+        });
 </script>

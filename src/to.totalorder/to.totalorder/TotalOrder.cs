@@ -1,15 +1,14 @@
-﻿
-
-namespace to.totalorder
+﻿namespace to.totalorder
 {
     using System;
+
     using contracts;
     using contracts.data.domain;
 
-    struct IndexOrder
+    internal struct IndexOrder
     {
-        public int order;
-        public int index;
+        public int Order;
+        public int Index;
     }
 
     public class TotalOrder : ITotalOrder
@@ -21,7 +20,7 @@ namespace to.totalorder
 
         private static IndexOrder[] DetermineOrder(Submission[] submissions)
         {
-            int indexLen = 0;
+            var indexLen = 0;
 
             // determine the number of submission indices
             if (submissions.Length > 0)
@@ -30,36 +29,26 @@ namespace to.totalorder
             }
 
             // create array of order / index pairs
-            IndexOrder[] indexOrder = new IndexOrder[indexLen];
-            for (int ii = 0; ii < indexLen; ii++)
-            {
-                indexOrder[ii].index = ii;
-            }
+            var indexOrder = new IndexOrder[indexLen];
+            for (var ii = 0; ii < indexLen; ii++) indexOrder[ii].Index = ii;
 
             // accumulate orders
             foreach (var submission in submissions)
-            {
-                for (int ii = 0; ii < submission.Indexes.Length; ii++)
-                {
+                for (var ii = 0; ii < submission.Indexes.Length; ii++)
                     if (submission.Indexes[ii] < indexLen)
                     {
-                        indexOrder[submission.Indexes[ii]].order += ii;
+                        indexOrder[submission.Indexes[ii]].Order += ii;
                     }
-                }
-            }
 
             return indexOrder;
         }
 
         private static int[] SortOrder(IndexOrder[] indexOrder)
         {
-            Array.Sort<IndexOrder>(indexOrder, (x, y) => x.order.CompareTo(y.order));
+            Array.Sort(indexOrder, (x, y) => x.Order.CompareTo(y.Order));
 
-            int[] result = new int[indexOrder.Length];
-            for (int ii = 0; ii < indexOrder.Length; ii++)
-            {
-                result[ii] = indexOrder[ii].index;
-            }
+            var result = new int[indexOrder.Length];
+            for (var ii = 0; ii < indexOrder.Length; ii++) result[ii] = indexOrder[ii].Index;
 
             return result;
         }

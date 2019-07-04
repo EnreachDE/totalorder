@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace to.frontend.Models.Backlog
+﻿namespace to.frontend.Models.Backlog
 {
+    using System.Collections.Generic;
+
     public class BacklogEvalViewModel
     {
         public string Id { get; set; }

@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-md-6 userStories">
             @Html.LabelFor(p => p.UserStories)&nbsp;<button id="addUserStory">+</button><br/><br/>
-            @Html.EditorFor(p => p.UserStories)<br/><br/> 
+            @Html.EditorFor(p => p.UserStories)<br/><br/>
         </div>
     </div><br/>
     <div class="row">
@@ -25,14 +25,19 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $("#addUserStory").on("click", function(e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
+        $("#addUserStory").on("click",
+            function(e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
 
-            var numItems = $(".userStories input").length;
-            var html = '<input class="text-box single-line" id="UserStories_'+ numItems +'_" name="UserStories['+ numItems +']" type="text"></input><br/><br/>';
-            $(".userStories").append(html);
-            $(".userStories input:last").focus();
-        });
+                var numItems = $(".userStories input").length;
+                var html = '<input class="text-box single-line" id="UserStories_' +
+                    numItems +
+                    '_" name="UserStories[' +
+                    numItems +
+                    ']" type="text"></input><br/><br/>';
+                $(".userStories").append(html);
+                $(".userStories input:last").focus();
+            });
     });
 </script>

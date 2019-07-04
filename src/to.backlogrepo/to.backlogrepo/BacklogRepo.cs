@@ -1,8 +1,6 @@
 ﻿// some .cs file included in your project
 
-using System.Linq;
 using System.Runtime.CompilerServices;
-using to.contracts.data.domain;
 
 [assembly: InternalsVisibleTo("to.backlogrepo.test")]
 
@@ -11,62 +9,49 @@ namespace to.backlogrepo
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Text;
-    using to.contracts;
+
+    using contracts;
+    using contracts.data.domain;
+
     using Newtonsoft.Json;
 
     public class BacklogRepo : IBacklogRepo
     {
-        private readonly string rootpath;
+        private const string BacklogsSubFolder = "Backlogs";
 
         private readonly Func<Guid> guidGenerator;
-        private const string _backlogsSubFolder = "Backlogs";
+        private readonly string rootPath;
 
         public BacklogRepo()
         {
-            this.rootpath = Path.Combine(Environment.CurrentDirectory, _backlogsSubFolder);
-            var x = new Random();
+            this.rootPath = Path.Combine(Environment.CurrentDirectory, BacklogsSubFolder);
             this.guidGenerator = Guid.NewGuid;
         }
 
-        public BacklogRepo(string rootpath)
+        public BacklogRepo(string rootPath)
         {
-            this.rootpath = Path.Combine(rootpath, _backlogsSubFolder);
-            var x = new Random();
+            this.rootPath = Path.Combine(rootPath, BacklogsSubFolder);
             this.guidGenerator = Guid.NewGuid;
         }
 
-        internal BacklogRepo(string rootpath, Func<Guid> guidGenerator)
+        internal BacklogRepo(string rootPath, Func<Guid> guidGenerator)
         {
-            this.rootpath = Path.Combine(rootpath, _backlogsSubFolder);
+            this.rootPath = Path.Combine(rootPath, BacklogsSubFolder);
             this.guidGenerator = guidGenerator;
         }
 
         public string CreateBacklog(Backlog backlog)
         {
-            var id = guidGenerator().ToString();
+            var id = this.guidGenerator().ToString();
             SaveBacklog(backlog, id);
             return id;
         }
 
-        internal void SaveBacklog(Backlog backlog, string id)
-        {
-            backlog.Id = id;
-            var jsonString = JsonConvert.SerializeObject(backlog);
-            var backlogDirectory = CreateBacklogDirectory(id);
-            File.WriteAllText(Path.Combine(backlogDirectory, "Backlog.json"), jsonString);
-        }
-
-        private string CreateBacklogDirectory(string id)
-        {
-            var backlogPath = Path.Combine(this.rootpath, id);
-            Directory.CreateDirectory(backlogPath);
-            return backlogPath;
-        }
-
         public Submission[] ReadSubmissions(string id)
         {
-            var filePaths = Directory.GetFiles(Path.Combine(this.rootpath, id));
+            var filePaths = Directory.GetFiles(Path.Combine(this.rootPath, id));
             var tempList = new List<Submission>();
 
             foreach (var filePath in filePaths)
@@ -87,17 +72,17 @@ namespace to.backlogrepo
 
         public Backlog ReadBacklog(string id)
         {
-            var backlogDirectory = Path.Combine(this.rootpath, id);
-            var jsonString = File.ReadAllText(Path.Combine(backlogDirectory,"Backlog.json"));
+            var backlogDirectory = Path.Combine(this.rootPath, id);
+            var jsonString = File.ReadAllText(Path.Combine(backlogDirectory, "Backlog.json"));
             return JsonConvert.DeserializeObject<Backlog>(jsonString);
         }
 
         public void WriteSubmission(string id, Submission submission)
         {
-            var submissionPath = Path.Combine(this.rootpath, id);
+            var submissionPath = Path.Combine(this.rootPath, id);
             var fileName = new StringBuilder();
             fileName.Append("Submission-");
-            fileName.Append(guidGenerator().ToString());
+            fileName.Append(this.guidGenerator().ToString());
             fileName.Append(".json");
             var jsonString = JsonConvert.SerializeObject(submission);
             File.WriteAllText(Path.Combine(submissionPath, fileName.ToString()), jsonString);
@@ -107,7 +92,7 @@ namespace to.backlogrepo
         {
             var backlogs = new List<Backlog>();
 
-            var backlogDirs = Directory.GetDirectories(this.rootpath);
+            var backlogDirs = Directory.GetDirectories(this.rootPath);
             foreach (var backlogDir in backlogDirs)
             {
                 var jsonString = File.ReadAllText(Path.Combine(backlogDir, "Backlog.json"));
@@ -119,13 +104,28 @@ namespace to.backlogrepo
 
         public void DeleteBacklog(string id)
         {
-            string path = Path.Combine(this.rootpath, id);
+            var path = Path.Combine(this.rootPath, id);
             Directory.Delete(path, true);
         }
 
         public List<Backlog> GetBacklogsByIds(IEnumerable<string> ids)
         {
             return ids.Select(ReadBacklog).ToList();
+        }
+
+        internal void SaveBacklog(Backlog backlog, string id)
+        {
+            backlog.Id = id;
+            var jsonString = JsonConvert.SerializeObject(backlog);
+            var backlogDirectory = CreateBacklogDirectory(id);
+            File.WriteAllText(Path.Combine(backlogDirectory, "Backlog.json"), jsonString);
+        }
+
+        private string CreateBacklogDirectory(string id)
+        {
+            var backlogPath = Path.Combine(this.rootPath, id);
+            Directory.CreateDirectory(backlogPath);
+            return backlogPath;
         }
     }
 }

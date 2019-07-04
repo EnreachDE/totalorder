@@ -1,51 +1,51 @@
-﻿@using StackExchange.Redis
-@using to.contracts
-@using to.contracts.data.domain
+﻿@using to.contracts
 @using to.contracts.data.result
 @model to.frontend.Models.Backlog.BacklogShowViewModel
 
 <h1>Backlogs</h1>
 @if (User.HasPermission(Permission.CreateBacklog))
 {
-    <button id="createBacklog">Create Backlog</button><br/><br/>
+    <button id="createBacklog">Create Backlog</button>
+    <br/>
+    <br/>
 }
 
 @if (Model.Result is Success)
 {
     <table class="table">
         <thead>
-            <th>ID</th>
-            <th>Title</th>
-            <th>User Stories</th>
-            <th>Votes</th>  
+        <th>ID</th>
+        <th>Title</th>
+        <th>User Stories</th>
+        <th>Votes</th>
         </thead>
-    @foreach (var backlog in Model.Backlogs.Backlogs)
-    {
-         <tr>
-             <td>@backlog.Id</td>
-             <td>@backlog.Title</td>
-             <td>@backlog.UserStoryCount</td>
-             <td>@backlog.VoteCount</td>
-             <td class="noButtonWrap">
-                 @if(User.HasPermission(Permission.EvaluateBacklog))
-                 {
-                     <button class="evalBacklog" data-id="@backlog.Id">Eval</button>
-                 }
-                 @if(User.HasPermission(Permission.OrderBacklog))
-                 {
-                     <button class="orderBacklog" data-id="@backlog.Id">Order</button>
-                 }
-                 @if(User.HasPermission(Permission.CreateBacklog))
-                 {
-                     <button class="createOrderLink" data-id="@backlog.Id">Copy Link to Clipboard</button>
-                 }
-                 @if(User.HasPermission(Permission.DeleteBacklog))
-                 {
-                     <button class="deleteBacklog" data-id="@backlog.Id">Delete</button>
-                 }
-             </td>
-         </tr>
-    }
+        @foreach (var backlog in Model.Backlogs.Backlogs)
+        {
+            <tr>
+                <td>@backlog.Id</td>
+                <td>@backlog.Title</td>
+                <td>@backlog.UserStoryCount</td>
+                <td>@backlog.VoteCount</td>
+                <td class="noButtonWrap">
+                    @if (User.HasPermission(Permission.EvaluateBacklog))
+                    {
+                        <button class="evalBacklog" data-id="@backlog.Id">Eval</button>
+                    }
+                    @if (User.HasPermission(Permission.OrderBacklog))
+                    {
+                        <button class="orderBacklog" data-id="@backlog.Id">Order</button>
+                    }
+                    @if (User.HasPermission(Permission.CreateBacklog))
+                    {
+                        <button class="createOrderLink" data-id="@backlog.Id">Copy Link to Clipboard</button>
+                    }
+                    @if (User.HasPermission(Permission.DeleteBacklog))
+                    {
+                        <button class="deleteBacklog" data-id="@backlog.Id">Delete</button>
+                    }
+                </td>
+            </tr>
+        }
     </table>
 }
 else
@@ -55,36 +55,42 @@ else
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $(".evalBacklog").on("click", function() {
-            var id = $(this).data("id");
-            window.location.href = "/Backlogs/Eval/"+ id;
-        });
+        $(".evalBacklog").on("click",
+            function() {
+                var id = $(this).data("id");
+                window.location.href = "/Backlogs/Eval/" + id;
+            });
 
-        $(".orderBacklog").on("click", function (e) {
-            var id = $(this).data("id");
-            window.location.href = "/Backlogs/Order/" + id;
-        });
+        $(".orderBacklog").on("click",
+            function(e) {
+                var id = $(this).data("id");
+                window.location.href = "/Backlogs/Order/" + id;
+            });
 
-        $("#createBacklog").on("click", function() {
-            window.location.href = "/Backlogs/Create";
-        });
+        $("#createBacklog").on("click",
+            function() {
+                window.location.href = "/Backlogs/Create";
+            });
 
-        $(".deleteBacklog").on("click", function () {
-            var id = $(this).data("id");
-            $.post("Backlogs/Delete", { id: id },
-                function () {
-                    window.location.reload();
-                });
-        });
+        $(".deleteBacklog").on("click",
+            function() {
+                var id = $(this).data("id");
+                $.post("Backlogs/Delete",
+                    { id: id },
+                    function() {
+                        window.location.reload();
+                    });
+            });
 
-        $(".createOrderLink").on("click", function() {
-            var id = $(this).data("id");
-            var el = document.createElement('textarea');
-            el.value = window.location +"/Order/"+ id;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
-        });
+        $(".createOrderLink").on("click",
+            function() {
+                var id = $(this).data("id");
+                var el = document.createElement('textarea');
+                el.value = window.location + "/Order/" + id;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+            });
     });
 </script>

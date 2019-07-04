@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using to.contracts.data.domain;
-
-namespace to.contracts
+﻿namespace to.contracts
 {
+    using System.Collections.Generic;
+
+    using data.domain;
+
     public interface IBacklogRepo
     {
         string CreateBacklog(Backlog backlog);

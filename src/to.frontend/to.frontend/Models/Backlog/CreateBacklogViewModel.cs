@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace to.frontend.Models.Backlog
+﻿namespace to.frontend.Models.Backlog
 {
+    using System.Collections.Generic;
+
     public class CreateBacklogViewModel
     {
         public string Title { get; set; }
-        public ICollection<string> UserStories { get; set; } = new List<string> { "" };
+        public ICollection<string> UserStories { get; set; } = new List<string> {""};
     }
 }

@@ -1,10 +1,12 @@
-﻿using System.Linq;
-using System.Security.Claims;
-using to.contracts;
-using to.frontend.Constants;
-
-namespace to.frontend
+﻿namespace to.frontend
 {
+    using System.Linq;
+    using System.Security.Claims;
+
+    using Constants;
+
+    using contracts;
+
     public static class ClaimsPrincipalExtensions
     {
         public static bool HasPermission(this ClaimsPrincipal user, Permission permission)
