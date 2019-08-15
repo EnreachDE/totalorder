@@ -132,9 +132,9 @@ namespace to.requesthandler
         public (Status, BacklogEvalQueryResult) HandleBacklogOrderSubmissionRequest(BacklogOrderRequest request)
         {
             var submission = new Submission() { Indexes = request.UserStoryIndexes };
-            _backlogrepo.WriteSubmission(request.Id, submission);
+            _backlogrepo.WriteSubmission(request.BacklogId, submission);
 
-            return EvalSubmissions(request.Id);
+            return EvalSubmissions(request.BacklogId);
         }
 
         public (Status, UserLoginQueryResult) HandleLoginQuery(LoginRequest request)

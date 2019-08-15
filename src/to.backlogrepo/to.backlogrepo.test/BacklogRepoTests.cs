@@ -44,7 +44,7 @@ namespace to.backlogrepo.test
                 UserStories = new[] { "A", "B", "C", "D" }
             };
 
-            var expectedBacklogContent = @"{""Id"":""XXX987"",""Title"":""TestBacklog"",""UserStories"":[""A"",""B"",""C"",""D""]}";
+            var expectedBacklogContent = @"{""Id"":""XXX987"",""Title"":""TestBacklog"",""UserStories"":[""A"",""B"",""C"",""D""],""OneVotePerUser"":false}";
 
             repo.SaveBacklog(testBacklog, TestId);
 
