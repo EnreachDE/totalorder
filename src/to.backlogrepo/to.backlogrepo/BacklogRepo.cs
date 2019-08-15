@@ -97,7 +97,14 @@ namespace to.backlogrepo
             var submissionPath = Path.Combine(this.rootpath, id);
             var fileName = new StringBuilder();
             fileName.Append("Submission-");
-            fileName.Append(guidGenerator().ToString());
+            if (submission.UserId != null)
+            {
+                fileName.Append(submission.UserId.Value.ToString());
+            }
+            else
+            {
+                fileName.Append(guidGenerator().ToString());
+            }
             fileName.Append(".json");
             var jsonString = JsonConvert.SerializeObject(submission);
             File.WriteAllText(Path.Combine(submissionPath, fileName.ToString()), jsonString);

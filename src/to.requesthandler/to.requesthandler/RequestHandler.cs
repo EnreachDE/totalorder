@@ -132,6 +132,16 @@ namespace to.requesthandler
         public (Status, BacklogEvalQueryResult) HandleBacklogOrderSubmissionRequest(BacklogOrderRequest request)
         {
             var submission = new Submission() { Indexes = request.UserStoryIndexes };
+            var backlog = _backlogrepo.ReadBacklog(request.BacklogId);
+
+            if (backlog.OneVotePerUser)
+            {
+                if (request.UserId == null)
+                    return (new Failure("UserId not set"), null);
+
+                submission.UserId = request.UserId;
+            }
+
             _backlogrepo.WriteSubmission(request.BacklogId, submission);
 
             return EvalSubmissions(request.BacklogId);

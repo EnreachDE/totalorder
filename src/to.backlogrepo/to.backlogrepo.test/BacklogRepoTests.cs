@@ -37,16 +37,25 @@ namespace to.backlogrepo.test
         public void SaveBacklogTest()
         {
             var repo = new BacklogRepo(TestRootDir, Guid.NewGuid);
-            Backlog testBacklog = new Backlog()
+            Backlog testBacklog1 = new Backlog()
             {
                 Id = String.Empty,
                 Title = "TestBacklog",
                 UserStories = new[] { "A", "B", "C", "D" }
             };
 
-            var expectedBacklogContent = @"{""Id"":""XXX987"",""Title"":""TestBacklog"",""UserStories"":[""A"",""B"",""C"",""D""],""OneVotePerUser"":false}";
+            Backlog testBacklog2 = new Backlog()
+            {
+                Id = String.Empty,
+                Title = "TestBacklog",
+                UserStories = new[] { "A", "B", "C", "D" },
+                OneVotePerUser = true
+            };
 
-            repo.SaveBacklog(testBacklog, TestId);
+            var expectedBacklogContent1 = @"{""Id"":""XXX987"",""Title"":""TestBacklog"",""UserStories"":[""A"",""B"",""C"",""D""],""OneVotePerUser"":false}";
+            var expectedBacklogContent2 = @"{""Id"":""XXX987"",""Title"":""TestBacklog"",""UserStories"":[""A"",""B"",""C"",""D""],""OneVotePerUser"":true}";
+
+            repo.SaveBacklog(testBacklog1, TestId);
 
             var backlogFolderPath = Path.Combine(Environment.CurrentDirectory, _testDir);
             var backlogFilePath = Path.Combine(backlogFolderPath, "Backlog.json");
@@ -55,7 +64,11 @@ namespace to.backlogrepo.test
             File.Exists(backlogFilePath).Should().BeTrue();
 
             var backlogFileContent = File.ReadAllText(backlogFilePath);
-            backlogFileContent.Should().Be(expectedBacklogContent);
+            backlogFileContent.Should().Be(expectedBacklogContent1);
+
+            repo.SaveBacklog(testBacklog2, TestId);
+            backlogFileContent = File.ReadAllText(backlogFilePath);
+            backlogFileContent.Should().Be(expectedBacklogContent2);
         }
 
         [Test]
@@ -84,7 +97,7 @@ namespace to.backlogrepo.test
             var repo = new BacklogRepo(TestRootDir, Guid.NewGuid);
 
             var expectedSubmission1 = new Submission() { Indexes = new int[] { 1, 2, 3, 4 } };
-            var expectedSubmission2 = new Submission() { Indexes = new int[] { 2, 4, 1, 3 } };
+            var expectedSubmission2 = new Submission() { Indexes = new int[] { 2, 4, 1, 3 }, UserId = 123456 };
 
             Directory.CreateDirectory(_testDir);
             File.Copy("Submission1.json", Path.Combine(_testDir, "Submission1.json"));
@@ -104,10 +117,15 @@ namespace to.backlogrepo.test
             var testGuid = Guid.NewGuid();
             var repo = new BacklogRepo(TestRootDir, () => testGuid);
             var expectedSubmission1 = new Submission() { Indexes = new int[] { 1, 2, 3, 4 } };
+            var expectedSubmission2 = new Submission() { Indexes = new int[] { 1, 2, 3, 4 }, UserId = 123456 };
 
             Directory.CreateDirectory(_testDir);
+
             repo.WriteSubmission(TestId, expectedSubmission1);
             File.Exists(Path.Combine(_testDir, "Submission-" + testGuid + ".json")).Should().BeTrue();
+
+            repo.WriteSubmission(TestId, expectedSubmission2);
+            File.Exists(Path.Combine(_testDir, "Submission-123456.json")).Should().BeTrue();
         }
 
         [Test]
