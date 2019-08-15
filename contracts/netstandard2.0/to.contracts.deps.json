@@ -32,14 +32,14 @@
     "Microsoft.NETCore.Platforms/1.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
+      "sha512": "sha512-PZe7dJaFD65Evgd2+HTbfZNbr819dPWjw5dt8Rqp6qIuDtPyOiEfs6ds1U4yYO/sC4q/RZaaCaeBrhJm0iANWQ==",
       "path": "microsoft.netcore.platforms/1.1.0",
       "hashPath": "microsoft.netcore.platforms.1.1.0.nupkg.sha512"
     },
     "NETStandard.Library/2.0.3": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-RLsYvZK6t1+qlgRp8scumS0O8dcKV0SINewJ9nFo5aeKwwyMfObvJpJ6VsS1foOoFYF2zH/ZK+dd2lUjXB9nOw==",
+      "sha512": "sha512-8GlfXp8s/Rc8U80pPpnWXOX0uSHo6sOPV+TX/mt4w4DP6lKqe4IbAvQOvA0gItXq8RpHCEucLGD9tok7nuZHwA==",
       "path": "netstandard.library/2.0.3",
       "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
     }
