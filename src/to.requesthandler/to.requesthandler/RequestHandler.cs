@@ -64,7 +64,8 @@ namespace to.requesthandler
             var backlog = new Backlog
             {
                 Title = request.Title,
-                UserStories = request.UserStories
+                UserStories = request.UserStories,
+                OneVotePerUser = request.OneVotePerUser
             };
 
             var backlogId = _backlogrepo.CreateBacklog(backlog);

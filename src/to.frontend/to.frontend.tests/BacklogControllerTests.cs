@@ -10,6 +10,8 @@ using to.frontend.Models.Backlog;
 
 namespace to.frontend.tests
 {
+    using Microsoft.AspNetCore.Hosting.Internal;
+
     [TestFixture]
     public class BacklogControllerTests
     {
@@ -28,7 +30,7 @@ namespace to.frontend.tests
             });
             _handlerFactory = new Mock<IRequestHandlerFactory>();
             _handler = new Mock<IRequestHandler>();
-            _sut = new BacklogsController(_handlerFactory.Object);
+            _sut = new BacklogsController(_handlerFactory.Object, new HostingEnvironment());
         }
 
         [Test]
@@ -47,7 +49,7 @@ namespace to.frontend.tests
                 .Returns((new Success(), new BacklogEvalQueryResult { Id = dummyid }))
                 .Callback<BacklogCreationRequest>(r => actualRequest = r);
             _handlerFactory.Setup(p => p.GetHandler()).Returns(_handler.Object);
-            _sut = new BacklogsController(_handlerFactory.Object);
+            _sut = new BacklogsController(_handlerFactory.Object, new HostingEnvironment());
 
             var result = (RedirectToActionResult)_sut.PostCreate(model);
 

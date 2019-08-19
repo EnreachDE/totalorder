@@ -4,23 +4,31 @@
 }
 
 <form action="/Backlogs/Create" method="post">
-    <div class="row" style="margin-top: 30px;">
-        <div class="col-md-6">
-            @Html.LabelFor(p => p.Title)<br/>
-            @Html.TextBoxFor(p => p.Title)<br/>
+    <fieldset class="fieldset">
+        <legend>Create new voting</legend>
+        <div class="row" style="margin-top: 30px;">
+            <div class="col-md-6">
+                <div class="checkbox">
+                    @Html.LabelFor(p => p.OneVotePerUser)
+                    @Html.CheckBoxFor(p => p.OneVotePerUser)<br /><br />
+                </div>
+                @Html.LabelFor(p => p.Title)<br/>
+                @Html.TextBoxFor(p => p.Title)<br/>
+            </div>
         </div>
-    </div><br/>
-    <div class="row">
-        <div class="col-md-6 userStories">
-            @Html.LabelFor(p => p.UserStories)&nbsp;<button id="addUserStory">+</button><br/><br/>
-            @Html.EditorFor(p => p.UserStories)<br/><br/> 
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-md-6 userStories">
+                @Html.LabelFor(p => p.UserStories)&nbsp;<button id="addUserStory">+</button><br/><br/>
+                @Html.EditorFor(p => p.UserStories)<br/><br/>
+            </div>
+        </div><br/>
+        <div class="row">
+            <div class="col-md-6">
+                <button type="submit">Create</button>
+            </div>
         </div>
-    </div><br/>
-    <div class="row">
-        <div class="col-md-6">
-            <button type="submit">Anlegen</button>
-        </div>
-    </div>
+    </fieldset>
+    
 </form>
 
 <script type="text/javascript">

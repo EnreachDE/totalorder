@@ -9,17 +9,21 @@ using to.frontend.Models.Backlog;
 
 namespace to.frontend.Controllers
 {
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Hosting.Internal;
     using Microsoft.AspNetCore.Http;
 
     [Authorize(Roles = nameof(UserRole.Developer) +", "+ nameof(UserRole.ProductOwner) +", "+ nameof(UserRole.Administrator))]
     public class BacklogsController : Controller
     {
         private readonly IRequestHandler _handler;
+        private readonly IHostingEnvironment _env;
         private const string ErrorMessageString = "errorMessage";
 
-        public BacklogsController(IRequestHandlerFactory factory)
+        public BacklogsController(IRequestHandlerFactory factory, IHostingEnvironment env)
         {
             _handler = factory.GetHandler();
+            _env = env;
         }
 
         [HttpGet]
@@ -70,16 +74,16 @@ namespace to.frontend.Controllers
         public ActionResult PostOrder(BacklogOrderRequestViewModel model)
         {
             var orderRequest = Mapper.Map<BacklogOrderRequest>(model);
+            orderRequest.UserId = User.GetId();
             var (status, result) = _handler.HandleBacklogOrderSubmissionRequest(orderRequest);
             if (status is Failure failure) { 
                 TempData[ErrorMessageString] = failure.ErrorMessage;
-                return Redirect("/Home");
+                TempData["Environment"] = this._env.EnvironmentName;
+                return View("Error");
             }
-            else
-            {
-                var viewModel = Mapper.Map<BacklogEvalViewModel>(result);
-                return RedirectToAction(nameof(Eval), new { viewModel.Id });
-            }            
+
+            var viewModel = Mapper.Map<BacklogEvalViewModel>(result);
+            return RedirectToAction(nameof(Eval), new { viewModel.Id });
         }
 
         [HttpGet]
