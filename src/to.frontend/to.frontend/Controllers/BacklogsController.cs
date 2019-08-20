@@ -12,6 +12,7 @@ namespace to.frontend.Controllers
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Hosting.Internal;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Http.Extensions;
 
     [Authorize(Roles = nameof(UserRole.Developer) +", "+ nameof(UserRole.ProductOwner) +", "+ nameof(UserRole.Administrator))]
     public class BacklogsController : Controller
@@ -55,15 +56,19 @@ namespace to.frontend.Controllers
         [AllowAnonymous]
         public ActionResult GetOrder(string id)
         {
-            var (status, backlog) = _handler.HandleBacklogOrderQuery(id);
-            switch (status)
+            var (status, backlogOrderQueryResult) = _handler.HandleBacklogOrderQuery(id);
+            if (status is Failure f)
             {
-                case Failure f:
-                    TempData[ErrorMessageString] = f.ErrorMessage;
-                    return Redirect("/Home");
+                TempData[ErrorMessageString] = f.ErrorMessage;
+                return View("Error");
             }
 
-            var viewModel = Mapper.Map<BacklogEvalViewModel>(backlog);
+            if (backlogOrderQueryResult.OneVotePerUser && !User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Login", new { returnUrl = HttpContext.Request.GetEncodedUrl() });
+            }
+
+            var viewModel = Mapper.Map<BacklogEvalViewModel>(backlogOrderQueryResult);
 
             return View("Order", viewModel);
         }

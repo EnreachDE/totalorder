@@ -130,7 +130,8 @@ namespace to.requesthandler
                 Id = backlog.Id,
                 Title = backlog.Title,
                 UserStories = backlog.UserStories,
-                UserStoryIndexes = new int[backlog.UserStories.Length]
+                UserStoryIndexes = new int[backlog.UserStories.Length],
+                OneVotePerUser = backlog.OneVotePerUser
             };
 
             for (int i = 0; i < backlog.UserStories.Length; i++)
