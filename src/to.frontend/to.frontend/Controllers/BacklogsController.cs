@@ -74,7 +74,10 @@ namespace to.frontend.Controllers
         public ActionResult PostOrder(BacklogOrderRequestViewModel model)
         {
             var orderRequest = Mapper.Map<BacklogOrderRequest>(model);
-            orderRequest.UserId = User.GetId();
+            
+            if (User.Identity.IsAuthenticated)
+                orderRequest.UserId = User.GetId();
+            
             var (status, result) = _handler.HandleBacklogOrderSubmissionRequest(orderRequest);
             if (status is Failure failure) { 
                 TempData[ErrorMessageString] = failure.ErrorMessage;

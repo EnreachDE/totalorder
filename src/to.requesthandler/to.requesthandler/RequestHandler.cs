@@ -39,7 +39,9 @@ namespace to.requesthandler
         {
             try
             {
-                var backlogs = _backlogrepo.GetAll();
+                var (status, backlogs) = _backlogrepo.GetAll();
+                if (status is Failure) return status;
+
                 var displayItems = backlogs.Select(Transform);
                 return new Success<BacklogShowQueryResult>(new BacklogShowQueryResult(displayItems));
             }
@@ -54,7 +56,9 @@ namespace to.requesthandler
             var (status, backlogIds) = _userRepo.GetUserBacklogIds(userId);
             if (status is Failure) return (status, null);
 
-            var backlogs = _backlogrepo.GetBacklogsByIds(backlogIds);
+            var (status2, backlogs) = _backlogrepo.GetBacklogsByIds(backlogIds);
+            if (status2 is Failure) return (status2, null);
+
             var displayItems = backlogs.Select(Transform);
             return (new Success(), new BacklogShowQueryResult(displayItems));
         }
@@ -68,8 +72,10 @@ namespace to.requesthandler
                 OneVotePerUser = request.OneVotePerUser
             };
 
-            var backlogId = _backlogrepo.CreateBacklog(backlog);
-            var status = _userRepo.AddUserBacklogId(request.UserId, backlogId);
+            var (status, backlogId) = _backlogrepo.CreateBacklog(backlog);
+            if (status is Failure) return (status, null);
+
+            status = _userRepo.AddUserBacklogId(request.UserId, backlogId);
             if (status is Failure) return (status, null);
 
             return EvalSubmissions(backlogId);
@@ -77,9 +83,13 @@ namespace to.requesthandler
 
         private (Status, BacklogEvalQueryResult) EvalSubmissions(string backlogId)
         {
-            var submissions = _backlogrepo.ReadSubmissions(backlogId);
+            var (status, submissions) = _backlogrepo.ReadSubmissions(backlogId);
+            if (status is Failure) return (status, null);
+
             int[] currentOrder = _totalorder.Order(submissions);
-            var backlog = _backlogrepo.ReadBacklog(backlogId);
+
+            var (status2, backlog) = _backlogrepo.ReadBacklog(backlogId);
+            if (status2 is Failure) return (status2, null);
 
             return (new Success(), new BacklogEvalQueryResult
             {
@@ -112,7 +122,8 @@ namespace to.requesthandler
 
         public (Status, BacklogOrderQueryResult) HandleBacklogOrderQuery(string id)
         {
-            var backlog = _backlogrepo.ReadBacklog(id);
+            var (status, backlog) = _backlogrepo.ReadBacklog(id);
+            if (status is Failure) return (status, null);
 
             var result = new BacklogOrderQueryResult
             {
@@ -132,18 +143,14 @@ namespace to.requesthandler
 
         public (Status, BacklogEvalQueryResult) HandleBacklogOrderSubmissionRequest(BacklogOrderRequest request)
         {
-            var submission = new Submission() { Indexes = request.UserStoryIndexes };
-            var backlog = _backlogrepo.ReadBacklog(request.BacklogId);
-
-            if (backlog.OneVotePerUser)
+            var submission = new Submission()
             {
-                if (request.UserId == null)
-                    return (new Failure("UserId not set"), null);
-
-                submission.UserId = request.UserId;
-            }
-
-            _backlogrepo.WriteSubmission(request.BacklogId, submission);
+                Indexes = request.UserStoryIndexes,
+                UserId = request.UserId
+            };
+            
+            var status =_backlogrepo.WriteSubmission(request.BacklogId, submission);
+            if (status is Failure) return (status, null);
 
             return EvalSubmissions(request.BacklogId);
         }
@@ -236,7 +243,9 @@ namespace to.requesthandler
 
         private BacklogShowQueryResult.BacklogDisplayItem Transform(Backlog backlog)
         {
-            var submissions = _backlogrepo.ReadSubmissions(backlog.Id);
+            var (status, submissions) = _backlogrepo.ReadSubmissions(backlog.Id);
+            if (status is Failure) return null;
+
             return BacklogShowQueryResult.BacklogDisplayItem.FromBacklog(backlog, submissions);
         }
     }

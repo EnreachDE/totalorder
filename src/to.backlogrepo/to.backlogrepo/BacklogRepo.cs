@@ -12,6 +12,9 @@ namespace to.backlogrepo
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
+
+    using contracts.data.result;
+
     using to.contracts;
     using Newtonsoft.Json;
 
@@ -42,11 +45,11 @@ namespace to.backlogrepo
             this.guidGenerator = guidGenerator;
         }
 
-        public string CreateBacklog(Backlog backlog)
+        public (Status, string) CreateBacklog(Backlog backlog)
         {
             var id = guidGenerator().ToString();
             SaveBacklog(backlog, id);
-            return id;
+            return  (new Success(), id);
         }
 
         internal void SaveBacklog(Backlog backlog, string id)
@@ -64,7 +67,7 @@ namespace to.backlogrepo
             return backlogPath;
         }
 
-        public Submission[] ReadSubmissions(string id)
+        public (Status, Submission[]) ReadSubmissions(string id)
         {
             var filePaths = Directory.GetFiles(Path.Combine(this.rootpath, id));
             var tempList = new List<Submission>();
@@ -82,35 +85,51 @@ namespace to.backlogrepo
                 tempList.Add(currentSubmission);
             }
 
-            return tempList.ToArray();
+            return (new Success(), tempList.ToArray());
         }
 
-        public Backlog ReadBacklog(string id)
+        public (Status, Backlog) ReadBacklog(string id)
         {
             var backlogDirectory = Path.Combine(this.rootpath, id);
             var jsonString = File.ReadAllText(Path.Combine(backlogDirectory,"Backlog.json"));
-            return JsonConvert.DeserializeObject<Backlog>(jsonString);
+            return (new Success(), JsonConvert.DeserializeObject<Backlog>(jsonString));
         }
 
-        public void WriteSubmission(string id, Submission submission)
+        public Status WriteSubmission(string backlogId, Submission submission)
         {
-            var submissionPath = Path.Combine(this.rootpath, id);
+            var (status, backlog) = this.ReadBacklog(backlogId);
+            if (status is Failure) return status;
+
+            return CheckBacklogTypeAndWriteSubmission(submission, backlog);
+        }
+
+        internal Status CheckBacklogTypeAndWriteSubmission(Submission submission, Backlog backlog)
+        {
+            bool userIdPresent = submission.UserId != null;
+            bool authenticationRequired = backlog.OneVotePerUser;
+            bool authenticationFailure = authenticationRequired && !userIdPresent;
+
+            if (authenticationFailure)
+            {
+                return new Failure("Submissions to authenticated Backlogs require a UserId!");
+            }
+
+            var submissionPath = Path.Combine(this.rootpath, backlog.Id);
+
             var fileName = new StringBuilder();
             fileName.Append("Submission-");
-            if (submission.UserId != null)
-            {
-                fileName.Append(submission.UserId.Value.ToString());
-            }
-            else
-            {
-                fileName.Append(guidGenerator().ToString());
-            }
+            fileName.Append(authenticationRequired ? submission.UserId.Value.ToString() : guidGenerator().ToString());
             fileName.Append(".json");
+
             var jsonString = JsonConvert.SerializeObject(submission);
-            File.WriteAllText(Path.Combine(submissionPath, fileName.ToString()), jsonString);
+
+            var path = Path.Combine(submissionPath, fileName.ToString());
+            File.WriteAllText(path, jsonString);
+
+            return new Success();
         }
 
-        public List<Backlog> GetAll()
+        public (Status, List<Backlog>) GetAll()
         {
             var backlogs = new List<Backlog>();
 
@@ -121,18 +140,41 @@ namespace to.backlogrepo
                 backlogs.Add(JsonConvert.DeserializeObject<Backlog>(jsonString));
             }
 
-            return backlogs;
+            return (new Success(), backlogs);
         }
 
-        public void DeleteBacklog(string id)
+        public Status DeleteBacklog(string id)
         {
             string path = Path.Combine(this.rootpath, id);
-            Directory.Delete(path, true);
+
+            try
+            {
+                Directory.Delete(path, true);
+            }
+            catch (Exception e) when (e is IOException || 
+                                      e is UnauthorizedAccessException ||
+                                      e is ArgumentNullException ||
+                                      e is ArgumentException)
+            {
+                return new Failure(e.Message);
+            }
+
+            return new Success();
         }
 
-        public List<Backlog> GetBacklogsByIds(IEnumerable<string> ids)
+        public (Status, List<Backlog>) GetBacklogsByIds(IEnumerable<string> ids)
         {
-            return ids.Select(ReadBacklog).ToList();
+            var backlogs = new List<Backlog>();
+
+            foreach (var id in ids)
+            {
+                var (status, backlog) = this.ReadBacklog(id);
+                if (status is Failure) return (status, null);
+
+                backlogs.Add(backlog);
+            }
+            
+            return (new Success(), backlogs);
         }
     }
 }
