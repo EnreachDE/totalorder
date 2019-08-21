@@ -37,12 +37,14 @@ namespace to.contracts
             public string Title { get; set; }
             public int UserStoryCount { get; set; }
             public int VoteCount { get; set; }
+            public bool OneVotePerUser { get; set; }
 
             public static BacklogDisplayItem FromBacklog(Backlog backlog, Submission[] submissions) => new BacklogDisplayItem() {
                 Id = backlog.Id,
                 Title = backlog.Title,
                 UserStoryCount = backlog.UserStories.Length,
-                VoteCount = submissions.Length
+                VoteCount = submissions.Length,
+                OneVotePerUser = backlog.OneVotePerUser
             };
         }
     }

@@ -17,7 +17,8 @@
             <th>ID</th>
             <th>Title</th>
             <th>User Stories</th>
-            <th>Votes</th>  
+            <th>Votes</th>
+            <th>Authenticated</th>
         </thead>
     @foreach (var backlog in Model.Backlogs.Backlogs)
     {
@@ -26,6 +27,7 @@
              <td>@backlog.Title</td>
              <td>@backlog.UserStoryCount</td>
              <td>@backlog.VoteCount</td>
+             <td>@if (backlog.OneVotePerUser) {<p class="glyphicon-lock"></p>}</td>
              <td class="noButtonWrap">
                  @if(User.HasPermission(Permission.EvaluateBacklog))
                  {
@@ -50,7 +52,7 @@
 }
 else
 {
-    <div class="alert alert-danger">Fehler beim Abrufen der Backlogs</div>
+    <div class="alert alert-danger">An error occurred while fetching the backlogs!</div>
 }
 
 <script type="text/javascript">

@@ -26,11 +26,11 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     @if (User.HasPermission(Permission.ListBacklog))
                     {
-                        <li>@Html.ActionLink("Backlogs", "Index", "Backlogs")</li>
+                        <li>@Html.ActionLink("My Backlogs", "Index", "Backlogs")</li>
                     }
                     @if (User.HasPermission(Permission.ListUser))
                     {
-                        <li>@Html.ActionLink("Administration", "Index", "Admin")</li>
+                        <li>@Html.ActionLink("User Administration", "Index", "Admin")</li>
                     }
                 </ul>
             </div>
