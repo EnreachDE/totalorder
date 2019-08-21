@@ -37,6 +37,7 @@
             @if (User.Identity.IsAuthenticated)
             {
                 <div class="logoutLink">
+                    <label style="color: azure;margin-right: 30px">Hi @User.Identity.Name !</label>
                     <a class="btn btn-primary" href="/Logout">Logout</a>
                 </div>
             }

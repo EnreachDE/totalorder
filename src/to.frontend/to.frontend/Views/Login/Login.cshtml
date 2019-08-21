@@ -9,9 +9,10 @@
     <div class="row" style="margin-top: 30px;">
         <div class="col-md-6">
             @Html.LabelFor(p => p.UserName)<br />
-            @Html.TextBoxFor(p => p.UserName)<br />
+            @Html.TextBoxFor(p => p.UserName)
         </div>
-    </div><br />
+    </div>
+    <br />
     <div class="row">
         <div class="col-md-6">
             @Html.LabelFor(p => p.Password)<br />
@@ -25,6 +26,7 @@
     <div class="row">
         <div class="col-md-6">
             <button type="submit">Login</button>
+            <input type="button" value="Create Account" style="margin-left: 20px;" onclick="window.location.href('@Url.Action("GetCreateUser", "Login")')" />
         </div>
     </div>
 </form>
