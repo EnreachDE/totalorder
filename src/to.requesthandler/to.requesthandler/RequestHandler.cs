@@ -39,7 +39,9 @@ namespace to.requesthandler
         {
             try
             {
-                var backlogs = _backlogrepo.GetAll();
+                var (status, backlogs) = _backlogrepo.GetAll();
+                if (status is Failure) return status;
+
                 var displayItems = backlogs.Select(Transform);
                 return new Success<BacklogShowQueryResult>(new BacklogShowQueryResult(displayItems));
             }
@@ -54,7 +56,9 @@ namespace to.requesthandler
             var (status, backlogIds) = _userRepo.GetUserBacklogIds(userId);
             if (status is Failure) return (status, null);
 
-            var backlogs = _backlogrepo.GetBacklogsByIds(backlogIds);
+            var (status2, backlogs) = _backlogrepo.GetBacklogsByIds(backlogIds);
+            if (status2 is Failure) return (status2, null);
+
             var displayItems = backlogs.Select(Transform);
             return (new Success(), new BacklogShowQueryResult(displayItems));
         }
@@ -64,11 +68,14 @@ namespace to.requesthandler
             var backlog = new Backlog
             {
                 Title = request.Title,
-                UserStories = request.UserStories
+                UserStories = request.UserStories,
+                OneVotePerUser = request.OneVotePerUser
             };
 
-            var backlogId = _backlogrepo.CreateBacklog(backlog);
-            var status = _userRepo.AddUserBacklogId(request.UserId, backlogId);
+            var (status, backlogId) = _backlogrepo.CreateBacklog(backlog);
+            if (status is Failure) return (status, null);
+
+            status = _userRepo.AddUserBacklogId(request.UserId, backlogId);
             if (status is Failure) return (status, null);
 
             return EvalSubmissions(backlogId);
@@ -76,16 +83,21 @@ namespace to.requesthandler
 
         private (Status, BacklogEvalQueryResult) EvalSubmissions(string backlogId)
         {
-            var submissions = _backlogrepo.ReadSubmissions(backlogId);
+            var (status, submissions) = _backlogrepo.ReadSubmissions(backlogId);
+            if (status is Failure) return (status, null);
+
             int[] currentOrder = _totalorder.Order(submissions);
-            var backlog = _backlogrepo.ReadBacklog(backlogId);
+
+            var (status2, backlog) = _backlogrepo.ReadBacklog(backlogId);
+            if (status2 is Failure) return (status2, null);
 
             return (new Success(), new BacklogEvalQueryResult
             {
                 Id = backlogId,
                 Title = backlog.Title,
                 UserStories = applyOrder(backlog.UserStories, currentOrder),
-                NumberOfSubmissions = submissions.Length
+                NumberOfSubmissions = submissions.Length,
+                OneVotePerUser = backlog.OneVotePerUser
             });
         }
 
@@ -111,14 +123,16 @@ namespace to.requesthandler
 
         public (Status, BacklogOrderQueryResult) HandleBacklogOrderQuery(string id)
         {
-            var backlog = _backlogrepo.ReadBacklog(id);
+            var (status, backlog) = _backlogrepo.ReadBacklog(id);
+            if (status is Failure) return (status, null);
 
             var result = new BacklogOrderQueryResult
             {
                 Id = backlog.Id,
                 Title = backlog.Title,
                 UserStories = backlog.UserStories,
-                UserStoryIndexes = new int[backlog.UserStories.Length]
+                UserStoryIndexes = new int[backlog.UserStories.Length],
+                OneVotePerUser = backlog.OneVotePerUser
             };
 
             for (int i = 0; i < backlog.UserStories.Length; i++)
@@ -131,10 +145,16 @@ namespace to.requesthandler
 
         public (Status, BacklogEvalQueryResult) HandleBacklogOrderSubmissionRequest(BacklogOrderRequest request)
         {
-            var submission = new Submission() { Indexes = request.UserStoryIndexes };
-            _backlogrepo.WriteSubmission(request.Id, submission);
+            var submission = new Submission()
+            {
+                Indexes = request.UserStoryIndexes,
+                UserId = request.UserId
+            };
+            
+            var status =_backlogrepo.WriteSubmission(request.BacklogId, submission);
+            if (status is Failure) return (status, null);
 
-            return EvalSubmissions(request.Id);
+            return EvalSubmissions(request.BacklogId);
         }
 
         public (Status, UserLoginQueryResult) HandleLoginQuery(LoginRequest request)
@@ -225,7 +245,9 @@ namespace to.requesthandler
 
         private BacklogShowQueryResult.BacklogDisplayItem Transform(Backlog backlog)
         {
-            var submissions = _backlogrepo.ReadSubmissions(backlog.Id);
+            var (status, submissions) = _backlogrepo.ReadSubmissions(backlog.Id);
+            if (status is Failure) return null;
+
             return BacklogShowQueryResult.BacklogDisplayItem.FromBacklog(backlog, submissions);
         }
     }

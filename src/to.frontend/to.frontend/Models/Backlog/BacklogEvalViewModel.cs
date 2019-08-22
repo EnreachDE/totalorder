@@ -8,5 +8,6 @@ namespace to.frontend.Models.Backlog
         public string Title { get; set; }
         public List<string> UserStories { get; set; } = new List<string>();
         public int NumberOfSubmissions { get; set; }
+        public bool OneVotePerUser { get; set; }
     }
 }

@@ -4,7 +4,9 @@ namespace to.frontend.Models.Backlog
 {
     public class BacklogOrderRequestViewModel
     {
-        public string Id { get; set; }
+        public string BacklogId { get; set; }
         public string UserStoryIndexes { get; set; }
+
+        public int? UserId { get; set; }
     }
 }

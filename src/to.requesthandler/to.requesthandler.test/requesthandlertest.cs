@@ -168,12 +168,12 @@ namespace to.requesthandlertest
 
     public class BacklogRepoTest : IBacklogRepo
     {
-        public string CreateBacklog(Backlog backlog)
+        public (Status, string) CreateBacklog(Backlog backlog)
         {
-            return "7";
+            return (new Success(), "7");
         }
 
-        public Backlog ReadBacklog(string id)
+        public (Status, Backlog) ReadBacklog(string id)
         {
             var backlog = new Backlog
             {
@@ -181,15 +181,16 @@ namespace to.requesthandlertest
                 Title = "The backlog",
                 UserStories = new string[] { "A", "B", "C" }
             };
-            return backlog;
+
+            return (new Success(), backlog);
         }
 
-        public void WriteSubmission(string id, Submission submission)
+        public Status WriteSubmission(string id, Submission submission)
         {
             throw new NotImplementedException();
         }
 
-        public virtual List<Backlog> GetAll()
+        public virtual (Status, List<Backlog>) GetAll()
         {
             var backlog = new Backlog
             {
@@ -204,35 +205,32 @@ namespace to.requesthandlertest
                 UserStories = new string[] { "X", "Y", "Z" }
             };
 
-            return new List<Backlog> {backlog, backlog2};
+            return (new Success(), new List<Backlog> {backlog, backlog2});
         }
 
-        public void DeleteBacklog(string id)
+        public Status DeleteBacklog(string id)
         {
             throw new NotImplementedException();
         }
 
-        public List<Backlog> GetBacklogsByIds(IEnumerable<string> ids)
+        public (Status, List<Backlog>) GetBacklogsByIds(IEnumerable<string> ids)
         {
             throw new NotImplementedException();
         }
 
-        public List<Backlog> GetBacklogsByIds(int userId)
+        public (Status, List<Backlog>) GetBacklogsByIds(int userId)
         {
             throw new NotImplementedException();
         }
 
-        public Submission[] ReadSubmissions(string id)
+        public (Status, Submission[]) ReadSubmissions(string id)
         {
-            Submission submission = new Submission();
-            submission.Indexes = new int[3];
-            submission.Indexes[0] = 0;
-            submission.Indexes[1] = 1;
-            submission.Indexes[2] = 2;
+            var indexes = new[] { 0, 1, 2 };
+            var submission = new Submission {Indexes = indexes};
 
             Submission[] result = new Submission[1];
             result[0] = submission;
-            return result;
+            return (new Success(), result);
         }
     }
 }

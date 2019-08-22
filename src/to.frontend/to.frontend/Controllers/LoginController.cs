@@ -10,6 +10,9 @@
     using System.Collections.Generic;
     using System.Security.Claims;
     using System.Threading.Tasks;
+
+    using contracts.data.domain;
+
     using to.contracts;
     using to.frontend.Constants;
     using to.frontend.Factories;
@@ -109,6 +112,46 @@
         public ActionResult GetRegister()
         {
             return View("Login");
+        }
+
+        [HttpGet]
+        [Route("Login/Create")]
+        public IActionResult GetCreateUser()
+        {
+            return View("CreateUser", new CreateUserModel());
+        }
+
+        [HttpPost]
+        [Route("Login/Create")]
+        public IActionResult PostCreateUser(CreateUserModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("CreateUser", model);
+            }
+
+            var (status, userList) = requestHandler.HandleUserCreateRequest(new UserCreateRequest
+            {
+                UserName = model.Username,
+                Password = model.Password,
+                // TODO: After reduction of the role system we should assign "User" here (PO will be removed)
+                UserRole = UserRole.ProductOwner
+            });
+
+            switch (status)
+            {
+                case Failure f:
+                    ModelState.AddModelError(string.Empty, f.ErrorMessage);
+                    TempData[errorMessageString] = f.ErrorMessage;
+                    break;
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View("CreateUser", model);
+            }
+
+            return RedirectToAction(nameof(Login));
         }
     }
 }

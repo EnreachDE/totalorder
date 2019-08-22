@@ -26,17 +26,18 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     @if (User.HasPermission(Permission.ListBacklog))
                     {
-                        <li>@Html.ActionLink("Backlogs", "Index", "Backlogs")</li>
+                        <li>@Html.ActionLink("My Backlogs", "Index", "Backlogs")</li>
                     }
                     @if (User.HasPermission(Permission.ListUser))
                     {
-                        <li>@Html.ActionLink("Administration", "Index", "Admin")</li>
+                        <li>@Html.ActionLink("User Administration", "Index", "Admin")</li>
                     }
                 </ul>
             </div>
             @if (User.Identity.IsAuthenticated)
             {
                 <div class="logoutLink">
+                    <label style="color: azure;margin-right: 30px">Hi @User.Identity.Name !</label>
                     <a class="btn btn-primary" href="/Logout">Logout</a>
                 </div>
             }

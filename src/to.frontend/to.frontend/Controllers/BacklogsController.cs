@@ -9,17 +9,22 @@ using to.frontend.Models.Backlog;
 
 namespace to.frontend.Controllers
 {
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Hosting.Internal;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Http.Extensions;
 
     [Authorize(Roles = nameof(UserRole.Developer) +", "+ nameof(UserRole.ProductOwner) +", "+ nameof(UserRole.Administrator))]
     public class BacklogsController : Controller
     {
         private readonly IRequestHandler _handler;
+        private readonly IHostingEnvironment _env;
         private const string ErrorMessageString = "errorMessage";
 
-        public BacklogsController(IRequestHandlerFactory factory)
+        public BacklogsController(IRequestHandlerFactory factory, IHostingEnvironment env)
         {
             _handler = factory.GetHandler();
+            _env = env;
         }
 
         [HttpGet]
@@ -40,10 +45,15 @@ namespace to.frontend.Controllers
             var request = Mapper.Map<BacklogCreationRequest>(model);
             request.UserId = User.GetId();
 
-            var result = _handler.HandleBacklogCreationRequest(request);
+            var (status, evalResult) = _handler.HandleBacklogCreationRequest(request);
+            
+            if (status is Failure f)
+            {
+                TempData[ErrorMessageString] = f.ErrorMessage;
+                return View("Error");
+            }
 
-            var evalModel = Mapper.Map<BacklogEvalQueryResult>(result.Item2);
-            return RedirectToAction(nameof(Eval), new { evalModel.Id });
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
@@ -51,15 +61,19 @@ namespace to.frontend.Controllers
         [AllowAnonymous]
         public ActionResult GetOrder(string id)
         {
-            var (status, backlog) = _handler.HandleBacklogOrderQuery(id);
-            switch (status)
+            var (status, backlogOrderQueryResult) = _handler.HandleBacklogOrderQuery(id);
+            if (status is Failure f)
             {
-                case Failure f:
-                    TempData[ErrorMessageString] = f.ErrorMessage;
-                    return Redirect("/Home");
+                TempData[ErrorMessageString] = f.ErrorMessage;
+                return View("Error");
             }
 
-            var viewModel = Mapper.Map<BacklogEvalViewModel>(backlog);
+            if (backlogOrderQueryResult.OneVotePerUser && !User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login", "Login", new { returnUrl = HttpContext.Request.GetEncodedUrl() });
+            }
+
+            var viewModel = Mapper.Map<BacklogEvalViewModel>(backlogOrderQueryResult);
 
             return View("Order", viewModel);
         }
@@ -70,16 +84,19 @@ namespace to.frontend.Controllers
         public ActionResult PostOrder(BacklogOrderRequestViewModel model)
         {
             var orderRequest = Mapper.Map<BacklogOrderRequest>(model);
+            
+            if (User.Identity.IsAuthenticated)
+                orderRequest.UserId = User.GetId();
+            
             var (status, result) = _handler.HandleBacklogOrderSubmissionRequest(orderRequest);
             if (status is Failure failure) { 
                 TempData[ErrorMessageString] = failure.ErrorMessage;
-                return Redirect("/Home");
+                TempData["Environment"] = this._env.EnvironmentName;
+                return View("Error");
             }
-            else
-            {
-                var viewModel = Mapper.Map<BacklogEvalViewModel>(result);
-                return RedirectToAction(nameof(Eval), new { viewModel.Id });
-            }            
+
+            var viewModel = Mapper.Map<BacklogEvalViewModel>(result);
+            return RedirectToAction(nameof(Eval), new { viewModel.Id });
         }
 
         [HttpGet]

@@ -37,12 +37,14 @@ namespace to.contracts
             public string Title { get; set; }
             public int UserStoryCount { get; set; }
             public int VoteCount { get; set; }
+            public bool OneVotePerUser { get; set; }
 
             public static BacklogDisplayItem FromBacklog(Backlog backlog, Submission[] submissions) => new BacklogDisplayItem() {
                 Id = backlog.Id,
                 Title = backlog.Title,
                 UserStoryCount = backlog.UserStories.Length,
-                VoteCount = submissions.Length
+                VoteCount = submissions.Length,
+                OneVotePerUser = backlog.OneVotePerUser
             };
         }
     }
@@ -100,8 +102,9 @@ namespace to.contracts
 
     public class BacklogOrderRequest
     {
-        public string Id { get; set; }
+        public string BacklogId { get; set; }
         public int[] UserStoryIndexes { get; set; }
+        public int? UserId { get; set; }
     }
 
     public class BacklogOrderQueryResult
@@ -110,6 +113,7 @@ namespace to.contracts
         public string Title { get; set; }
         public string[] UserStories { get; set; }
         public int[] UserStoryIndexes { get; set; }
+        public bool OneVotePerUser { get; set; }
     }
 
     public class BacklogCreationRequest
@@ -117,6 +121,7 @@ namespace to.contracts
         public string Title { get; set; }
         public int UserId { get; set; }
         public string[] UserStories { get; set; }
+        public bool OneVotePerUser { get; set; }
     }
 
     public class BacklogEvalQueryResult
@@ -125,6 +130,7 @@ namespace to.contracts
         public string Title { get; set; }
         public string[] UserStories { get; set; }
         public int NumberOfSubmissions { get; set; }
+        public bool OneVotePerUser { get; set; }
     }
 
     public class LoginRequest
