@@ -96,7 +96,8 @@ namespace to.requesthandler
                 Id = backlogId,
                 Title = backlog.Title,
                 UserStories = applyOrder(backlog.UserStories, currentOrder),
-                NumberOfSubmissions = submissions.Length
+                NumberOfSubmissions = submissions.Length,
+                OneVotePerUser = backlog.OneVotePerUser
             });
         }
 

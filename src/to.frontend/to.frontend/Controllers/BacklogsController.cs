@@ -45,9 +45,14 @@ namespace to.frontend.Controllers
             var request = Mapper.Map<BacklogCreationRequest>(model);
             request.UserId = User.GetId();
 
-            var result = _handler.HandleBacklogCreationRequest(request);
+            var (status, evalResult) = _handler.HandleBacklogCreationRequest(request);
+            
+            if (status is Failure f)
+            {
+                TempData[ErrorMessageString] = f.ErrorMessage;
+                return View("Error");
+            }
 
-            var evalModel = Mapper.Map<BacklogEvalQueryResult>(result.Item2);
             return RedirectToAction(nameof(Index));
         }
 

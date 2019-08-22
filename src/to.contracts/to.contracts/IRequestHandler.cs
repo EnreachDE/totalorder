@@ -130,6 +130,7 @@ namespace to.contracts
         public string Title { get; set; }
         public string[] UserStories { get; set; }
         public int NumberOfSubmissions { get; set; }
+        public bool OneVotePerUser { get; set; }
     }
 
     public class LoginRequest
