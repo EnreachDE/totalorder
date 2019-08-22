@@ -1,4 +1,5 @@
-﻿@model to.frontend.Models.Backlog.BacklogEvalViewModel
+﻿@using to.frontend.Controllers
+@model to.frontend.Models.Backlog.BacklogEvalViewModel
 @{
     ViewBag.Title = "Evaluate";
 }
@@ -36,7 +37,7 @@
     }, 10000);
 
     (function showQrCode() {
-        var path = window.location + "/Order/@Model.Id";
+        var path = window.location.origin + "@Url.Action(nameof(BacklogsController.GetOrder), new {Model.Id })";
         
         new QRCode(document.getElementById("qrCode"), {
             text: path,

@@ -2,6 +2,7 @@
 @using to.contracts
 @using to.contracts.data.domain
 @using to.contracts.data.result
+@using to.frontend.Controllers
 @model to.frontend.Models.Backlog.BacklogShowViewModel
 
 <h1>Backlogs</h1>
@@ -40,7 +41,7 @@
                  @if(User.HasPermission(Permission.CreateBacklog))
                  {
                      <button class="createOrderLink" data-id="@backlog.Id">Copy Link to Clipboard</button>
-                     <button class="createOrderQr" data-id="@backlog.Id">QR</button>
+                     <button class="createOrderQr" data-path="@Url.Action(nameof(BacklogsController.GetOrder), new { backlog.Id })">QR</button>
                  }
                  @if(User.HasPermission(Permission.DeleteBacklog))
                  {
@@ -96,9 +97,8 @@ else
         });
 
         $(".createOrderQr").on("click", function() {
-            var id = $(this).data("id");
-            var path = window.location + "/Order/" + id;
-
+            var path = window.location.origin + $(this).data("path");
+            
             var maxDim = Math.min(window.innerHeight, window.innerWidth) * 0.8;
 
             new QRCode(document.getElementById("qrCode"), {
