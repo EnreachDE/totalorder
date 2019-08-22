@@ -27,9 +27,24 @@
             }
         </ul>
     </div>
+    <div class="col-md-6" id="qrCode"></div>
 </div>
+<script type="text/javascript" src="~/js/qrcode.min.js"></script>
 <script type="text/javascript">
     setTimeout(function() {
         window.location.reload();
     }, 10000);
+
+    (function showQrCode() {
+        var path = window.location + "/Order/@Model.Id";
+        
+        new QRCode(document.getElementById("qrCode"), {
+            text: path,
+            width: 256,
+            height: 256,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+    })();
 </script>
