@@ -1,4 +1,6 @@
-﻿namespace to.frontend.Controllers
+﻿using Microsoft.AspNetCore.Hosting;
+
+namespace to.frontend.Controllers
 {
     using contracts.data.result;
     using Microsoft.AspNetCore.Authentication;
@@ -22,14 +24,14 @@
     {
         private IConfiguration _configuration;
 
-        private const string ErrorMessageString = "errorMessage";
-
         private readonly IRequestHandler _requestHandler;
+        private readonly IHostingEnvironment _env;
 
         public LoginController(IConfiguration configuration,
-                               IRequestHandlerFactory requestHandlerFactory)
+                               IRequestHandlerFactory requestHandlerFactory, IHostingEnvironment env)
         {
             this._configuration = configuration;
+            _env = env;
             this._requestHandler = requestHandlerFactory.GetHandler();
         }
 
@@ -38,9 +40,9 @@
         public ViewResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            if (TempData != null && !string.IsNullOrEmpty((string)TempData[ErrorMessageString]))
+            if (TempData != null && !string.IsNullOrEmpty((string)TempData[TempDataKeys.ErrorMessageString]))
             {
-                ModelState.AddModelError("", (string)TempData[ErrorMessageString]);
+                ModelState.AddModelError("", (string)TempData[TempDataKeys.ErrorMessageString]);
             }
             return View();
         }
@@ -100,7 +102,7 @@
             {
                 case Failure f:
                     ModelState.AddModelError(string.Empty, f.ErrorMessage);
-                    TempData[ErrorMessageString] = f.ErrorMessage;
+                    TempData[TempDataKeys.ErrorMessageString] = f.ErrorMessage;
                     break;
             }
 
@@ -128,7 +130,7 @@
 
                 if (status is Failure failure)
                 {
-                    TempData[ErrorMessageString] = failure.ErrorMessage;
+                    TempData[TempDataKeys.ErrorMessageString] = failure.ErrorMessage;
                 }
                 else
                 {
@@ -138,8 +140,11 @@
 
                 return Redirect(redirectUrl);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                TempData[TempDataKeys.Environment] = _env.EnvironmentName;
+                var error = $"Error: {ex.Message}{Environment.NewLine}StackTrace: {ex.StackTrace}";
+                TempData[TempDataKeys.ErrorMessageString] = error;
                 return View("Error");
             }
         }

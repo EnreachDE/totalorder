@@ -5,6 +5,7 @@ using to.contracts.data.domain;
 using to.frontend.Factories;
 using to.frontend.Models.Admin;
 using System;
+using to.frontend.Constants;
 
 namespace to.frontend.Controllers
 {
@@ -14,7 +15,6 @@ namespace to.frontend.Controllers
     public class AdminController : Controller
     {
         private readonly IRequestHandler _handler;
-        private const string ErrorMessageString = "errorMessage";
 
         public AdminController(IRequestHandlerFactory factory)
         {
@@ -30,7 +30,7 @@ namespace to.frontend.Controllers
             switch (status)
             {
                 case Failure f:
-                    TempData[ErrorMessageString] = f.ErrorMessage;
+                    TempData[TempDataKeys.ErrorMessageString] = f.ErrorMessage;
                     break;
             }
 
@@ -47,7 +47,7 @@ namespace to.frontend.Controllers
             switch (status)
             {
                 case Failure f:
-                    TempData[ErrorMessageString] = f.ErrorMessage;
+                    TempData[TempDataKeys.ErrorMessageString] = f.ErrorMessage;
                     break;
             }
 
@@ -68,7 +68,7 @@ namespace to.frontend.Controllers
             switch (status)
             {
                 case Failure f:
-                    TempData[ErrorMessageString] = f.ErrorMessage;
+                    TempData[TempDataKeys.ErrorMessageString] = f.ErrorMessage;
                     break;
             }
 
@@ -104,7 +104,7 @@ namespace to.frontend.Controllers
             {
                 case Failure f:
                     ModelState.AddModelError(string.Empty, f.ErrorMessage);
-                    TempData[ErrorMessageString] = f.ErrorMessage;
+                    TempData[TempDataKeys.ErrorMessageString] = f.ErrorMessage;
                     break;
             }
 
@@ -122,7 +122,7 @@ namespace to.frontend.Controllers
         public IActionResult DeleteUser(int id)
         {
             var (status, result) = _handler.HandleUserDeleteRequest(new UserDeleteRequest {Id = id});
-            if (status is Failure f) TempData[ErrorMessageString] = f.ErrorMessage;
+            if (status is Failure f) TempData[TempDataKeys.ErrorMessageString] = f.ErrorMessage;
 
             return RedirectToAction(nameof(Index));
         }

@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Hosting.Internal
+@using to.frontend.Constants
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,9 +11,9 @@
     <h1>We are sorry, something unexpected happened...</h1>
     <h2>If this issue persists please raise an issue in the <a href="https://github.com/Swyx/totalorder/">Github Repository</a> </h2>
 </hgroup>
-@if (TempData["Environment"].Equals("Development"))
+@if (TempData[TempDataKeys.Environment].Equals("Development"))
 {
-    <p class="alert-danger">@TempData["errorMessage"]</p>
+    <p class="alert-danger">@TempData[TempDataKeys.ErrorMessageString]</p>
 }
 </body>
 </html>
