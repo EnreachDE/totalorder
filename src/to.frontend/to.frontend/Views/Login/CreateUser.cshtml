@@ -1,8 +1,11 @@
 ﻿@using to.contracts.data.domain
 @model to.frontend.Models.Login.CreateUserModel
+@{
+    var actionUrl = (!string.IsNullOrEmpty(ViewBag.ReturnUrl)) ? "/Login/Create?ReturnUrl=" + ViewBag.ReturnUrl : "/Login/Create";
+}
 <h1>Create User</h1>
 @Html.ValidationSummary(true, "", new { @class = "alert alert-danger hidden" })
-<form action="/Login/Create" method="post">
+<form action="@actionUrl" method="post">
     <div class="form-group">
         <label for="username">Username</label>
         <input type="text" class="form-control" id="username" name="@nameof(Model.Username)" aria-describedby="username" placeholder="The username" value="@Model.Username">

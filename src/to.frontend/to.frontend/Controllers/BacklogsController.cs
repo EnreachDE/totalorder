@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using to.contracts;
 using to.contracts.data.domain;
 using to.contracts.data.result;
+using to.frontend.Constants;
 using to.frontend.Factories;
 using to.frontend.Models.Backlog;
 
@@ -19,7 +20,6 @@ namespace to.frontend.Controllers
     {
         private readonly IRequestHandler _handler;
         private readonly IHostingEnvironment _env;
-        private const string ErrorMessageString = "errorMessage";
 
         public BacklogsController(IRequestHandlerFactory factory, IHostingEnvironment env)
         {
@@ -49,7 +49,7 @@ namespace to.frontend.Controllers
             
             if (status is Failure f)
             {
-                TempData[ErrorMessageString] = f.ErrorMessage;
+                TempData[TempDataKeys.ErrorMessageString] = f.ErrorMessage;
                 return View("Error");
             }
 
@@ -64,7 +64,7 @@ namespace to.frontend.Controllers
             var (status, backlogOrderQueryResult) = _handler.HandleBacklogOrderQuery(id);
             if (status is Failure f)
             {
-                TempData[ErrorMessageString] = f.ErrorMessage;
+                TempData[TempDataKeys.ErrorMessageString] = f.ErrorMessage;
                 return View("Error");
             }
 
@@ -90,8 +90,8 @@ namespace to.frontend.Controllers
             
             var (status, result) = _handler.HandleBacklogOrderSubmissionRequest(orderRequest);
             if (status is Failure failure) { 
-                TempData[ErrorMessageString] = failure.ErrorMessage;
-                TempData["Environment"] = this._env.EnvironmentName;
+                TempData[TempDataKeys.ErrorMessageString] = failure.ErrorMessage;
+                TempData[TempDataKeys.Environment] = this._env.EnvironmentName;
                 return View("Error");
             }
 
@@ -106,7 +106,7 @@ namespace to.frontend.Controllers
         {
             var (status, result) = _handler.HandleBacklogEvalQuery(id);
             if (status is Failure failure) { 
-                TempData[ErrorMessageString] = failure.ErrorMessage;
+                TempData[TempDataKeys.ErrorMessageString] = failure.ErrorMessage;
                 return Redirect("/Home");
             }
             else
@@ -124,7 +124,7 @@ namespace to.frontend.Controllers
             var userId = User.GetId();
             var (status, result) = _handler.HandleBacklogsShowRequest(userId);
             if (status is Failure failure) { 
-                TempData[ErrorMessageString] = failure.ErrorMessage;
+                TempData[TempDataKeys.ErrorMessageString] = failure.ErrorMessage;
                 return Redirect("/Home");
             }
             return View(new BacklogShowViewModel { Result = new Success(), Backlogs = result });
@@ -141,7 +141,7 @@ namespace to.frontend.Controllers
             switch (result)
             {
                 case Failure f:
-                    TempData[ErrorMessageString] = f.ErrorMessage;
+                    TempData[TempDataKeys.ErrorMessageString] = f.ErrorMessage;
                     break;
             }
 
