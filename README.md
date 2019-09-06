@@ -1,4 +1,6 @@
-## TotalOrder
+# TotalOrder
+
+![badge](https://github.com/martinh2011/totalorder/workflows/.github/workflows/dockerimgage.yml/badge.svg)
 
 Swyx TotalOrder (STO) bringt ehrliche Subjektivitität in das Schätzen von Backlog Issues zurück.
 STO ist das Tool der Wahl, um relatives Schätzen festen Teams oder größeren temporären Gruppen zu ermöglichen.
