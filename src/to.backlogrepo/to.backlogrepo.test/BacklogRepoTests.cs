@@ -37,6 +37,15 @@ namespace to.backlogrepo.test
         }
 
         [Test]
+        public void InitTest()
+        {
+            var repo = new BacklogRepo(TestRootDir, Guid.NewGuid);
+            repo.Initialise();
+            var path = Path.Combine(TestRootDir, BacklogsSubFolder);
+            Directory.Exists(path).Should().BeTrue();
+        }
+
+        [Test]
         public void SaveBacklogTest()
         {
             var repo = new BacklogRepo(TestRootDir, Guid.NewGuid);
