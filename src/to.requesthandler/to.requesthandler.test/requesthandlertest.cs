@@ -232,5 +232,10 @@ namespace to.requesthandlertest
             result[0] = submission;
             return (new Success(), result);
         }
+
+        public Status Initialise()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
