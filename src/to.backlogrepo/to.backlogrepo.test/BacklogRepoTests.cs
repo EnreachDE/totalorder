@@ -112,8 +112,8 @@ namespace to.backlogrepo.test
 
             status.Should().BeOfType<Success>();
             submissions.Length.Should().Be(2);
-            submissions[0].Should().BeEquivalentTo(expectedSubmission1);
-            submissions[1].Should().BeEquivalentTo(expectedSubmission2);
+            submissions.Should().ContainEquivalentOf(expectedSubmission1);
+            submissions.Should().ContainEquivalentOf(expectedSubmission2);
         }
 
         [Test]
