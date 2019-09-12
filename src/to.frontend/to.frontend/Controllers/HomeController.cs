@@ -23,11 +23,11 @@ namespace to.frontend.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var model = new HomeViewModel
-            {
-                AdminUserExists = CheckAdminUserExists()
-            };
-            return View(model);
+            var adminUserExists = CheckAdminUserExists();
+            if (!adminUserExists)
+                return RedirectToAction(nameof(GetCreateAdministrator));
+
+            return View();
         }
 
         protected virtual bool CheckAdminUserExists()
@@ -46,9 +46,23 @@ namespace to.frontend.Controllers
             return adminUserExists;
         }
 
+        [HttpGet]
+        [Route("Home/CreateAdmin")]
+        public IActionResult GetCreateAdministrator()
+        {
+            var adminUserExists = _applicationState.Get<bool>("AdminUserExists");
+            if (adminUserExists)
+            {
+                TempData["AdminUserExistsAlready"] = true;
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View("CreateAdministrator");
+        }
+
         [HttpPost]
         [Route("Home/CreateAdmin")]
-        public IActionResult PostCreateAdministrator(HomeViewModel model)
+        public IActionResult PostCreateAdministrator(CreateAdministratorModel model)
         {
             var adminUserExists = _applicationState.Get<bool>("AdminUserExists");
             if (!adminUserExists)
@@ -60,6 +74,10 @@ namespace to.frontend.Controllers
                     Password = model.Password,
                     UserRole = UserRole.Administrator
                 });
+            }
+            else
+            {
+                TempData["AdminUserExistsAlready"] = true;
             }
 
             return RedirectToAction(nameof(Index));

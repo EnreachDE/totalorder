@@ -1,5 +1,4 @@
-﻿@using to.frontend.Models.Home
-@model to.frontend.Models.Home.HomeViewModel
+﻿@model to.frontend.Models.Home.CreateAdministratorModel
 @{
     ViewBag.Title = "Home Page";
 }
@@ -8,46 +7,20 @@
     <h1>Total Order</h1>
 </div>
 
-@if (!Model.AdminUserExists)
+@if (TempData["AdminUserExistsAlready"] != null && (bool)TempData["AdminUserExistsAlready"])
 {
     <div class="row">
-        <h2>Welcome, Boss!</h2>
-        <h3>We are ready to go, please create your Administrator account:</h3>
-    </div>
-    <br/>
-    <form action="/Home/CreateAdmin" method="post">
-        <div class="row">
-            <div class="col-md-4">
-                <table>
-                    <tr>
-                        <th>Username:</th>
-                        <td>
-                            <input type="text" id="username" name="username" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Password:</th>
-                        <td>
-                            <input type="password" id="password" name="password" />
-                        </td>
-                    </tr>
-                </table>
-                <br/>
-                <button type="submit" class="btn btn-default">Create &raquo;</button>
-            </div>
-        </div>
-    </form>
-}
-else
-{
-    <div class="row">
-        <div class="col-md-4">
-            <h2>Create a new Voting</h2>
-            <p><a class="btn btn-default" href="Backlogs/Create">Create &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-            <h2>Show my Votings</h2>
-            <p><a class="btn btn-default" href="Backlogs/">Show</a></p>
-        </div>
+        <div class="alert alert-danger">You're out of luck! Somebody else already created an Administrator account.</div>
     </div>
 }
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Create a new Voting</h2>
+        <p><a class="btn btn-default" href="Backlogs/Create">Create &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Show my Votings</h2>
+        <p><a class="btn btn-default" href="Backlogs/">Show</a></p>
+    </div>
+</div>
