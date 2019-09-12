@@ -135,7 +135,7 @@ namespace to.frontend.Controllers
                 else
                 {
                     await SignIn(userResult);
-                    redirectUrl = returnUrl ?? "/Home";
+                    redirectUrl = returnUrl ?? $"/{nameof(BacklogsController).Replace("Controller", string.Empty)}";
                 }
 
                 return Redirect(redirectUrl);
