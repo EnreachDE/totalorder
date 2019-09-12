@@ -14,5 +14,6 @@
         (Status, List<Backlog>) GetAll();
         Status DeleteBacklog(string id);
         (Status, List<Backlog>) GetBacklogsByIds(IEnumerable<string> ids);
+        Status Initialise();
     }
 }

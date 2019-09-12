@@ -7,5 +7,6 @@ namespace to.contracts
     public interface IPermissionRepo
     {
         (Status, IEnumerable<Permission>) LoadPermissions(UserRole role);
+        Status Initialise();
     }
 }
