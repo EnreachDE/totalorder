@@ -5,10 +5,10 @@
 @using to.frontend.Controllers
 @model to.frontend.Models.Backlog.BacklogShowViewModel
 
-<h1>Backlogs</h1>
+<h1>Votings</h1>
 @if (User.HasPermission(Permission.CreateBacklog))
 {
-    <button id="createBacklog">Create Backlog</button><br/><br/>
+    <button id="createBacklog">Create Voting</button><br/><br/>
 }
 
 @if (Model.Result is Success)

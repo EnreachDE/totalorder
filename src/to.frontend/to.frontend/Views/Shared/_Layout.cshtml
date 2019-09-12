@@ -23,10 +23,9 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     @if (User.HasPermission(Permission.ListBacklog))
                     {
-                        <li>@Html.ActionLink("My Backlogs", "Index", "Backlogs")</li>
+                        <li>@Html.ActionLink("My Votings", "Index", "Backlogs")</li>
                     }
                     @if (User.HasPermission(Permission.ListUser))
                     {
