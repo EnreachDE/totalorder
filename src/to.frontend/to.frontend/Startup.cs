@@ -37,6 +37,7 @@ namespace to.frontend
             });
 
             services.AddSingleton<IRequestHandlerFactory, RequestHandlerFactory>();
+            services.AddSingleton<IApplicationState, ApplicationState>();
             services.AddMvc();
             
         }
