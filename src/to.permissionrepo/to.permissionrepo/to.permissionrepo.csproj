@@ -8,8 +8,10 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\to.contracts\to.contracts\to.contracts.csproj" />
+<ItemGroup>
+    <Reference Include="to.contracts">
+      <HintPath>..\..\..\contracts\netstandard2.0\to.contracts.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
