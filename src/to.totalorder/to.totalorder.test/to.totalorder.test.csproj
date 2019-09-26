@@ -12,8 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\to.contracts\to.contracts\to.contracts.csproj" />
     <ProjectReference Include="..\to.totalorder\to.totalorder.csproj" />
   </ItemGroup>
 
+<ItemGroup>
+    <Reference Include="to.contracts">
+      <HintPath>..\..\..\contracts\netstandard2.0\to.contracts.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

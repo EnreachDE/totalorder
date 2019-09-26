@@ -18,6 +18,12 @@
     <ProjectReference Include="..\to.permissionrepo\to.permissionrepo.csproj" />
   </ItemGroup>
 
+<ItemGroup>
+    <Reference Include="to.contracts">
+      <HintPath>..\..\..\contracts\netstandard2.0\to.contracts.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  
   <ItemGroup>
     <None Update="SampleData\permissions.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

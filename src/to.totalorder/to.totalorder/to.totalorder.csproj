@@ -12,8 +12,10 @@
     <OutputPath>..\..\bin\Release\</OutputPath>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\to.contracts\to.contracts\to.contracts.csproj" />
+<ItemGroup>
+    <Reference Include="to.contracts">
+      <HintPath>..\..\..\contracts\netstandard2.0\to.contracts.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

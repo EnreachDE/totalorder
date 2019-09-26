@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "to.contracts", "src\to.contracts\to.contracts\to.contracts.csproj", "{64A69B9A-0AA7-4F70-873D-F7EC5A286651}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "to.backlogrepo", "src\to.backlogrepo\to.backlogrepo\to.backlogrepo.csproj", "{CCB2853A-8A00-4C21-B3EC-9BF8FBB0866E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "to.totalorder", "src\to.totalorder\to.totalorder\to.totalorder.csproj", "{EF82F2FC-7F87-4989-8D1C-0D8F39E80E7A}"
@@ -26,14 +24,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "to.totalorder.test", "src\to.totalorder\to.totalorder.test\to.totalorder.test.csproj", "{AACD1945-F621-4D70-B717-C1EC3FA286E4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "to.userrepo", "src\to.userrepo\to.userrepo\to.userrepo.csproj", "{B462FCD3-2B1F-4F61-813F-07C500D29304}"
-	ProjectSection(ProjectDependencies) = postProject
-		{64A69B9A-0AA7-4F70-873D-F7EC5A286651} = {64A69B9A-0AA7-4F70-873D-F7EC5A286651}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "to.security", "src\to.security\to.security\to.security.csproj", "{65A15ABE-DA9C-457A-99BC-22A2C077B560}"
-	ProjectSection(ProjectDependencies) = postProject
-		{64A69B9A-0AA7-4F70-873D-F7EC5A286651} = {64A69B9A-0AA7-4F70-873D-F7EC5A286651}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "to.security.test", "src\to.security\to.security.test\to.security.test.csproj", "{4A8D6538-CBE2-4107-9706-B8E0379A7846}"
 EndProject
@@ -49,10 +41,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{64A69B9A-0AA7-4F70-873D-F7EC5A286651}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{64A69B9A-0AA7-4F70-873D-F7EC5A286651}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{64A69B9A-0AA7-4F70-873D-F7EC5A286651}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{64A69B9A-0AA7-4F70-873D-F7EC5A286651}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CCB2853A-8A00-4C21-B3EC-9BF8FBB0866E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CCB2853A-8A00-4C21-B3EC-9BF8FBB0866E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCB2853A-8A00-4C21-B3EC-9BF8FBB0866E}.Release|Any CPU.ActiveCfg = Release|Any CPU
