@@ -32,8 +32,22 @@ namespace to.userrepo.test
             {
                 Directory.Delete(usersDirectory, true);
             }
-            Directory.CreateDirectory(usersDirectory);
+            _userRepo.Initialise();
             File.Copy(Path.Combine(TestRootDir, "users.json"), Path.Combine(TestRootDir, UsersDirectoryName, UsersTestJson), true);
+        }
+
+        [Test]
+        public void TestInitialise()
+        {
+            var usersDirectory = Path.Combine(TestRootDir, UsersDirectoryName);
+            if (Directory.Exists(usersDirectory))
+            {
+                Directory.Delete(usersDirectory, true);
+            }
+            _userRepo.Initialise();
+
+            var usersFile = Path.Combine(usersDirectory, UsersTestJson);
+            Assert.IsTrue(File.Exists(usersFile));
         }
 
         [Test]

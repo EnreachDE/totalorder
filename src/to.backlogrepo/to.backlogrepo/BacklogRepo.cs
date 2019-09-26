@@ -176,5 +176,14 @@ namespace to.backlogrepo
             
             return (new Success(), backlogs);
         }
+
+        public Status Initialise()
+        {
+            if (!Directory.Exists(this.rootpath))
+            {
+                Directory.CreateDirectory(this.rootpath);
+            }
+            return new Success();
+        }
     }
 }

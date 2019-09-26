@@ -1,10 +1,18 @@
-﻿@{
+﻿@model to.frontend.Models.Home.CreateAdministratorModel
+@{
     ViewBag.Title = "Home Page";
 }
 
 <div class="jumbotron">
     <h1>Total Order</h1>
 </div>
+
+@if (TempData["AdminUserExistsAlready"] != null && (bool)TempData["AdminUserExistsAlready"])
+{
+    <div class="row">
+        <div class="alert alert-danger">You're out of luck! Somebody else already created an Administrator account.</div>
+    </div>
+}
 
 <div class="row">
     <div class="col-md-4">

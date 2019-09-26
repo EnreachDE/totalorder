@@ -1,4 +1,5 @@
-﻿using to.backlogrepo;
+﻿using System;
+using to.backlogrepo;
 using to.contracts;
 using to.requesthandler;
 using to.security;
@@ -6,6 +7,7 @@ using to.totalorder;
 using to.userrepo;
 using to.permissionrepo;
 using Microsoft.Extensions.Configuration;
+using to.contracts.data.result;
 
 namespace to.frontend.Factories
 {
@@ -16,20 +18,36 @@ namespace to.frontend.Factories
 
     public class RequestHandlerFactory : IRequestHandlerFactory
     {
-        private IConfiguration _configuration;
-        
+        private readonly Lazy<RequestHandler> _handler;
+
         public RequestHandlerFactory(IConfiguration configuration)
         {
-            this._configuration = configuration;
+            _handler = new Lazy<RequestHandler>(() =>
+            {
+                var rootPath = configuration.GetValue<string>("App:DataRootPath");
+                var userRepo = new UserRepo(rootPath, "users.json");
+                var backlogRepo = new BacklogRepo(rootPath);
+                var permissionsRepo = new PermissionRepo(rootPath, "permissions.json");
+
+                if (userRepo.Initialise() is Failure ||
+                    backlogRepo.Initialise() is Failure ||
+                    permissionsRepo.Initialise() is Failure)
+                {
+                    throw new FailedRepositoryCreationException();
+                }
+
+                return new RequestHandler(backlogRepo, new TotalOrder(), userRepo, new Security(), permissionsRepo);
+            });
         }
-        public IRequestHandler GetHandler() {
-            string rootPath = this._configuration.GetValue<string>("App:DataRootPath");
-            return new RequestHandler(
-                new BacklogRepo(rootPath),
-                new TotalOrder(),
-                new UserRepo(rootPath, "users.json"),
-                new Security(),
-                new PermissionRepo(rootPath, "permissions.json"));
+
+        public IRequestHandler GetHandler()
+        {
+            return _handler.Value;
         }
+    }
+
+    public class FailedRepositoryCreationException : Exception
+    {
+
     }
 }

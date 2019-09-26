@@ -47,6 +47,19 @@ namespace to.userrepo
             _idGenerator = idGenerator;
         }
 
+        public Status Initialise()
+        {
+            var usersPath = Path.Combine(_rootpath, _usersSubFolder);
+            if (!Directory.Exists(usersPath))
+                Directory.CreateDirectory(usersPath);
+
+            var usersFile = Path.Combine(_rootpath, _usersSubFolder, _userListFileName);
+            if (!File.Exists(usersFile))
+                File.AppendAllText(usersFile, "[]");
+
+            return new Success();
+        }
+
         public (Status, User) LoadUser(string username)
         {
             var users = ReadUserList();

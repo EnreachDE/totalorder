@@ -30,6 +30,65 @@ namespace to.permissionrepo
             return RetrieveRolePermissions(role, dict);
         }
 
+        public Status Initialise()
+        {
+            var exists = File.Exists(Path.Combine(_rootpath, _fileName));
+
+            if (!exists)
+            {
+                var dict = CreateDefaultPermissionDictionary();
+                SerializeAndWriteFile(dict);
+            }
+
+            return new Success();
+        }
+
+        private void SerializeAndWriteFile(Dictionary<UserRole, List<Permission>> dict)
+        {
+            var serializedDict = JsonConvert.SerializeObject(dict,Formatting.Indented);
+            var path = Path.Combine(_rootpath, _fileName);
+            File.WriteAllLines(path, new[] {serializedDict});
+        }
+
+        private static Dictionary<UserRole, List<Permission>> CreateDefaultPermissionDictionary()
+        {
+            var dict = new Dictionary<UserRole, List<Permission>>();
+
+            dict[UserRole.Administrator] = new List<Permission>
+            {
+                Permission.CreateBacklog,
+                Permission.CreateUser,
+                Permission.DeleteBacklog,
+                Permission.DeleteUser,
+                Permission.EditUser,
+                Permission.EvaluateBacklog,
+                Permission.ListBacklog,
+                Permission.ListUser,
+                Permission.OrderBacklog
+            };
+
+            dict[UserRole.Guest] = new List<Permission>
+            {
+                Permission.ListBacklog,
+            };
+
+            dict[UserRole.ProductOwner] = new List<Permission>
+            {
+                Permission.CreateBacklog,
+                Permission.DeleteBacklog,
+                Permission.EvaluateBacklog,
+                Permission.ListBacklog,
+            };
+
+            dict[UserRole.Developer] = new List<Permission>
+            {
+                Permission.EvaluateBacklog,
+                Permission.ListBacklog,
+                Permission.OrderBacklog
+            };
+            return dict;
+        }
+
         private static (Status, IEnumerable<Permission>) RetrieveRolePermissions(UserRole role, Dictionary<UserRole, List<Permission>> dict)
         {
             dict.TryGetValue(role, out var permissions);
