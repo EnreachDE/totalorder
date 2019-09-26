@@ -7,11 +7,10 @@ using to.contracts.data.result;
 using to.frontend.Controllers;
 using to.frontend.Factories;
 using to.frontend.Models.Backlog;
+using Microsoft.Extensions.Hosting.Internal;
 
 namespace to.frontend.tests
 {
-    using Microsoft.AspNetCore.Hosting.Internal;
-
     [TestFixture]
     public class BacklogControllerTests
     {

@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/to.frontend/to.frontend/bin/Debug/netcoreapp2.0/to.frontend.dll",
+            "program": "${workspaceFolder}/src/to.frontend/to.frontend/bin/Debug/netcoreapp3.0/to.frontend.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/to.frontend/to.frontend/",
             "stopAtEntry": false,

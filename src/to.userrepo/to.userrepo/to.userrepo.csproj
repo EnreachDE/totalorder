@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>bin\Debug\netstandard2.0\</OutputPath>
+    <OutputPath>bin\Debug\netstandard2.1\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <Reference Include="to.contracts">
-      <HintPath>..\..\..\contracts\netstandard2.0\to.contracts.dll</HintPath>
+      <HintPath>..\..\..\contracts\netstandard2.1\to.contracts.dll</HintPath>
     </Reference>
   </ItemGroup>
 

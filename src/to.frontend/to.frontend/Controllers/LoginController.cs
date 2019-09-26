@@ -25,10 +25,10 @@ namespace to.frontend.Controllers
         private IConfiguration _configuration;
 
         private readonly IRequestHandler _requestHandler;
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
 
         public LoginController(IConfiguration configuration,
-                               IRequestHandlerFactory requestHandlerFactory, IHostingEnvironment env)
+                               IRequestHandlerFactory requestHandlerFactory, IWebHostEnvironment env)
         {
             this._configuration = configuration;
             _env = env;

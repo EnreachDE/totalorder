@@ -8,7 +8,7 @@ COPY to.build.sln ./
 COPY src src/
 COPY docker-compose.dcproj ./docker-compose.dcproj
 RUN dotnet restore -nowarn:msb3202,nu1503 ./to.build.sln && \
-    dotnet build -c release -o /src/contracts/netstandard2.0/ src/to.contracts/to.contracts/to.contracts.csproj && \
+    dotnet build -c release -o /src/contracts/netstandard2.1/ src/to.contracts/to.contracts/to.contracts.csproj && \
     dotnet build -c Release to.build.sln
 
 RUN dotnet test to.build.sln 

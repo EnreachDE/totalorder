@@ -7,21 +7,18 @@ using to.contracts.data.result;
 using to.frontend.Constants;
 using to.frontend.Factories;
 using to.frontend.Models.Backlog;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace to.frontend.Controllers
 {
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Hosting.Internal;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Http.Extensions;
-
     [Authorize(Roles = nameof(UserRole.Developer) +", "+ nameof(UserRole.ProductOwner) +", "+ nameof(UserRole.Administrator))]
     public class BacklogsController : Controller
     {
         private readonly IRequestHandler _handler;
-        private readonly IHostingEnvironment _env;
+        private readonly IHostEnvironment _env;
 
-        public BacklogsController(IRequestHandlerFactory factory, IHostingEnvironment env)
+        public BacklogsController(IRequestHandlerFactory factory, IHostEnvironment env)
         {
             _handler = factory.GetHandler();
             _env = env;
