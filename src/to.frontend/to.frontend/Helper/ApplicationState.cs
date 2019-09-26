@@ -1,13 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace to.frontend.Factories
+namespace to.frontend.Helper
 {
-    public interface IApplicationState
-    {
-        T Get<T>(string key);
-        void Set<T>(string key, T value);
-    }
-
     public class ApplicationState : IApplicationState
     {
         private readonly Dictionary<string, object> _state;
