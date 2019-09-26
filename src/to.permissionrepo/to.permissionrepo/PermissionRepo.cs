@@ -45,7 +45,7 @@ namespace to.permissionrepo
 
         private void SerializeAndWriteFile(Dictionary<UserRole, List<Permission>> dict)
         {
-            var serializedDict = JsonConvert.SerializeObject(dict);
+            var serializedDict = JsonConvert.SerializeObject(dict,Formatting.Indented);
             var path = Path.Combine(_rootpath, _fileName);
             File.WriteAllLines(path, new[] {serializedDict});
         }
