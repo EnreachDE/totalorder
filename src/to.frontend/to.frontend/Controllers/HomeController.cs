@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Hosting;
 using to.contracts;
 using to.contracts.data.domain;
 using to.contracts.data.result;
+using to.frontend.Constants;
 using to.frontend.Factories;
 using to.frontend.Helper;
 using to.frontend.Models;
@@ -14,10 +16,12 @@ namespace to.frontend.Controllers
     {
         private readonly IApplicationState _applicationState;
         private readonly IRequestHandler _handler;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public HomeController(IApplicationState applicationState, IRequestHandlerFactory factory)
+        public HomeController(IApplicationState applicationState, IRequestHandlerFactory factory, IHostingEnvironment hostingEnvironment)
         {
             _applicationState = applicationState;
+            _hostingEnvironment = hostingEnvironment;
             _handler = factory.GetHandler();
         }
 
@@ -69,12 +73,19 @@ namespace to.frontend.Controllers
             if (!adminUserExists)
             {
                 _applicationState.Set("AdminUserExists", true);
-                _handler.HandleUserCreateRequest(new UserCreateRequest
+                var (status, userList) = _handler.HandleUserCreateRequest(new UserCreateRequest
                 {
                     UserName = model.Username,
                     Password = model.Password,
                     UserRole = UserRole.Administrator
                 });
+                if (status is Failure)
+                {
+                    _applicationState.Set("AdminUserExists", false);
+                    TempData[TempDataKeys.ErrorMessageString] = "Could not create administrator.";
+                    TempData[TempDataKeys.Environment] = this._hostingEnvironment.EnvironmentName;
+                    return RedirectToAction(nameof(Error));
+                }
             }
             else
             {
