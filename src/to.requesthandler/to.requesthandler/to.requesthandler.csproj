@@ -14,7 +14,7 @@
   
 <ItemGroup>
     <Reference Include="to.contracts">
-      <HintPath>..\..\..\contracts\netstandard2.0\to.contracts.dll</HintPath>
+      <HintPath>..\..\..\contracts\netstandard2.1\to.contracts.dll</HintPath>
     </Reference>
   </ItemGroup>
 
