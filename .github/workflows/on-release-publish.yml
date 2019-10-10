@@ -1,0 +1,45 @@
+name: Deploy on totalorder.de
+
+on:
+  release:
+    types: [published]
+
+jobs:
+
+  build:
+ 
+    runs-on: ubuntu-16.04
+ 
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Login
+      env:
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+      run: echo ${DOCKERHUB_PASSWORD} | docker login --username=${DOCKERHUB_USERNAME} --password-stdin
+   
+    - name: Build and test
+      run: docker build . --file src/to.frontend/to.frontend/Dockerfile --tag swyx/totalorder:${GITHUB_SHA}
+      
+    - name: Push
+      run: docker push swyx/totalorder:${GITHUB_SHA}
+
+    - name: decrypt docker tls certs
+      run: |
+        ./.github/scripts/decrypt_secret.sh .github/ca.pem
+        ./.github/scripts/decrypt_secret.sh .github/key.pem
+        ./.github/scripts/decrypt_secret.sh .github/cert.pem
+
+      env:
+          LARGE_SECRET_PASSPHRASE: ${{ secrets.LARGE_SECRET_PASSPHRASE }}
+     
+    - name: run docker container
+      env:
+        DOCKER_CERT_PATH: /home/runner/secrets/
+        DOCKER_TLS_VERIFY: 1
+        DOCKER_HOST: tcp://cloud.hueser.name:2376
+      run: |
+        docker info
+        docker container ls
