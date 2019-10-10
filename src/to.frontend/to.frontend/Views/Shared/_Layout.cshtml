@@ -5,13 +5,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Total Order</title>
-    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="~/css/bootstrap.flatly.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <script type="text/javascript" src="~/js/jquery-1.10.2.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-default navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -37,7 +37,7 @@
             {
                 <div class="logoutLink">
                     <label style="color: azure;margin-right: 30px">Hi @User.Identity.Name !</label>
-                    <a class="btn btn-primary" href="/Logout">Logout</a>
+                    <a class="btn btn-info" href="/Logout">Logout</a>
                 </div>
             }
             else

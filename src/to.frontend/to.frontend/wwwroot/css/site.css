@@ -62,3 +62,25 @@ ul.userStories li {
 .hidden {
     display: none;
 }
+
+.headerBackground {
+    background-image: url(/images/header.jpg);
+    background-size: 100%;
+}
+
+.jumbotron.headerBackground > h1 {
+    color: #fff;
+    /* text-shadow: -1px -1px 0 #AAA, 1px -1px 0 #AAA, -1px 1px 0 #AAA, 1px 1px 0 #AAA; */
+    text-align: right;
+    font-family: 'Roboto', sans-serif;
+    font-size: 3em;
+    margin-top: 0;
+    margin-bottom: 0;
+    letter-spacing: 3px;
+}
+
+.homeImage {
+    width: 300px;
+    height: 300px;
+    border-radius: 150px;
+}

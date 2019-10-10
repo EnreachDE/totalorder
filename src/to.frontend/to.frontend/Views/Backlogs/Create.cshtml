@@ -5,7 +5,7 @@
 
 <form action="/Backlogs/Create" method="post">
     <fieldset class="fieldset">
-        <legend>Create new voting</legend>
+        <h1>Create new voting</h1>
         <div class="row" style="margin-top: 30px;">
             <div class="col-md-6">
                 <div class="checkbox">
@@ -13,18 +13,18 @@
                     @Html.CheckBoxFor(p => p.OneVotePerUser)<br /><br />
                 </div>
                 @Html.LabelFor(p => p.Title)<br/>
-                @Html.TextBoxFor(p => p.Title)<br/>
+                @Html.TextBoxFor(p => p.Title, new  { @class="form-control" }) <br/>
             </div>
         </div>
         <div class="row" style="margin-top: 20px;">
             <div class="col-md-6 userStories">
-                @Html.LabelFor(p => p.UserStories)&nbsp;<button id="addUserStory">+</button><br/><br/>
-                @Html.EditorFor(p => p.UserStories)<br/><br/>
+                @Html.LabelFor(p => p.UserStories)&nbsp;<button id="addUserStory" class="btn btn-primary">+</button><br/><br/>
+                @Html.EditorFor(p => p.UserStories, new { htmlattributes = new { @class = "form-control" }})<br/><br/>
             </div>
         </div><br/>
         <div class="row">
             <div class="col-md-6">
-                <button type="submit">Create</button>
+                <button type="submit" class="btn btn-primary">Create</button>
             </div>
         </div>
     </fieldset>
@@ -38,7 +38,7 @@
             e.stopImmediatePropagation();
 
             var numItems = $(".userStories input").length;
-            var html = '<input class="text-box single-line" id="UserStories_'+ numItems +'_" name="UserStories['+ numItems +']" type="text"></input><br/><br/>';
+            var html = '<input class="form-control" id="UserStories_'+ numItems +'_" name="UserStories['+ numItems +']" type="text"></input><br/><br/>';
             $(".userStories").append(html);
             $(".userStories input:last").focus();
         });

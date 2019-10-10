@@ -3,8 +3,8 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>Total Order</h1>
+<div class="jumbotron headerBackground">
+    <h1>TOTAL ORDER</h1>
 </div>
 
 @if (TempData["AdminUserExistsAlready"] != null && (bool)TempData["AdminUserExistsAlready"])
@@ -14,13 +14,16 @@
     </div>
 }
 
+<br/><br/>
 <div class="row">
-    <div class="col-md-4">
-        <h2>Create a new Voting</h2>
-        <p><a class="btn btn-default" href="Backlogs/Create">Create &raquo;</a></p>
+    <div class="col-md-6" style="text-align: center;">
+        <img src="/images/create_voting.jpg" class="homeImage"/>
+        <br/><br/>
+        <p><a class="btn btn-primary" href="Backlogs/Create" style="width: 300px; font-size: 1.5em">Create a new Voting</a></p>
     </div>
-    <div class="col-md-4">
-        <h2>Show my Votings</h2>
-        <p><a class="btn btn-default" href="Backlogs/">Show</a></p>
+    <div class="col-md-6" style="text-align: center;">
+        <img src="/images/list_votings.jpg" class="homeImage" />
+        <br/><br/>
+        <p><a class="btn btn-primary" href="Backlogs/" style="width: 300px; font-size: 1.5em">Show my Votings</a></p>
     </div>
 </div>
