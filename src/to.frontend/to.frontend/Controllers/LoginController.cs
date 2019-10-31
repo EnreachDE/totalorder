@@ -6,9 +6,9 @@ namespace to.frontend.Controllers
 
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
-    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Hosting;
 
     using System;
     using System.Collections.Generic;
@@ -25,10 +25,10 @@ namespace to.frontend.Controllers
         private IConfiguration _configuration;
 
         private readonly IRequestHandler _requestHandler;
-        private readonly IWebHostEnvironment _env;
+        private readonly IHostEnvironment _env;
 
         public LoginController(IConfiguration configuration,
-                               IRequestHandlerFactory requestHandlerFactory, IWebHostEnvironment env)
+                               IRequestHandlerFactory requestHandlerFactory, IHostEnvironment env)
         {
             _configuration = configuration;
             _env = env;
