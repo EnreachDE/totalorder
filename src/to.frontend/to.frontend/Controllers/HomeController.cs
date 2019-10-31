@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using to.contracts;
 using to.contracts.data.domain;
 using to.contracts.data.result;
@@ -16,9 +16,9 @@ namespace to.frontend.Controllers
     {
         private readonly IApplicationState _applicationState;
         private readonly IRequestHandler _handler;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IHostEnvironment _hostingEnvironment;
 
-        public HomeController(IApplicationState applicationState, IRequestHandlerFactory factory, IHostingEnvironment hostingEnvironment)
+        public HomeController(IApplicationState applicationState, IRequestHandlerFactory factory, IHostEnvironment hostingEnvironment)
         {
             _applicationState = applicationState;
             _hostingEnvironment = hostingEnvironment;

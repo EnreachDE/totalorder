@@ -1,16 +1,45 @@
 # TotalOrder
 
-![badge](https://github.com/swyx/totalorder/workflows/.github/workflows/dockerimgage.yml/badge.svg)
+![badge](https://github.com/swyx/totalorder/workflows/Docker%20Image%20CI/badge.svg)
 
-Swyx TotalOrder (STO) bringt ehrliche Subjektivitität in das Schätzen von Backlog Issues zurück.
-STO ist das Tool der Wahl, um relatives Schätzen festen Teams oder größeren temporären Gruppen zu ermöglichen.
+Swyx TotalOrder (STO) brings honest subjectivity back into ordering backlog issues or any other list of items. STO is the tool of choice to enable relative estimation of fixed teams or larger temporary groups.
 
+## Rough functionality
 
-Grobe Funktionsweise
-Wer eine Einschätzung für eine Liste von Issues bekommen möchte, registriert sich bei STO, legt ein Backlog an und teilt den Mitgliedern seiner Gruppe dessen Code mit. 
-Über diesen Code bekommen die Mitglieder Zugang zum Backlog und können die Issues auf der in Frage stehenden Dimension zueinander anordnen. 
-Und der Backlog-Owner bekommt die errechnete Gesamtordnung als Ergebnis zu sehen.
-Backlog-Owner müssen sich registrieren und anmelden, um Backlogs anzulegen und zu verwalten.
-Wer ein Backlog ordnen will, muss sich allerdings nur anmelden, wenn das als Voraussetzung im Backlog eingestellt ist (persönliche Einschätzung).
-Bei persönlichen Einschätzungen hat jeder Benutzer nur eine Stimme; mit der kann er seine Einschätzung auch revidieren, wenn das laut Backlog-Einstellung erlaubt ist.
-Bei unpersönlichen/anonymen Einschätzungen hingegen kann jeder Code-Inhaber potenziell mehrfach Backlog-Ordnungen herstellen, die dann auch nicht änderbar sind.
+If you want to get an evaluation for a list of items, register with STO, create a voting distribute the voting url or QR code to your team. The url or QA code  gives team members access to the voting and allows them to arrange the items on the dimension in question.
+
+The voting owner sees the calculated overall order as the result. Voting owners must register and log in to create and manage votings. Per default anybody with the voting link or QR code can order the items. No account necessary. However, if you create a voting with option _one voting per user_ everybody who wants to vote needs to create an account and login.
+
+## totalorder.de
+
+The Totalorder voting web app is hosted at [totalorder.de](http://totalorder.de)
+
+## Build
+
+The web app is an asp.net core application intended to run as a docker container. To build it, run
+
+``` shell
+docker-compose build
+```
+
+This also runs the totalorder unit tests.
+
+To run the app use
+
+``` shell
+docker-compose build
+```
+
+For building and running without docker use
+
+``` shell
+dotnet build to.build.sln
+```
+
+``` shell
+dotnet test to.build.sln
+```
+
+``` shell
+dotnet run src/to.frontend/to.frontend.csproj
+```

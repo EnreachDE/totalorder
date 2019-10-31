@@ -1,38 +1,38 @@
-﻿using Microsoft.AspNetCore.Hosting;
-
+﻿
 namespace to.frontend.Controllers
 {
+    using contracts.data.domain;
     using contracts.data.result;
+
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Hosting;
+
     using System;
     using System.Collections.Generic;
     using System.Security.Claims;
     using System.Threading.Tasks;
 
-    using contracts.data.domain;
-
-    using to.contracts;
-    using to.frontend.Constants;
-    using to.frontend.Factories;
-    using to.frontend.Models.Login;
+    using contracts;
+    using Constants;
+    using Factories;
+    using Models.Login;
 
     public class LoginController : Controller
     {
         private IConfiguration _configuration;
 
         private readonly IRequestHandler _requestHandler;
-        private readonly IHostingEnvironment _env;
+        private readonly IHostEnvironment _env;
 
         public LoginController(IConfiguration configuration,
-                               IRequestHandlerFactory requestHandlerFactory, IHostingEnvironment env)
+                               IRequestHandlerFactory requestHandlerFactory, IHostEnvironment env)
         {
-            this._configuration = configuration;
+            _configuration = configuration;
             _env = env;
-            this._requestHandler = requestHandlerFactory.GetHandler();
+            _requestHandler = requestHandlerFactory.GetHandler();
         }
 
         [Route("Login")]
@@ -126,7 +126,7 @@ namespace to.frontend.Controllers
             {
                 var redirectUrl = nameof(Login);
 
-                var (status, userResult) = this._requestHandler.HandleLoginQuery(loginRequest);
+                var (status, userResult) = _requestHandler.HandleLoginQuery(loginRequest);
 
                 if (status is Failure failure)
                 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -38,13 +38,13 @@ namespace to.frontend
             });
 
             services.AddSingleton<IRequestHandlerFactory, RequestHandlerFactory>();
+            services.AddMvc(options => options.EnableEndpointRouting = false);
             services.AddSingleton<IApplicationState, ApplicationState>();
-            services.AddMvc();
             
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
