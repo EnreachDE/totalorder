@@ -41,6 +41,6 @@ jobs:
         DOCKER_TLS_VERIFY: 1
         DOCKER_HOST: tcp://cloud.hueser.name:2376
       run: |
-        docker container stop totalorder
-        docker container rm totalorder
+        docker container stop totalorder || true
+        docker container rm totalorder || true
         docker run -d --name totalorder -p 80:80 --restart always -v /data/totalorder:/TotalOrder swyx/totalorder:${GITHUB_SHA}
