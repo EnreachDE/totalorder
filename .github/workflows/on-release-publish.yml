@@ -1,4 +1,4 @@
-name: Deploy on totalorder.de
+name: Deploy Release on totalorder.de
 
 on:
   release:
@@ -41,5 +41,6 @@ jobs:
         DOCKER_TLS_VERIFY: 1
         DOCKER_HOST: tcp://cloud.hueser.name:2376
       run: |
-        docker info
-        docker container ls
+        docker container stop totalorder
+        docker container rm totalorder
+        docker run -d --name totalorder -p 80:80 --restart always -v /data/totalorder:/TotalOrder swyx/totalorder:${GITHUB_SHA}
