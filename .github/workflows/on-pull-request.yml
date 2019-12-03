@@ -21,3 +21,23 @@ jobs:
      
     - name: Build and test
       run: docker build . --file src/to.frontend/to.frontend/Dockerfile --tag swyx/totalorder:${GITHUB_SHA}
+
+  sonarscanner:
+    runs-on: ubuntu-16.04
+    
+    steps:
+    - name: Setup sonarqube
+      uses: warchant/setup-sonar-scanner@v1
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Run sonarqube
+      env:
+        # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: sonar-scanner
+        -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+        -Dsonar.projectKey=Swyx_totalorder
+        -Dsonar.organization=swyx-totalorder
+        -Dsonar.sources=./src/
+        -Dsonar.host.url=https://sonarcloud.io
+        -Dsonar.branch.name=${GITHUB_REF}
