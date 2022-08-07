@@ -14,7 +14,7 @@ dotnet test to.build.sln
 
 ## Deployment via github actions
 
-The repository defines a github action workflow which deploys the web app docker container to totalorder.de. The docker connection is secured via TLS. TLS client certificate and key are encrypted via
+The repository defines a github action workflow which deploys the web app docker container to totalorder.de. The docker connection is secured via TLS. TLS client certificates and commit encrypted in the repo. They are encrypted via
 
 ```shell
 gpg --symmetric --cipher-algo AES256 cert.pem

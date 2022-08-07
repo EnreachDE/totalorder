@@ -2,7 +2,6 @@ name: Build and Test PR
 
 on: 
   pull_request:
-    types: [ready_for_review]
 
 jobs:
 
@@ -22,3 +21,19 @@ jobs:
      
     - name: Build and test
       run: docker build . --file src/to.frontend/to.frontend/Dockerfile --tag swyx/totalorder:${GITHUB_SHA}
+
+  sonarscanner:
+    runs-on: ubuntu-16.04
+    
+    steps:
+    - name: Setup sonarqube
+      uses: warchant/setup-sonar-scanner@v1
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Run sonarqube
+      env:
+        # to get access to secrets.SONAR_TOKEN, provide GITHUB_TOKEN
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: sonar-scanner
+        -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+        
